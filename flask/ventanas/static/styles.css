@@ -1,0 +1,22 @@
+
+@font-face {
+  font-family: socake;
+  src: url(Socake.ttf);
+}
+@font-face {
+  font-family: typo;
+  src: url(Typo.otf);
+}
+
+nav {
+  font-family: typo;
+  color: #ff0000;
+}
+h1{
+  font-family: typo;
+}
+
+p {
+  color: #666;
+}
+
