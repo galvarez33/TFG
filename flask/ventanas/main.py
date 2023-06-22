@@ -19,8 +19,9 @@ collection = db['usuarios']
 
 
 @app.route('/home')
-def index():
-    return render_template('home.html')
+def home():
+    logged_user = session.get('logged_user')
+    return render_template('home.html', logged_user=logged_user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -111,11 +112,22 @@ def confirmar_correo(token):
 
 @app.route('/restricted')
 def restricted():
+    logged_user = session.get('logged_user')
+
     if 'logged_user' in session:
-        return render_template('restricted.html')
+        return render_template('restricted.html', logged_user=logged_user)
         
     else:
         return 'Acceso no autorizado'
+
+
+
+
+@app.route('/cierre', methods=['GET','POST'])
+def cierre():
+    logged_user = session.get('logged_user')
+    
+    return render_template('cierre.html',logged_user=logged_user)
 
 if __name__ == '__main__':
     app.run(port=5004)
