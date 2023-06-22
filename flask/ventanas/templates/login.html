@@ -17,7 +17,8 @@
       <input type="text" id="contraseña" class="fadeIn third" name="contrasena" placeholder="contraseña">
       <input type="submit" class="fadeIn fourth" value="Entrar">
     </form>
-   
+
+
     <!-- Remind Passowrd -->
     <div id="formFooter">
       <a class="underlineHover" href="#">Contraseña olvidada?</a>
@@ -25,6 +26,14 @@
 
   </div>
 </div>
+{% if error %}
+<h2>Error de confirmación</h2>
+<p>{{ error }}</p>
+{% else %}
+<h2>Confirmación exitosa</h2>
+<p>Tu correo electrónico {{ correo }} ha sido verificado exitosamente.</p>
+{% endif %}
+
 
 </body>
 
