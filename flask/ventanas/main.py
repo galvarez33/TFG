@@ -29,8 +29,9 @@ def login():
         username = request.form['correo']
         password = request.form['contrasena']
 
-        user_count = collection.count_documents({'correo': username, 'contraseña': password})
-        if user_count > 0:
+        user = collection.find_one({'correo': username, 'contraseña': password})
+        if user:
+            session['logged_user'] = user['correo']
             return redirect(url_for('restricted'))
         else:
             error = 'El Correo o Contraseña son incorrectos'
@@ -95,7 +96,6 @@ def confirmar_correo(token):
         correo = serializer.loads(token, salt='email-confirm', max_age=3600)
         contraseña = request.args.get('contraseña')
         nia = request.args.get('nia')
-        print(correo,contraseña,nia)
 
         datos_usuario = {
             'correo': correo,
@@ -111,10 +111,11 @@ def confirmar_correo(token):
 
 @app.route('/restricted')
 def restricted():
-
-        return render_template('restricted.html', logged_user=session['logged_user'])
-    
-    
+    if 'logged_user' in session:
+        return render_template('restricted.html')
+        
+    else:
+        return 'Acceso no autorizado'
 
 if __name__ == '__main__':
     app.run(port=5004)
