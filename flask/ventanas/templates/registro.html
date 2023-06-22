@@ -18,6 +18,11 @@
         <input type="text" id="contraseña" class="fadeIn fourth" name="nia" placeholder="NIA Alumn@">
         <input type="submit" class="fadeIn fifth" value="Entrar">
       </form>
+
+      {% if error %}
+      <p class="alert alert-danger" role="alert">{{ error }}</p>
+      {% endif %}
+  
   
       <!-- Remind Passowrd -->
       <div id="formFooter">

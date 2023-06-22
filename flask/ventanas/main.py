@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from pymongo import MongoClient
+import re
 
 
 app = Flask(__name__)
@@ -39,6 +40,29 @@ def registro():
         correo = request.form['correo']
         contraseña = request.form['contraseña']
         nia = request.form['nia']
+
+        correo_valido = re.match(r'^[a-zA-Z0-9]+@usp\.ceu\.es$', correo)
+        if not correo_valido:
+            error = 'El correo electrónico no tiene el formato válido.'
+            return render_template('registro.html', error=error)
+
+    # Validar la longitud del NIA
+        
+        if len(nia) != 6 or not nia.isdigit():
+            error= 'El NIA debe ser un número de 6 dígitos.'
+            return render_template('registro.html', error=error)
+
+        usuario_existente = collection.count_documents({'correo': f'{correo}'})
+        if usuario_existente >0:
+            error= "El correo electrónico ya está registrado."
+            return render_template('registro.html', error=error)
+
+        # Validar la contraseña
+        if not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', contraseña):
+            error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
+            return render_template('registro.html', error=error)
+
+
 
         # Crear el documento del usuario
         datos_usuario = {
