@@ -2,8 +2,11 @@
     <html>
     <head>
         <title>Página de inicio</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     </head>
     <body>
+        {% include 'header.html' %}
         <h1>Bienvenido al sistema</h1>
     
         <p>¡Has iniciado sesión correctamente!</p>

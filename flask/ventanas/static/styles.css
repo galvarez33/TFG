@@ -8,6 +8,25 @@
   src: url(Typo.otf);
 }
 
+.image {
+  background-image: url('image.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
+  top: 40px; /* Ajusta la altura del navbar en píxeles */
+  left: 0;
+  width: 100%;
+  height: calc(100% - 10px); /* Calcula la altura restante después de restar la altura del navbar */
+  opacity: 0.4;
+  z-index: -1;
+}
+
+.navbar {
+  position: relative;
+  z-index: 0s;
+}
+
+
 nav {
   font-family: typo;
   color: #ff0000;
