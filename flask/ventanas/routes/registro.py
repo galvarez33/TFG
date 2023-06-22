@@ -5,6 +5,7 @@ app = Flask(__name__)
 class RegistroUsuario:
     def __init__(self):
         self.usuarios = []
+        
 
     def agregar_usuario(self, usuario):
         self.usuarios.append(usuario)
@@ -38,8 +39,9 @@ def registro():
     }
 
     registro.agregar_usuario(nuevo_usuario)
-
+    print(usuarios)
     return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
     app.run()
