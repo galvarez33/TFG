@@ -27,6 +27,13 @@
                     <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
                 </li>
 
+
+                {% if logged_user %}
+
+                <li class="nav-item active">
+                    <a class="nav-link" href="/home">Cerrar Sesion <span class="sr-only">(current)</span></a>
+                </li>
+                {% else %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
@@ -37,12 +44,7 @@
                         <a class="dropdown-item" href="/registro">Registrarse</a>
                     </div>
                 </li>
-                <% if (logged_user) { %>
-
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/cierre">Cerrar Sesion <span class="sr-only">(current)</span></a>
-                    </li>
-                    <% }%>
+                {% endif %}
             </ul>
         </div>
     </nav>
