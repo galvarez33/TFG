@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for,re
 
 app = Flask(__name__)
 
@@ -28,6 +28,16 @@ def registro():
     nombre_usuario = request.form['nombre_usuario']
     contraseña = request.form['contraseña']
 
+    # Validar el formato del correo
+    correo_valido = re.match(r'^[a-zA-Z0-9]+@usp\.ceu\.es$', correo)
+    if not correo_valido:
+        return render_template('registro.html', error='El correo electrónico no tiene el formato válido.')
+
+    # Validar la longitud del NIA
+    nia = request.form['nia']
+    if len(nia) != 6 or not nia.isdigit():
+        return render_template('registro.html', error='El NIA debe ser un número de 6 dígitos.')
+
     usuario_existente = registro.buscar_usuario(correo)
     if usuario_existente:
         return render_template('registro.html', error='El correo electrónico ya está registrado.')
@@ -41,7 +51,6 @@ def registro():
     registro.agregar_usuario(nuevo_usuario)
     print(usuarios)
     return redirect(url_for('login'))
-
 
 if __name__ == '__main__':
     app.run()

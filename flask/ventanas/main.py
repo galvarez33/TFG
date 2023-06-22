@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session,url_for
+from flask import Flask, render_template, request, redirect, session, url_for
 from pymongo import MongoClient
 
 
@@ -20,11 +20,12 @@ def index():
 def login():
     if request.method == 'POST':
         username = request.form['correo']
-        password = request.form['contraseña']
+        password = request.form['contrasena']
 
-        # Comprobar si el usuario y la contraseña coinciden en la lista de usuarios
-        if any(user[0] == username and user[1] == password for user in users):
-            session['logged_user'] = username  # Almacenar estado de inicio de sesión en la sesión
+        # Buscar el usuario en la base de datos
+        user_count = collection.count_documents({'correo': f'{username}', 'contraseña': f'{password}'},)
+        if user_count > 0:
+           # Almacenar estado de inicio de sesión en la sesión
             return redirect(url_for('restricted'))
         else:
             return redirect(url_for('login'))
