@@ -89,13 +89,15 @@ def registro():
 
 def generar_token(correo):
     serializer = URLSafeTimedSerializer(app.secret_key)
-    return serializer.dumps(correo, salt='restablecer-contrasena')
+    token = serializer.dumps({'correo': correo}, salt='restablecer-contrasena')
+    return token
 
 
 def obtener_correo_desde_token(token):
     serializer = URLSafeTimedSerializer(app.secret_key)
     try:
-        correo = serializer.loads(token, salt='restablecer-contrasena', max_age=3600)
+        data = serializer.loads(token, salt='restablecer-contrasena', max_age=3600)
+        correo = data['correo']
         return correo
     except:
         return None
@@ -168,8 +170,8 @@ def contrasena_olvidada():
 
 
 def enviar_correo_restablecer_contrasena(correo):
-    token = generar_token(correo)
-    url_restablecer = url_for('restablecer_contrasena', token=token, _external=True)
+    token = generar_token(correo)  # Generar el token con el correo electrónico
+    url_restablecer = url_for('restablecer_contrasena', correo=correo, token=token, _external=True)
 
     mensaje = Message('Restablecer contraseña', sender='practicaceu@gmail.com', recipients=[correo])
     mensaje.body = f'Haz clic en el siguiente enlace para restablecer tu contraseña: {url_restablecer}'
@@ -177,30 +179,31 @@ def enviar_correo_restablecer_contrasena(correo):
     mail.send(mensaje)
 
 
-@app.route('/restablecer_contrasena', methods=['GET', 'POST'])
-def restablecer_contrasena():
+@app.route('/restablecer_contrasena/<correo>/<token>', methods=['GET', 'POST'])
+def restablecer_contrasena(correo, token):
+    print(correo)
     if request.method == 'POST':
         nueva_contrasena = request.form['nueva_contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
-        token = request.form.get('token')
+        print(correo,nueva_contrasena)
 
         # Validar que las contraseñas coinciden
         if nueva_contrasena != confirmar_contrasena:
             return render_template('restablecer_contrasena.html', error='Las contraseñas no coinciden')
 
-        # Obtener el correo electrónico a partir del token
-        correo = obtener_correo_desde_token(token)
-        print(correo, nueva_contrasena)
+        # Obtener el correo electrónico a partir del token (opcional)
+        # correo = obtener_correo_desde_token(token)
 
         # Actualizar la contraseña en la base de datos
-        result=collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
+        result = collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
         print(result.modified_count) 
 
         # Redirigir a la página de inicio de sesión después de restablecer la contraseña
         session['mensaje_confirmacion'] = 'La contraseña se ha restablecido correctamente. Inicia sesión con tu nueva contraseña.'
         return redirect(url_for('login'))
 
-    return render_template('restablecer_contrasena.html')
+    return render_template('restablecer_contrasena.html', correo=correo, token=token)
+
 
 if __name__ == '__main__':
     app.run(port=5004)
