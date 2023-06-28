@@ -181,11 +181,11 @@ def enviar_correo_restablecer_contrasena(correo):
 
 @app.route('/restablecer_contrasena/<correo>/<token>', methods=['GET', 'POST'])
 def restablecer_contrasena(correo, token):
-    print(correo)
+    
     if request.method == 'POST':
         nueva_contrasena = request.form['nueva_contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
-        print(correo,nueva_contrasena)
+        
 
         # Validar que las contraseñas coinciden
         if nueva_contrasena != confirmar_contrasena:
