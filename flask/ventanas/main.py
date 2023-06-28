@@ -9,7 +9,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'practicaceu@gmail.com'
-app.config['MAIL_PASSWORD'] = 'pzrwkjjftegjcwwy'
+app.config['MAIL_PASSWORD'] = 'lkytkgkbhirfyxlv'
 app.secret_key = '12345'
 
 mail = Mail(app)
@@ -26,6 +26,9 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if 'logged_user' in session:
+        return redirect(url_for('restricted'))
+
     if request.method == 'POST':
         username = request.form['correo']
         password = request.form['contrasena']
@@ -35,14 +38,18 @@ def login():
             session['logged_user'] = user['correo']
             return redirect(url_for('restricted'))
         else:
-            error = 'El Correo o Contraseña son incorrectos'
+            error = 'El correo o la contraseña son incorrectos'
             return render_template('login.html', error=error)
 
-    return render_template('login.html')
+    mensaje_confirmacion = session.pop('mensaje_confirmacion', None)
+    return render_template('login.html', mensaje_confirmacion=mensaje_confirmacion)
 
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
+    if 'logged_user' in session:
+        return redirect(url_for('restricted'))
+
     if request.method == 'POST':
         correo = request.form['correo']
         contraseña = request.form['contraseña']
@@ -70,18 +77,32 @@ def registro():
             'correo': correo,
             'contraseña': contraseña,
             'nia': nia,
-            
         }
 
         enviar_correo_verificacion(correo, contraseña, nia)
+        session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico.'
+
         return redirect(url_for('login'))
 
     return render_template('registro.html')
 
 
-def enviar_correo_verificacion(correo, contraseña, nia):
+def generar_token(correo):
     serializer = URLSafeTimedSerializer(app.secret_key)
-    token = serializer.dumps(correo, salt='email-confirm')
+    return serializer.dumps(correo, salt='restablecer-contrasena')
+
+
+def obtener_correo_desde_token(token):
+    serializer = URLSafeTimedSerializer(app.secret_key)
+    try:
+        correo = serializer.loads(token, salt='restablecer-contrasena', max_age=3600)
+        return correo
+    except:
+        return None
+
+
+def enviar_correo_verificacion(correo, contraseña, nia):
+    token = generar_token(correo)
     url_verificacion = url_for('confirmar_correo', token=token, contraseña=contraseña, nia=nia, _external=True)
 
     mensaje = Message('Verificación de correo electrónico', sender='ceupractica@gmail.com', recipients=[correo])
@@ -92,9 +113,8 @@ def enviar_correo_verificacion(correo, contraseña, nia):
 
 @app.route('/confirmar-correo/<token>')
 def confirmar_correo(token):
-    serializer = URLSafeTimedSerializer(app.secret_key)
-    try:
-        correo = serializer.loads(token, salt='email-confirm', max_age=3600)
+    correo = obtener_correo_desde_token(token)
+    if correo:
         contraseña = request.args.get('contraseña')
         nia = request.args.get('nia')
 
@@ -106,7 +126,7 @@ def confirmar_correo(token):
 
         collection.insert_one(datos_usuario)
         return render_template('login.html', correo=correo)
-    except:
+    else:
         return render_template('login.html', error='Token inválido o expirado')
 
 
@@ -116,18 +136,71 @@ def restricted():
 
     if 'logged_user' in session:
         return render_template('restricted.html', logged_user=logged_user)
-        
     else:
         return 'Acceso no autorizado'
 
 
-
-
-@app.route('/cierre', methods=['GET','POST'])
+@app.route('/cierre', methods=['GET', 'POST'])
 def cierre():
     logged_user = session.get('logged_user')
-    
-    return render_template('cierre.html',logged_user=logged_user)
+    if request.method == 'POST':
+        confirm = request.form.get('confirm')
+        if confirm == 'yes':
+            session.clear()
+            return redirect(url_for('home'))
+        elif confirm == 'no':
+            return redirect(url_for('restricted'))
+    return render_template('cierre.html', logged_user=logged_user)
+
+
+@app.route('/contrasena_olvidada', methods=['GET', 'POST'])
+def contrasena_olvidada():
+    if 'logged_user' in session:
+        return redirect(url_for('restricted'))
+
+    if request.method == 'POST':
+        correo = request.form['correo']
+        enviar_correo_restablecer_contrasena(correo)
+        session['mensaje_confirmacion'] = 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección de correo electrónico.'
+        return redirect(url_for('login'))
+
+    return render_template('contrasena_olvidada.html')
+
+
+def enviar_correo_restablecer_contrasena(correo):
+    token = generar_token(correo)
+    url_restablecer = url_for('restablecer_contrasena', token=token, _external=True)
+
+    mensaje = Message('Restablecer contraseña', sender='practicaceu@gmail.com', recipients=[correo])
+    mensaje.body = f'Haz clic en el siguiente enlace para restablecer tu contraseña: {url_restablecer}'
+
+    mail.send(mensaje)
+
+
+@app.route('/restablecer_contrasena', methods=['GET', 'POST'])
+def restablecer_contrasena():
+    if 'logged_user' in session:
+        return redirect(url_for('restricted'))
+
+    if request.method == 'POST':
+        nueva_contrasena = request.form['nueva_contrasena']
+        confirmar_contrasena = request.form['confirmar_contrasena']
+
+        if nueva_contrasena != confirmar_contrasena:
+            return render_template('restablecer_contrasena.html', error='Las contraseñas no coinciden')
+
+        token = request.args.get('token')
+        correo = obtener_correo_desde_token(token)
+
+        if correo:
+            collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
+            session['mensaje_confirmacion'] = 'La contraseña se ha restablecido correctamente. Inicia sesión con tu nueva contraseña.'
+            return redirect(url_for('login'))
+        else:
+            return render_template('restablecer_contrasena.html', error='Token inválido o expirado')
+
+    return render_template('restablecer_contrasena.html')
+
 
 if __name__ == '__main__':
     app.run(port=5004)

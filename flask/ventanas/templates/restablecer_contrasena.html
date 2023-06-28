@@ -5,24 +5,22 @@
 <div class="wrapper fadeInDown">
   <div id="formContent">
     <!-- Tabs Titles -->
-    <h2 class="active"> Iniciar Sesión </h2>
-    <a class="inactive underlineHover" href="/registro">REGISTRARSE</a>
+    <h1>Restablecer contraseña</h1>
+    <form action="/restablecer-contrasena" method="POST">
+        <label for="nueva_contrasena">Nueva contraseña:</label>
+        <input type="password" id="nueva_contrasena" name="nueva_contrasena" required><br>
 
+        <label for="confirmar_contrasena">Confirmar contraseña:</label>
+        <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required><br>
+
+        <button type="submit">Restablecer contraseña</button>
+    </form>
 
     
-
-    <!-- Login Form -->
-    <form action="/login" method="post">
-      <input type="text" id="login" class="fadeIn second" name="correo" placeholder="correo CEU">
-      <input type="text" id="contraseña" class="fadeIn third" name="contrasena" placeholder="contraseña">
-      <input type="submit" class="fadeIn fourth" value="Entrar">
-    </form>
     {% if error %}
     <p class="alert alert-danger" role="alert">{{ error }}</p>
     {% elif correo %}
     <p class="alert alert-success" role="alert">Tu correo electrónico {{ correo }} ha sido verificado exitosamente.</p>
-    {% elif mensaje_confirmacion %}
-    <p class="alert alert-success" role="alert">Se ha enviado un correo de verificación.</p>
     {% endif %}
 
     <!-- Remind Passowrd -->
