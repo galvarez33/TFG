@@ -179,28 +179,28 @@ def enviar_correo_restablecer_contrasena(correo):
 
 @app.route('/restablecer_contrasena', methods=['GET', 'POST'])
 def restablecer_contrasena():
-    if 'logged_user' in session:
-        return redirect(url_for('restricted'))
-
     if request.method == 'POST':
         nueva_contrasena = request.form['nueva_contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
+        token = request.form.get('token')
 
+        # Validar que las contraseñas coinciden
         if nueva_contrasena != confirmar_contrasena:
             return render_template('restablecer_contrasena.html', error='Las contraseñas no coinciden')
 
-        token = request.args.get('token')
+        # Obtener el correo electrónico a partir del token
         correo = obtener_correo_desde_token(token)
+        print(correo, nueva_contrasena)
 
-        if correo:
-            collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
-            session['mensaje_confirmacion'] = 'La contraseña se ha restablecido correctamente. Inicia sesión con tu nueva contraseña.'
-            return redirect(url_for('login'))
-        else:
-            return render_template('restablecer_contrasena.html', error='Token inválido o expirado')
+        # Actualizar la contraseña en la base de datos
+        result=collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
+        print(result.modified_count) 
+
+        # Redirigir a la página de inicio de sesión después de restablecer la contraseña
+        session['mensaje_confirmacion'] = 'La contraseña se ha restablecido correctamente. Inicia sesión con tu nueva contraseña.'
+        return redirect(url_for('login'))
 
     return render_template('restablecer_contrasena.html')
-
 
 if __name__ == '__main__':
     app.run(port=5004)

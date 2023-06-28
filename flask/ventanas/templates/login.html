@@ -22,7 +22,7 @@
     {% elif correo %}
     <p class="alert alert-success" role="alert">Tu correo electrónico {{ correo }} ha sido verificado exitosamente.</p>
     {% elif mensaje_confirmacion %}
-    <p class="alert alert-success" role="alert">Se ha enviado un correo de verificación.</p>
+    <p class="alert alert-success" role="alert">{{mensaje_confirmacion}}</p>
     {% endif %}
 
     <!-- Remind Passowrd -->

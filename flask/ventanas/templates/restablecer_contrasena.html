@@ -6,21 +6,16 @@
   <div id="formContent">
     <!-- Tabs Titles -->
     <h1>Restablecer contraseña</h1>
-    <form action="/restablecer-contrasena" method="POST">
-        <label for="nueva_contrasena">Nueva contraseña:</label>
-        <input type="password" id="nueva_contrasena" name="nueva_contrasena" required><br>
-
-        <label for="confirmar_contrasena">Confirmar contraseña:</label>
-        <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required><br>
-
-        <button type="submit">Restablecer contraseña</button>
-    </form>
+    <form method="POST" action="{{ url_for('restablecer_contrasena') }}">
+      <input type="text" name="nueva_contrasena" placeholder="Nueva Contraseña" required><br>
+      <input type="text" name="confirmar_contrasena" placeholder="Confirmar Contraseña" required><br>
+      <input type="hidden" name="token" value="{{ token }}">
+      <input type="submit" value="Restablecer Contraseña">
+  </form>
 
     
     {% if error %}
-    <p class="alert alert-danger" role="alert">{{ error }}</p>
-    {% elif correo %}
-    <p class="alert alert-success" role="alert">Tu correo electrónico {{ correo }} ha sido verificado exitosamente.</p>
+    <p class="error">{{ error }}</p>
     {% endif %}
 
     <!-- Remind Passowrd -->
