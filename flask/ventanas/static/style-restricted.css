@@ -1,0 +1,32 @@
+.container {
+    height: 100vh;
+  }
+  
+  .button-container {
+    height: 80vh; /* Ajusta el tamaño vertical del contenedor */
+  }
+  
+  .button {
+    width: 300px; /* Ancho específico en píxeles */
+    margin: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: #700202;
+    border-radius: 10px;
+    display: inline-block; /* Cambio a display inline-block */
+  }
+  
+  .duda {
+    background-color: #725AC1;
+  }
+  
+  .ejercicios {
+    background-color: #E15759;
+  }
+  
+  .explorar {
+    background-color: #66CC99;
+  }
+  

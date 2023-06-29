@@ -214,7 +214,9 @@ def restablecer_contrasena(correo, token):
 
 
 
-
+@app.route('/publicar_duda', methods=['GET', 'POST'])
+def publicar_duda():
+    return render_template('publicar_duda.html')
 
 if __name__ == '__main__':
     app.run(port=5004)
