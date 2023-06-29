@@ -162,9 +162,15 @@ def contrasena_olvidada():
 
     if request.method == 'POST':
         correo = request.form['correo']
-        enviar_correo_restablecer_contrasena(correo)
-        session['mensaje_confirmacion'] = 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección de correo electrónico.'
-        return redirect(url_for('login'))
+        resultado = collection.find_one({'correo': correo})
+        if resultado:
+            enviar_correo_restablecer_contrasena(correo)
+            session['mensaje_confirmacion'] = 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección de correo electrónico.'
+            return redirect(url_for('login'))
+        else:
+            error = 'El correo introducido no existe'
+            return render_template('contrasena_olvidada.html', error=error)
+
 
     return render_template('contrasena_olvidada.html')
 
@@ -181,21 +187,23 @@ def enviar_correo_restablecer_contrasena(correo):
 
 @app.route('/restablecer_contrasena/<correo>/<token>', methods=['GET', 'POST'])
 def restablecer_contrasena(correo, token):
-    
+    print(correo)
     if request.method == 'POST':
         nueva_contrasena = request.form['nueva_contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
-        
+        token = request.form['token']  # Agrega esta línea para obtener el token del formulario
 
         # Validar que las contraseñas coinciden
         if nueva_contrasena != confirmar_contrasena:
-            return render_template('restablecer_contrasena.html', error='Las contraseñas no coinciden')
-
-        # Obtener el correo electrónico a partir del token (opcional)
-        # correo = obtener_correo_desde_token(token)
-
+            return render_template('restablecer_contrasena.html', error='Las contraseñas no coinciden', correo=correo, token=token)
+        
+        if not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', nueva_contrasena):
+            error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
+            return render_template('restablecer_contrasena.html', error=error, correo=correo, token=token)
+            
         # Actualizar la contraseña en la base de datos
         result = collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
+        print(correo,token, nueva_contrasena)
         print(result.modified_count) 
 
         # Redirigir a la página de inicio de sesión después de restablecer la contraseña
@@ -203,6 +211,9 @@ def restablecer_contrasena(correo, token):
         return redirect(url_for('login'))
 
     return render_template('restablecer_contrasena.html', correo=correo, token=token)
+
+
+
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@
 <div class="wrapper fadeInDown">
   <div id="formContent">
     <!-- Tabs Titles -->
-    <h1>Restablecer contraseña</h1>
+    <h2>Restablecer contraseña</h2>
     <form method="POST" action="{{ url_for('restablecer_contrasena', correo=correo, token=token) }}">
       <input type="text" name="nueva_contrasena" placeholder="Nueva Contraseña" required><br>
       <input type="text" name="confirmar_contrasena" placeholder="Confirmar Contraseña" required><br>
@@ -15,7 +15,7 @@
 
     
     {% if error %}
-    <p class="error">{{ error }}</p>
+    <p class="alert alert-danger" role="alert">{{ error }}</p>
     {% endif %}
 
     <!-- Remind Passowrd -->

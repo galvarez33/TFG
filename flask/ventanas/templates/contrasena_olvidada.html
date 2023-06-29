@@ -12,10 +12,19 @@
       
       <input type="submit" class="fadeIn fourth" value="Enviar">
     </form>
+
+    {% if error %}
+    <p class="alert alert-danger" role="alert">{{ error }}</p>
+    {% elif mensaje_confirmacion %}
+    <p class="alert alert-success" role="alert">{{mensaje_confirmacion}}</p>
+    {% endif %}
+
+
     <!-- Remind Passowrd -->
     <div id="formFooter">
       <a class="underlineHover" href="/login">Volver</a>
     </div>
+
 
   </div>
 </div>
