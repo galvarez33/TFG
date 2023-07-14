@@ -16,6 +16,7 @@ mail = Mail(app)
 client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
 db = client['TFG']
 collection = db['usuarios']
+form_collection= db['publicar_duda'] 
 
 
 @app.route('/home')
@@ -216,7 +217,32 @@ def restablecer_contrasena(correo, token):
 
 @app.route('/publicar_duda', methods=['GET', 'POST'])
 def publicar_duda():
+    if request.method == 'POST':
+        imagen = request.files['imagen']
+        titulo = request.form['titulo']
+        texto = request.form['texto']
+        carrera = request.form['carrera']
+        curso = request.form['curso']
+        asignatura = request.form['asignatura']
+
+        # Guardar la información en la base de datos
+        form_data = {
+            'imagen': imagen.read(),  # Guarda los bytes de la imagen
+            'titulo': titulo,
+            'texto': texto,
+            'carrera': carrera,
+            'curso': curso,
+            'asignatura': asignatura
+        }
+        form_collection.insert_one(form_data)
+
+        return redirect(url_for('explorar'))
+
     return render_template('publicar_duda.html')
+
+@app.route('/explorar')
+def explorar():
+    return render_template('explorar.html')
 
 if __name__ == '__main__':
     app.run(port=5004)
