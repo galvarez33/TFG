@@ -3,6 +3,8 @@ from pymongo import MongoClient
 import re
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
+import base64
+
 
 app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -225,9 +227,12 @@ def publicar_duda():
         curso = request.form['curso']
         asignatura = request.form['asignatura']
 
+        if imagen:
+            imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
+
         # Guardar la información en la base de datos
         form_data = {
-            'imagen': imagen.read(),  # Guarda los bytes de la imagen
+            'imagen': imagen_base64,  # Guarda los bytes de la imagen
             'titulo': titulo,
             'texto': texto,
             'carrera': carrera,
@@ -242,7 +247,21 @@ def publicar_duda():
 
 @app.route('/explorar')
 def explorar():
-    return render_template('explorar.html')
+    dudas = form_collection.find()
+
+    return render_template('explorar.html', dudas=dudas)
+
+
+
+
+@app.route('/detalle_duda/<duda_id>')
+def detalle_duda(duda_id):
+    # Aquí debes implementar la lógica para obtener la información de la duda con el ID proporcionado
+    # Puedes consultar la base de datos u otro medio de almacenamiento para obtener los detalles de la duda
+
+    # Por ahora, simplemente pasaremos el ID de la duda al template para mostrarlo
+    return render_template('detalle_duda.html', duda_id=duda_id)
+
 
 if __name__ == '__main__':
     app.run(port=5004)
