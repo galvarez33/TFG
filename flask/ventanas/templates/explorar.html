@@ -1,45 +1,47 @@
 {% include 'header.html' %}
 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-home.css') }}">
-<style>
-  .duda-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .duda-container img {
-    max-width: 200px;
-    max-height: 200px;
-    margin-bottom: 10px;
-  }
-  
-  .duda-container h3 {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  h2 {
-    margin-top: 20px;
-  }
-  
-  .duda-link {
-    color: inherit;
-    text-decoration: none;
-  }
-</style>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-explorar.css') }}">
 
 <div class="container">
     <h2 class="mt-4">Explorar</h2>
-    {% for duda in dudas %}
-        <div class="duda-container">
-            <a href="{{ url_for('detalle_duda', duda_id=duda.id) }}" class="duda-link">
-                <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="imagen-duda">
-            </a>
-            <h3 class="titulo-duda">{{ duda.titulo }}</h3>
+    <form method="POST" action="{{ url_for('explorar') }}" class="mb-4">
+        <div class="form-group">
+            <input type="text" class="form-control" id="consulta" name="consulta" placeholder="Buscar por título">
         </div>
-    {% endfor %}
+        <div class="form-group">
+            <label for="carrera">Carrera:</label>
+            <select class="form-control" id="carrera" name="carrera">
+                <option value="">Todas las carreras</option>
+                <option value="ADE">Administración y Dirección de Empresas</option>
+                <option value="ISI">Ingeniería de Sistemas de Información</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="curso">Curso:</label>
+            <select class="form-control" id="curso" name="curso">
+                <option value="">Todos los cursos</option>
+                <option value="curso1">1º</option>
+                <option value="curso2">2º</option>
+                <option value="curso3">3º</option>
+                <option value="curso4">4º</option>
+                <option value="curso5">5º</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a href="{{ url_for('explorar') }}" class="btn btn-secondary">Deshacer filtros</a>
+    </form>
+    <div class="row">
+        {% for duda in dudas %}
+            <div class="col-md-4 mb-4">
+                <div class="card duda-card">
+                    <a href="{{ url_for('detalle_duda', duda_id=duda.id) }}" class="duda-link">
+                        <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top fixed-size-image">
+                    </a>
+                    <div class="card-body duda-card-body">
+                        <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
-

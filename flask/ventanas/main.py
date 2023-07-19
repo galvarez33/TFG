@@ -245,13 +245,25 @@ def publicar_duda():
 
     return render_template('publicar_duda.html')
 
-@app.route('/explorar')
+@app.route('/explorar', methods=['GET', 'POST'])
 def explorar():
-    dudas = form_collection.find()
+    consulta = request.form.get('consulta', '')
+    carrera = request.form.get('carrera', '')
+    curso = request.form.get('curso', '')
+
+    # Aplicar filtros si se han seleccionado valores
+    if carrera or curso:
+        filtros = {}
+        if carrera:
+            filtros['carrera'] = carrera
+        if curso:
+            filtros['curso'] = curso
+
+        dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}, **filtros})
+    else:
+        dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}})
 
     return render_template('explorar.html', dudas=dudas)
-
-
 
 
 @app.route('/detalle_duda/<duda_id>')

@@ -1,0 +1,40 @@
+
+@font-face {
+  font-family: socake;
+  src: url(Socake.ttf);
+}
+@font-face {
+  font-family: typo;
+  src: url(Typo.otf);
+}
+
+.navbar {
+  position: relative;
+
+}
+
+#vista-previa img {
+  max-width: 200px;
+  max-height: 200px;
+  margin-bottom: 10px;
+}
+
+.form-group .btn {
+  margin-top: 10px;
+}
+
+h2 {
+  margin-top: 20px;
+}
+
+nav {
+  color: #ff0000;
+}
+h1{
+  font-family: typo;
+}
+
+p {
+  color: #666;
+}
+

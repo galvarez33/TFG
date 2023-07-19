@@ -1,0 +1,46 @@
+@font-face {
+  font-family: socake;
+  src: url(Socake.ttf);
+}
+
+@font-face {
+  font-family: typo;
+  src: url(Typo.otf);
+}
+
+.duda-card {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.fixed-size-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+
+.duda-container img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain; /* Ajustar la propiedad object-fit a "contain" */
+}
+
+.duda-card-body {
+    padding: 10px;
+}
+
+.duda-card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-top: 20px;
+}
+
+.duda-link {
+    color: inherit;
+    text-decoration: none;
+}
