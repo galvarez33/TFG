@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from pymongo import MongoClient
+from bson import ObjectId
 import re
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
@@ -219,6 +220,7 @@ def restablecer_contrasena(correo, token):
 
 @app.route('/publicar_duda', methods=['GET', 'POST'])
 def publicar_duda():
+    logged_user = session.get('logged_user')
     if request.method == 'POST':
         imagen = request.files['imagen']
         titulo = request.form['titulo']
@@ -243,37 +245,55 @@ def publicar_duda():
 
         return redirect(url_for('explorar'))
 
-    return render_template('publicar_duda.html')
+    return render_template('publicar_duda.html', logged_user=logged_user)
 
 @app.route('/explorar', methods=['GET', 'POST'])
 def explorar():
-    consulta = request.form.get('consulta', '')
-    carrera = request.form.get('carrera', '')
-    curso = request.form.get('curso', '')
+    if request.method == 'POST':
+        # Verificar si el usuario está autenticado antes de procesar la solicitud POST
+        logged_user = session.get('logged_user')
+        if not logged_user:
+            return 'Acceso no autorizado'
 
-    # Aplicar filtros si se han seleccionado valores
-    if carrera or curso:
-        filtros = {}
-        if carrera:
-            filtros['carrera'] = carrera
-        if curso:
-            filtros['curso'] = curso
+        consulta = request.form.get('consulta', '')
+        carrera = request.form.get('carrera', '')
+        curso = request.form.get('curso', '')
 
-        dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}, **filtros})
-    else:
-        dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}})
+        # Aplicar filtros si se han seleccionado valores
+        if carrera or curso:
+            filtros = {}
+            if carrera:
+                filtros['carrera'] = carrera
+            if curso:
+                filtros['curso'] = curso
 
-    return render_template('explorar.html', dudas=dudas)
+            dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}, **filtros})
+        else:
+            dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}})
 
+        return render_template('explorar.html', dudas=dudas, logged_user=logged_user)
+
+    # Si la solicitud no es POST, muestra la página de explorar sin filtrar
+    logged_user = session.get('logged_user')
+    dudas = form_collection.find()
+    return render_template('explorar.html', dudas=dudas, logged_user=logged_user)
+
+
+def obtener_detalle_duda(duda_id):
+    # Convertir el duda_id a ObjectId
+    object_id = ObjectId(duda_id)
+    duda = form_collection.find_one({'_id': object_id})
+    return duda
 
 @app.route('/detalle_duda/<duda_id>')
 def detalle_duda(duda_id):
-    # Aquí debes implementar la lógica para obtener la información de la duda con el ID proporcionado
-    # Puedes consultar la base de datos u otro medio de almacenamiento para obtener los detalles de la duda
-
-    # Por ahora, simplemente pasaremos el ID de la duda al template para mostrarlo
-    return render_template('detalle_duda.html', duda_id=duda_id)
+    duda = obtener_detalle_duda(duda_id)
+    if duda:
+        return render_template('detalle_duda.html', duda=duda)
+    else:
+        # Si no se encuentra la duda con el ID proporcionado, muestra un mensaje de error
+        return render_template('error.html', mensaje='Duda no encontrada')
 
 
 if __name__ == '__main__':
-    app.run(port=5004)
+    app.run(port=5005)

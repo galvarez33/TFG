@@ -1,0 +1,29 @@
+{% extends 'header.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if duda %}
+            <h2>Detalle de la duda</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top img-fluid">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ duda.titulo }}</h5>
+                            <p class="card-text">{{ duda.descripcion }}</p>
+                            <!-- Agrega más detalles de la duda si los tienes en la variable duda -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- Si la duda no se encontró en la base de datos, muestra un mensaje de error -->
+            <h2>Error</h2>
+            <p>{{ mensaje }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

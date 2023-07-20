@@ -33,14 +33,14 @@
     <div class="row">
         {% for duda in dudas %}
             <div class="col-md-4 mb-4">
-                <div class="card duda-card">
-                    <a href="{{ url_for('detalle_duda', duda_id=duda.id) }}" class="duda-link">
+                <a href="{{ url_for('detalle_duda', duda_id=duda._id) }}" class="duda-link">
+                    <div class="card duda-card">
                         <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top fixed-size-image">
-                    </a>
-                    <div class="card-body duda-card-body">
-                        <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
+                        <div class="card-body duda-card-body">
+                            <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         {% endfor %}
     </div>
