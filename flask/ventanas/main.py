@@ -279,20 +279,26 @@ def explorar():
     return render_template('explorar.html', dudas=dudas, logged_user=logged_user)
 
 
+@app.route('/detalle_duda/<duda_id>')
+def detalle_duda(duda_id):
+    # Verificar si el usuario está autenticado
+    logged_user = session.get('logged_user')
+    if not logged_user:
+        return 'Acceso no autorizado'
+
+    duda = obtener_detalle_duda(duda_id)
+    if duda:
+        return render_template('detalle_duda.html', duda=duda, logged_user=logged_user)
+    else:
+        # Si no se encuentra la duda con el ID proporcionado, muestra un mensaje de error
+        return render_template('error.html', mensaje='Duda no encontrada')
+
 def obtener_detalle_duda(duda_id):
     # Convertir el duda_id a ObjectId
     object_id = ObjectId(duda_id)
     duda = form_collection.find_one({'_id': object_id})
-    return duda
 
-@app.route('/detalle_duda/<duda_id>')
-def detalle_duda(duda_id):
-    duda = obtener_detalle_duda(duda_id)
-    if duda:
-        return render_template('detalle_duda.html', duda=duda)
-    else:
-        # Si no se encuentra la duda con el ID proporcionado, muestra un mensaje de error
-        return render_template('error.html', mensaje='Duda no encontrada')
+    return duda
 
 
 if __name__ == '__main__':
