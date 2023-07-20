@@ -1,11 +1,11 @@
 /* Ajustar el tamaño de la imagen */
 .card-img-top {
-    width: 600px; /* ancho */
-    height: 500px; /* alto */
-
+    width: 600px; /* ancho deseado para la imagen */
+    height: 500px; /* alto deseado para la imagen */
     margin-top: 30px;
     margin-left: 30px;
     object-fit: cover;
+    border-radius: 10px; /* Agregar bordes redondeados a la imagen */
 }
 
 /* Hacer que la imagen se ajuste correctamente */
@@ -25,6 +25,9 @@
 .duda-card-content {
     flex: 1; /* Hace que el contenido tome todo el espacio disponible */
     padding: 30px; /* Espacio entre la imagen y el contenido */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Alinear el contenido al inicio de la columna (parte superior) */
 }
 
 /* Estilo para el título */
@@ -32,4 +35,9 @@
     font-size: 30px;
     font-weight: bold;
     margin-bottom: 10px;
+}
+
+/* Estilo para la descripción */
+.card-text {
+    font-size: 20px;
 }

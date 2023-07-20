@@ -3,10 +3,14 @@
 {% block content %}
     {% if duda %}
         <div class="duda-card">
-            <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
+            <div class="card-img-zoom">
+                <a href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
+                    <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
+                </a>
+            </div>
             <div class="duda-card-content">
                 <h5 class="card-title">{{ duda.titulo }}</h5>
-                <p class="card-text">{{ duda.texto}}</p>
+                <p class="card-text">{{ duda.texto }}</p>
             </div>
         </div>
     {% else %}
