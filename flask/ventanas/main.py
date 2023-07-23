@@ -5,7 +5,8 @@ import re
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 import base64
-
+from math import ceil
+from flask_paginate import Pagination, get_page_parameter, get_page_args
 
 app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -271,12 +272,29 @@ def explorar():
         else:
             dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}})
 
-        return render_template('explorar.html', dudas=dudas, logged_user=logged_user)
+    else:
+        dudas = form_collection.find()
 
-    # Si la solicitud no es POST, muestra la página de explorar sin filtrar
-    logged_user = session.get('logged_user')
-    dudas = form_collection.find()
-    return render_template('explorar.html', dudas=dudas, logged_user=logged_user)
+    # Obtener el número de página actual y la cantidad de elementos por página
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    per_page = 9  # Mostrar 9 elementos por página
+
+    # Calcular el desplazamiento para la consulta en la base de datos
+    offset = (page - 1) * per_page
+
+    # Consultar las dudas con el límite y desplazamiento adecuados
+    dudas = form_collection.find().skip(offset).limit(per_page)
+
+    # Obtener el total de dudas para la paginación
+    total_dudas = form_collection.count_documents({})
+
+    # Crear el objeto de paginación
+    pagination = Pagination(page=page, per_page=per_page, total=total_dudas, css_framework='bootstrap4')
+
+    return render_template('explorar.html', dudas=dudas, pagination=pagination)
+
+
+
 
 
 @app.route('/detalle_duda/<duda_id>')
