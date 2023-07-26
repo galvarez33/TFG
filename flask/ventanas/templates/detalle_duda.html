@@ -9,10 +9,16 @@
                 </a>
             </div>
             <div class="duda-card-content">
-                <h5 class="card-title">{{ duda.titulo }}</h5>
-                <p class="card-text">{{ duda.texto }}</p>
+                <h3 class="card-title">{{ duda.titulo }}</h3>
+                <h5 class="card-text">{{ duda.texto }}</h5>
+                <div class="additional-info">
+                    <br>
+                    <p class="info" style="color: gray;"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
+                    <p class="info" style="color: gray;"><span class="label">Curso:</span> {{ duda.curso }}</p>
+                    <p class="info" style="color: gray;"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
+                </div>
                 <div class="stars">
-                    <p>Dificultad:</p> <!-- Imprimir el valor de dificultad -->
+                    <p class="dificultad"><span class="label">Dificultad:</span></p>
                     {% for i in range(5) %}
                         {% if i < duda.dificultad %}
                             <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
@@ -21,9 +27,6 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-                <p>Carrera: {{ duda.carrera }}</p>
-                <p>Curso: {{ duda.curso }}</p>
-                <p>Asignatura: {{ duda.asignatura }}</p>
             </div>
         </div>
     {% else %}
@@ -32,4 +35,3 @@
         <p>{{ mensaje }}</p>
     {% endif %}
 {% endblock %}
-
