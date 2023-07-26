@@ -1,4 +1,8 @@
 {% include 'header.html' %}
+{% if logged_user %}
+    <p>Bienvenido, {{ logged_user.nombre}}.</p>
+{% endif %}
+
 
 
 

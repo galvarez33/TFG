@@ -23,10 +23,14 @@ collection = db['usuarios']
 form_collection= db['publicar_duda'] 
 
 
+
+
 @app.route('/home')
 def home():
     logged_user = session.get('logged_user')
     return render_template('home.html', logged_user=logged_user)
+
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -40,7 +44,16 @@ def login():
 
         user = collection.find_one({'correo': username, 'contraseña': password})
         if user:
-            session['logged_user'] = user['correo']
+            # Guardar el correo del usuario en la sesión
+            session['logged_user'] = {
+                'correo': user['correo'],
+                'nombre': user['nombre']
+            }
+
+
+            # Guardar el nombre del usuario en la sesión
+            session['nombre_usuario'] = user['nombre']
+
             return redirect(url_for('restricted'))
         else:
             error = 'El correo o la contraseña son incorrectos'
@@ -48,6 +61,11 @@ def login():
 
     mensaje_confirmacion = session.pop('mensaje_confirmacion', None)
     return render_template('login.html', mensaje_confirmacion=mensaje_confirmacion)
+
+
+
+
+
 
 
 @app.route('/registro', methods=['GET', 'POST'])
@@ -59,6 +77,7 @@ def registro():
         correo = request.form['correo']
         contraseña = request.form['contraseña']
         nia = request.form['nia']
+        nombre = request.form['nombre']
 
         correo_valido = re.match(r'^[a-zA-Z0-9.]+@usp\.ceu\.es$', correo)
         if not correo_valido:
@@ -82,9 +101,10 @@ def registro():
             'correo': correo,
             'contraseña': contraseña,
             'nia': nia,
+            'nombre':nombre
         }
 
-        enviar_correo_verificacion(correo, contraseña, nia)
+        enviar_correo_verificacion(correo, contraseña, nia, nombre )
         session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico.'
 
         return redirect(url_for('login'))
@@ -108,9 +128,9 @@ def obtener_correo_desde_token(token):
         return None
 
 
-def enviar_correo_verificacion(correo, contraseña, nia):
+def enviar_correo_verificacion(correo, contraseña, nia, nombre ):
     token = generar_token(correo)
-    url_verificacion = url_for('confirmar_correo', token=token, contraseña=contraseña, nia=nia, _external=True)
+    url_verificacion = url_for('confirmar_correo', token=token, contraseña=contraseña, nia=nia,nombre=nombre, _external=True)
 
     mensaje = Message('Verificación de correo electrónico', sender='ceupractica@gmail.com', recipients=[correo])
     mensaje.body = f'Haz clic en el siguiente enlace para verificar tu correo electrónico: {url_verificacion}'
@@ -124,11 +144,13 @@ def confirmar_correo(token):
     if correo:
         contraseña = request.args.get('contraseña')
         nia = request.args.get('nia')
+        nombre = request.args.get('nombre')
 
         datos_usuario = {
             'correo': correo,
             'contraseña': contraseña,
-            'nia': nia
+            'nia': nia,
+            'nombre': nombre
         }
 
         collection.insert_one(datos_usuario)
@@ -242,7 +264,8 @@ def publicar_duda():
             'carrera': carrera,
             'curso': curso,
             'asignatura': asignatura,
-            'dificultad': dificultad  # Agregar la dificultad al documento
+            'dificultad': dificultad,  # Agregar la dificultad al documento
+            'comentario':[]
         }
         form_collection.insert_one(form_data)
 
@@ -295,7 +318,7 @@ def explorar():
 
 
 
-@app.route('/detalle_duda/<duda_id>')
+@app.route('/detalle_duda/<duda_id>', methods=['GET', 'POST'])
 def detalle_duda(duda_id):
     # Verificar si el usuario está autenticado
     logged_user = session.get('logged_user')
@@ -304,6 +327,23 @@ def detalle_duda(duda_id):
 
     duda = obtener_detalle_duda(duda_id)
     if duda:
+        if request.method == 'POST':
+            # Obtener el comentario del formulario enviado
+            nuevo_comentario = request.form.get('comentario')
+
+            # Concatenar el nombre del usuario con el comentario
+            nombre_usuario = session.get('nombre_usuario')
+            comentario_con_nombre = f"{nombre_usuario}: {nuevo_comentario}"
+
+            # Actualizar la colección con el nuevo comentario agregado a la lista
+            form_collection.update_one(
+                {'_id': duda['_id']},
+                {'$push': {'comentario': comentario_con_nombre}}
+            )
+
+            # Redirigir a la página de detalle de la duda para mostrar el cambio
+            return redirect(url_for('detalle_duda', duda_id=duda['_id']))
+
         return render_template('detalle_duda.html', duda=duda, logged_user=logged_user)
     else:
         # Si no se encuentra la duda con el ID proporcionado, muestra un mensaje de error
