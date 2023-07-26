@@ -261,18 +261,16 @@ def explorar():
         curso = request.form.get('curso', '')
 
         # Aplicar filtros si se han seleccionado valores
-        if carrera or curso:
-            filtros = {}
-            if carrera:
-                filtros['carrera'] = carrera
-            if curso:
-                filtros['curso'] = curso
+        filtros = {}
+        if carrera:
+            filtros['carrera'] = carrera
+        if curso:
+            filtros['curso'] = curso
 
-            dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}, **filtros})
-        else:
-            dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}})
-
+        # Consultar las dudas con los filtros aplicados
+        dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}, **filtros})
     else:
+        # Si la solicitud no es POST, mostrar todas las dudas sin filtros
         dudas = form_collection.find()
 
     # Obtener el número de página actual y la cantidad de elementos por página
@@ -283,7 +281,7 @@ def explorar():
     offset = (page - 1) * per_page
 
     # Consultar las dudas con el límite y desplazamiento adecuados
-    dudas = form_collection.find().skip(offset).limit(per_page)
+    dudas = dudas.skip(offset).limit(per_page)
 
     # Obtener el total de dudas para la paginación
     total_dudas = form_collection.count_documents({})
@@ -292,8 +290,6 @@ def explorar():
     pagination = Pagination(page=page, per_page=per_page, total=total_dudas, css_framework='bootstrap4')
 
     return render_template('explorar.html', dudas=dudas, pagination=pagination)
-
-
 
 
 
