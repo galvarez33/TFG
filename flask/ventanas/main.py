@@ -325,6 +325,9 @@ def detalle_duda(duda_id):
     if not logged_user:
         return 'Acceso no autorizado'
 
+    # Obtener el nombre del usuario desde la sesión
+    nombre_usuario = session.get('nombre_usuario')
+
     duda = obtener_detalle_duda(duda_id)
     if duda:
         if request.method == 'POST':
@@ -332,7 +335,6 @@ def detalle_duda(duda_id):
             nuevo_comentario = request.form.get('comentario')
 
             # Concatenar el nombre del usuario con el comentario
-            nombre_usuario = session.get('nombre_usuario')
             comentario_con_nombre = f"{nombre_usuario}: {nuevo_comentario}"
 
             # Actualizar la colección con el nuevo comentario agregado a la lista
@@ -344,10 +346,35 @@ def detalle_duda(duda_id):
             # Redirigir a la página de detalle de la duda para mostrar el cambio
             return redirect(url_for('detalle_duda', duda_id=duda['_id']))
 
-        return render_template('detalle_duda.html', duda=duda, logged_user=logged_user)
+        return render_template('detalle_duda.html', duda=duda, logged_user=logged_user, nombre_usuario=nombre_usuario)
     else:
         # Si no se encuentra la duda con el ID proporcionado, muestra un mensaje de error
         return render_template('error.html', mensaje='Duda no encontrada')
+
+
+@app.route('/borrar_comentario/<duda_id>/<comentario>', methods=['POST'])
+def borrar_comentario(duda_id, comentario):
+    # Verificar si el usuario está autenticado
+    logged_user = session.get('logged_user')
+    if not logged_user:
+        return 'Acceso no autorizado'
+
+    # Obtener el nombre del usuario desde la sesión
+    nombre_usuario = session.get('nombre_usuario')
+
+    # Verificar si el usuario autenticado es el que publicó el comentario
+    # Si no es el mismo, no se permite borrar el comentario
+    if nombre_usuario in comentario:
+        # Eliminar el comentario de la lista en la base de datos
+        form_collection.update_one(
+            {'_id': ObjectId(duda_id)},
+            {'$pull': {'comentario': comentario}}
+        )
+        # Redirigir a la página de detalle de la duda para mostrar el cambio
+        return redirect(url_for('detalle_duda', duda_id=duda_id))
+    else:
+        return 'Acceso no autorizado'
+
 
 def obtener_detalle_duda(duda_id):
     # Convertir el duda_id a ObjectId

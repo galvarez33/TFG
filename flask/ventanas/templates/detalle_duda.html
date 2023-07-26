@@ -1,58 +1,71 @@
 {% include 'header.html' %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-detalle_duda.css') }}">
-    {% block content %}
-        {% if duda %}
-            <div class="duda-card">
-                <div class="card-img-zoom">
-                    <a href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
-                        <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
-                    </a>
-                </div>
-                <div class="duda-card-content">
-                    <h3 class="card-title">{{ duda.titulo }}</h3>
-                    <h5 class="card-text">{{ duda.texto }}</h5>
-                    <div class="additional-info">
-                        <br>
-                        <p class="info" style="color: gray;"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
-                        <p class="info" style="color: gray;"><span class="label">Curso:</span> {{ duda.curso }}</p>
-                        <p class="info" style="color: gray;"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
-                    </div>
-                    <div class="stars">
-                        <p class="dificultad"><span class="label">Dificultad:</span></p>
-                        {% for i in range(5) %}
-                            {% if i < duda.dificultad %}
-                                <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
-                            {% else %}
-                                <label class="star-empty" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-detalle_duda.css') }}">
+
+{% block content %}
+    {% if duda %}
+        <div class="duda-card">
+            <div class="card-img-zoom">
+                <a href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
+                    <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
+                </a>
+            </div>
+            <div class="duda-card-content">
+                <h3 class="card-title">{{ duda.titulo }}</h3>
+                <h5 class="card-text">{{ duda.texto }}</h5>
+                <div class="additional-info">
                     <br>
-                    <div class="comentarios-container">
-                        <h2>Comentarios:</h2>
-                        {% if duda.comentario %}
-                          <ul>
-                            {% for comentario in duda.comentario %}
-                              <li><span class="label"></span> {{ comentario }}</li>
-                            {% endfor %}
-                          </ul>
+                    <p class="info" style="color: gray;"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
+                    <p class="info" style="color: gray;"><span class="label">Curso:</span> {{ duda.curso }}</p>
+                    <p class="info" style="color: gray;"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
+                </div>
+                <div class="stars">
+                    <p class="dificultad"><span class="label">Dificultad:</span></p>
+                    {% for i in range(5) %}
+                        {% if i < duda.dificultad %}
+                            <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
                         {% else %}
-                          <p>No hay comentarios aún.</p>
+                            <label class="star-empty" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
                         {% endif %}
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
+        </div>
+        
+        <br><br><div class="titulo-comentario"><h2 ><strong>COMENTARIOS</strong></h2></div>
+        <div class="comentarios-container">
+        <div class="nuevo-comentario-container">
             {% if logged_user %}
-            <div class="nuevo-comentario-container">
                 <form action="{{ url_for('detalle_duda', duda_id=duda._id) }}" method="post">
-                    <input type="text" name="comentario" id="nuevo-comentario" placeholder="Escribe tu comentario aquí">
+                    <br><input type="text" name="comentario" id="nuevo-comentario" placeholder="Escribe tu comentario aquí">
                     <button type="submit">Enviar comentario</button>
                 </form>
-            </div>
             {% endif %}
-        {% else %}
-            <!-- Si la duda no se encontró en la base de datos, muestra un mensaje de error -->
-            <h2>Error</h2>
-            <p>{{ mensaje }}</p>
-        {% endif %}
-    {% endblock %}
+        </div>
+
+        <div >
+            
+            {% if duda.comentario %}
+              <br><ul>
+                {% for comentario in duda.comentario %}
+                  <li>
+                    <span class="label"></span> {{ comentario }}
+                    {% if logged_user and nombre_usuario in comentario %}
+                      <form action="{{ url_for('borrar_comentario', duda_id=duda._id, comentario=comentario) }}" method="post" style="display: inline;">
+                        <button type="submit">Borrar</button>
+                      </form>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p>No hay comentarios aún.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% else %}
+        <!-- Si la duda no se encontró en la base de datos, muestra un mensaje de error -->
+        <h2>Error</h2>
+        <p>{{ mensaje }}</p>
+    {% endif %}
+{% endblock %}

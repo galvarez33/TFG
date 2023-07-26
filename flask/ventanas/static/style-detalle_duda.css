@@ -59,3 +59,11 @@
     content: "\2605";
     color: #FFD700;
 }
+
+.comentarios-container {
+    margin-left: 150px; /* Ajusta el valor del margen según tus preferencias */
+}
+
+.titulo-comentario {
+    margin-left: 600px; /* Ajusta el valor del margen según tus preferencias */
+}
