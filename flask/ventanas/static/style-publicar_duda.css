@@ -27,6 +27,31 @@ h2 {
   margin-top: 20px;
 }
 
+.stars {
+  display: inline-block;
+  font-size: 24px;
+}
+
+.stars input[type="radio"] {
+  display: none;
+}
+
+.stars label {
+  float: right;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.stars label:before {
+  content: "\2606";
+}
+
+.stars input[type="radio"]:checked ~ label:before {
+  content: "\2605";
+  color: #FFD700;
+}
+
+
 nav {
   color: #ff0000;
 }

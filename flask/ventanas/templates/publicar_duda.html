@@ -1,52 +1,75 @@
-{% include 'header.html' %}
+    {% include 'header.html' %}
 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-publicar_duda.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-publicar_duda.css') }}">
 
-<div class="container">
-    <h2 class="mt-4">Formulario</h2>
-    <form id="formulario" method="POST" action="{{ url_for('publicar_duda') }}" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="imagen">Imagen:</label>
-            <input type="file" class="form-control-file" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>
-            <div id="vista-previa"></div>
-            <button type="button" class="btn btn-dark" onclick="borrarImagen()">Borrar imagen</button>
-        </div>
-        <div class="form-group">
-          <label for="titulo">Título:</label>
-          <textarea class="form-control" id="titulo" name="titulo" rows="1" oninput="limitarPalabras(this, 10)" required></textarea>
-        </div>
-        
-        <div class="form-group">
-            <label for="texto">Texto:</label>
-            <textarea class="form-control" id="texto" name="texto" rows="3" required></textarea>
-        </div>
+    <div class="container">
+        <h2 class="mt-4">Formulario</h2>
+        <form id="formulario" method="POST" action="{{ url_for('publicar_duda') }}" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="imagen">Imagen:</label>
+                <input type="file" class="form-control-file" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>
+                <div id="vista-previa"></div>
+                <button type="button" class="btn btn-dark" onclick="borrarImagen()">Borrar imagen</button>
+            </div>
+            <div class="form-group">
+            <label for="titulo">Título:</label>
+            <textarea class="form-control" id="titulo" name="titulo" rows="1" oninput="limitarPalabras(this, 10)" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="texto">Texto:</label>
+                <textarea class="form-control" id="texto" name="texto" rows="3" required></textarea>
+            </div>
 
-        <div class="form-group">
-            <label for="carrera">Carrera:</label>
-            <select class="form-control" id="carrera" name="carrera" onchange="updateAsignaturas()" required>
-                <option value="ADE">ADMINISTRACION Y DIRECCIÓN DE EMPRESAS</option>
-                <option value="ISI">INGENIERIA SISTEMAS DE INFORMACIÓN</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="carrera">Carrera:</label>
+                <select class="form-control" id="carrera" name="carrera" onchange="updateAsignaturas()" required>
+                    <option value="ADE">ADMINISTRACION Y DIRECCIÓN DE EMPRESAS</option>
+                    <option value="ISI">INGENIERIA SISTEMAS DE INFORMACIÓN</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="curso">Curso:</label>
-            <select class="form-control" id="curso" name="curso" onchange="updateAsignaturas()" required>
-                <option value="curso1">1º</option>
-                <option value="curso2">2º</option>
-                <option value="curso3">3º</option>
-                <option value="curso4">4º</option>
-                <option value="curso5">5º</option>
-            </select>
-        </div>
 
-        <div class="form-group">
-            <label for="asignatura">Asignatura:</label>
-            <select class="form-control" id="asignatura" name="asignatura" required>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Enviar</button>
-    </form>
-</div>
 
-<script src="{{ url_for('static', filename='script-publicar_duda.js') }}"></script>
+
+
+            <div class="form-group">
+                <label for="curso">Curso:</label>
+                <select class="form-control" id="curso" name="curso" onchange="updateAsignaturas()" required>
+                    <option value="curso1">1º</option>
+                    <option value="curso2">2º</option>
+                    <option value="curso3">3º</option>
+                    <option value="curso4">4º</option>
+                    <option value="curso5">5º</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="asignatura">Asignatura:</label>
+                <select class="form-control" id="asignatura" name="asignatura" required>
+                </select>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="dificultad">Dificultad:</label>
+                <div class="stars">
+                    <input type="radio" id="star5" name="dificultad" value="5">
+                    <label for="star5" title="5 estrellas"></label>
+                    <input type="radio" id="star4" name="dificultad" value="4">
+                    <label for="star4" title="4 estrellas"></label>
+                    <input type="radio" id="star3" name="dificultad" value="3">
+                    <label for="star3" title="3 estrellas"></label>
+                    <input type="radio" id="star2" name="dificultad" value="2">
+                    <label for="star2" title="2 estrellas"></label>
+                    <input type="radio" id="star1" name="dificultad" value="1">
+                    <label for="star1" title="1 estrella"></label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='script-publicar_duda.js') }}"></script>

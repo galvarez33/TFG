@@ -229,18 +229,20 @@ def publicar_duda():
         carrera = request.form['carrera']
         curso = request.form['curso']
         asignatura = request.form['asignatura']
+        dificultad = int(request.form['dificultad'])  # Convertir a entero
 
         if imagen:
             imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
 
         # Guardar la información en la base de datos
         form_data = {
-            'imagen': imagen_base64,  # Guarda los bytes de la imagen
+            'imagen': imagen_base64,
             'titulo': titulo,
             'texto': texto,
             'carrera': carrera,
             'curso': curso,
-            'asignatura': asignatura
+            'asignatura': asignatura,
+            'dificultad': dificultad  # Agregar la dificultad al documento
         }
         form_collection.insert_one(form_data)
 

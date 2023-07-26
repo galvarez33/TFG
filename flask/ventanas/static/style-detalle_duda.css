@@ -1,11 +1,11 @@
 /* Ajustar el tamaño de la imagen */
 .card-img-top {
-    width: 600px; /* ancho deseado para la imagen */
-    height: 500px; /* alto deseado para la imagen */
+    width: 600px;
+    height: 500px;
     margin-top: 30px;
     margin-left: 30px;
     object-fit: cover;
-    border-radius: 10px; /* Agregar bordes redondeados a la imagen */
+    border-radius: 10px;
 }
 
 /* Hacer que la imagen se ajuste correctamente */
@@ -18,16 +18,16 @@
 .duda-card {
     display: flex;
     flex-direction: row;
-    align-items: flex-start; /* Alinear el contenido al inicio de la línea (parte superior) */
+    align-items: flex-start;
 }
 
 /* Estilo para el contenedor del título y el texto */
 .duda-card-content {
-    flex: 1; /* Hace que el contenido tome todo el espacio disponible */
-    padding: 30px; /* Espacio entre la imagen y el contenido */
+    flex: 1;
+    padding: 30px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Alinear el contenido al inicio de la columna (parte superior) */
+    justify-content: flex-start;
 }
 
 /* Estilo para el título */
@@ -40,4 +40,24 @@
 /* Estilo para la descripción */
 .card-text {
     font-size: 20px;
+}
+
+/* Estilos para las estrellas de dificultad */
+.stars {
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+/* Estrella vacía */
+.stars label.star-empty:before {
+    content: "\2606";
+    color: #ccc;
+}
+
+/* Estrella llena */
+.stars label.star-filled:before {
+    content: "\2605";
+    color: #FFD700;
+}
+
 }
