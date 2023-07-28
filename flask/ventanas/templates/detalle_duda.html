@@ -2,70 +2,98 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-detalle_duda.css') }}">
 
 {% block content %}
-    {% if duda %}
-        <div class="duda-card">
-            <div class="card-img-zoom">
-                <a href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
-                    <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
-                </a>
-            </div>
-            <div class="duda-card-content">
-                <h3 class="card-title">{{ duda.titulo }}</h3>
-                <h5 class="card-text">{{ duda.texto }}</h5>
-                <div class="additional-info">
-                    <br>
-                    <p class="info" style="color: gray;"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
-                    <p class="info" style="color: gray;"><span class="label">Curso:</span> {{ duda.curso }}</p>
-                    <p class="info" style="color: gray;"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
-                </div>
-                <div class="stars">
-                    <p class="dificultad"><span class="label">Dificultad:</span></p>
-                    {% for i in range(5) %}
-                        {% if i < duda.dificultad %}
-                            <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
-                        {% else %}
-                            <label class="star-empty" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
+{% if duda %}
+<div class="duda-card">
+    <div class="card-img-zoom">
+        <a href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
+            <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
+        </a>
+    </div>
+    <div class="duda-card-content">
+        <h3 class="card-title">{{ duda.titulo }}</h3>
+        <h5 class="card-text">{{ duda.texto }}</h5>
+        <div class="additional-info">
+            <br>
+            <p class="info" style="color: gray;"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
+            <p class="info" style="color: gray;"><span class="label">Curso:</span> {{ duda.curso }}</p>
+            <p class="info" style="color: gray;"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
         </div>
-        
-        <br><br><div class="titulo-comentario"><h2 ><strong>COMENTARIOS</strong></h2></div>
-        <div class="comentarios-container">
-        <div class="nuevo-comentario-container">
-            {% if logged_user %}
-                <form action="{{ url_for('detalle_duda', duda_id=duda._id) }}" method="post">
-                    <br><input type="text" name="comentario" id="nuevo-comentario" placeholder="Escribe tu comentario aquí">
-                    <button type="submit">Enviar comentario</button>
-                </form>
-            {% endif %}
-        </div>
-
-        <div >
-            
-            {% if duda.comentario %}
-              <br><ul>
-                {% for comentario in duda.comentario %}
-                  <li>
-                    <span class="label"></span> {{ comentario }}
-                    {% if logged_user and nombre_usuario in comentario %}
-                      <form action="{{ url_for('borrar_comentario', duda_id=duda._id, comentario=comentario) }}" method="post" style="display: inline;">
-                        <button type="submit">Borrar</button>
-                      </form>
-                    {% endif %}
-                  </li>
+        <div class="stars">
+            <p class="dificultad"><span class="label">Dificultad:</span></p>
+            {% for i in range(5) %}
+            {% if i < duda.dificultad %} <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas">
+                </label>
+                {% else %}
+                <label class="star-empty" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
+                {% endif %}
                 {% endfor %}
-              </ul>
-            {% else %}
-              <p>No hay comentarios aún.</p>
-            {% endif %}
         </div>
     </div>
+</div>
 
-    {% else %}
-        <!-- Si la duda no se encontró en la base de datos, muestra un mensaje de error -->
-        <h2>Error</h2>
-        <p>{{ mensaje }}</p>
-    {% endif %}
+<br><br>
+<div class="titulo-comentario">
+    <h2><strong>COMENTARIOS</strong></h2>
+</div>
+<div class="comentarios-container">
+    <div class="nuevo-comentario-container">
+        {% if logged_user %}
+        <form action="{{ url_for('detalle_duda', duda_id=duda._id) }}" method="post" enctype="multipart/form-data">
+            <br>
+            <div class="form-group">
+                <textarea class="form-control" name="comentario" id="nuevo-comentario"
+                    placeholder="Escribe tu comentario aquí" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="file" name="imagen" id="nueva-imagen" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar comentario</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div>
+        {% if duda.comentario %}
+        <br>
+        <ul>
+            {% for comentario_tupla in duda.comentario %}
+            <li>
+                <span class="label"><strong>{{ comentario_tupla[0] }}</strong></span>
+                <p>{{ comentario_tupla[1] }}</p>
+                {% if comentario_tupla[2] %}
+                <img src="data:image/jpeg;base64,{{ comentario_tupla[2] }}" alt="Imagen del comentario"
+                    class="comentario-img comentario-img-thumbnail" data-toggle="modal"
+                    data-target="#modalImagen{{ loop.index }}">
+                {% endif %}
+                {% if logged_user and nombre_usuario == comentario_tupla[0] %}
+                <form action="{{ url_for('borrar_comentario', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                    method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Borrar</button>
+                </form>
+                {% endif %}
+            </li>
+            <!-- Modal para mostrar la imagen en tamaño completo -->
+            <div class="modal fade" id="modalImagen{{ loop.index }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <img src="data:image/jpeg;base64,{{ comentario_tupla[2] }}" alt="Imagen del comentario"
+                                class="comentario-img-modal">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No hay comentarios aún.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<!-- Si la duda no se encontró en la base de datos, muestra un mensaje de error -->
+<h2>Error</h2>
+<p>{{ mensaje }}</p>
+{% endif %}
 {% endblock %}

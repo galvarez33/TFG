@@ -8,6 +8,8 @@ import base64
 from math import ceil
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 
+
+
 app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -318,6 +320,16 @@ def explorar():
 
 
 
+def obtener_detalle_duda(duda_id):
+    # Convertir el duda_id a ObjectId
+    object_id = ObjectId(duda_id)
+    duda = form_collection.find_one({'_id': object_id})
+
+    return duda
+
+
+
+
 @app.route('/detalle_duda/<duda_id>', methods=['GET', 'POST'])
 def detalle_duda(duda_id):
     # Verificar si el usuario está autenticado
@@ -329,20 +341,46 @@ def detalle_duda(duda_id):
     nombre_usuario = session.get('nombre_usuario')
 
     duda = obtener_detalle_duda(duda_id)
+    
     if duda:
         if request.method == 'POST':
             # Obtener el comentario del formulario enviado
             nuevo_comentario = request.form.get('comentario')
+            imagen = request.files['imagen']
 
-            # Concatenar el nombre del usuario con el comentario
-            comentario_con_nombre = f"{nombre_usuario}: {nuevo_comentario}"
+            # Convertir la imagen en Base64
+            if imagen:
+                imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
+            else:
+                imagen_base64 = None
+
+            # Crear la tupla de comentario e imagen
+            comentario_con_imagen = (nombre_usuario, nuevo_comentario, imagen_base64)
 
             # Actualizar la colección con el nuevo comentario agregado a la lista
             form_collection.update_one(
                 {'_id': duda['_id']},
-                {'$push': {'comentario': comentario_con_nombre}}
+                {'$push': {'comentario': comentario_con_imagen}}
             )
 
+            # Redirigir a la página de detalle de la duda para mostrar el cambio
+            return redirect(url_for('detalle_duda', duda_id=duda['_id']))
+
+        # Verificar si se ha enviado una solicitud para borrar un comentario
+        comentario_index = request.args.get('comentario_index')
+        if comentario_index is not None:
+            # Convertir el índice del comentario a entero
+            comentario_index = int(comentario_index)
+            # Eliminar el comentario con el índice proporcionado
+            form_collection.update_one(
+                {'_id': duda['_id']},
+                {'$unset': {f'comentario.{comentario_index}': 1}}
+            )
+            # Eliminar el elemento vacío del arreglo
+            form_collection.update_one(
+                {'_id': duda['_id']},
+                {'$pull': {'comentario': None}}
+            )
             # Redirigir a la página de detalle de la duda para mostrar el cambio
             return redirect(url_for('detalle_duda', duda_id=duda['_id']))
 
@@ -352,8 +390,11 @@ def detalle_duda(duda_id):
         return render_template('error.html', mensaje='Duda no encontrada')
 
 
-@app.route('/borrar_comentario/<duda_id>/<comentario>', methods=['POST'])
-def borrar_comentario(duda_id, comentario):
+
+
+
+@app.route('/borrar_comentario/<duda_id>/<int:comentario_index>', methods=['POST'])
+def borrar_comentario(duda_id, comentario_index):
     # Verificar si el usuario está autenticado
     logged_user = session.get('logged_user')
     if not logged_user:
@@ -362,27 +403,38 @@ def borrar_comentario(duda_id, comentario):
     # Obtener el nombre del usuario desde la sesión
     nombre_usuario = session.get('nombre_usuario')
 
-    # Verificar si el usuario autenticado es el que publicó el comentario
-    # Si no es el mismo, no se permite borrar el comentario
-    if nombre_usuario in comentario:
-        # Eliminar el comentario de la lista en la base de datos
-        form_collection.update_one(
-            {'_id': ObjectId(duda_id)},
-            {'$pull': {'comentario': comentario}}
-        )
+    # Buscar la duda por su ID en la base de datos
+    duda = form_collection.find_one({'_id': ObjectId(duda_id)})
+
+    if duda:
+        # Obtener la lista de comentarios
+        comentarios = duda.get('comentario', [])
+
+        # Verificar si el índice del comentario está dentro de los límites válidos
+        if 0 <= comentario_index < len(comentarios):
+            # Verificar si el usuario autenticado es el que publicó el comentario
+            if nombre_usuario == comentarios[comentario_index][0]:
+                # Eliminar el comentario del índice proporcionado
+                comentarios.pop(comentario_index)
+
+                # Actualizar el documento en la base de datos con la nueva lista de comentarios
+                form_collection.update_one(
+                    {'_id': duda['_id']},
+                    {'$set': {'comentario': comentarios}}
+                )
+
         # Redirigir a la página de detalle de la duda para mostrar el cambio
         return redirect(url_for('detalle_duda', duda_id=duda_id))
     else:
         return 'Acceso no autorizado'
 
 
-def obtener_detalle_duda(duda_id):
-    # Convertir el duda_id a ObjectId
-    object_id = ObjectId(duda_id)
-    duda = form_collection.find_one({'_id': object_id})
 
-    return duda
+
+
+
+
 
 
 if __name__ == '__main__':
-    app.run(port=5005)
+    app.run(port=5001)

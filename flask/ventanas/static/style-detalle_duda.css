@@ -61,9 +61,67 @@
 }
 
 .comentarios-container {
-    margin-left: 150px; /* Ajusta el valor del margen según tus preferencias */
+    margin-left: 150px;
+    margin-right: 150px; /* Ajusta el valor del margen según tus preferencias */
 }
 
 .titulo-comentario {
     margin-left: 600px; /* Ajusta el valor del margen según tus preferencias */
 }
+
+
+.comentarios-container ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.comentarios-container li {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    
+}
+
+.comentarios-container p {
+    font-size: 18px; /* Ajusta el tamaño de letra según tus preferencias */
+}
+
+
+.comentario-img-thumbnail {
+    max-width: 100px;
+    max-height: 100px;
+    margin-top: 5px;
+    border-radius: 5px;
+    cursor: pointer; /* Cambiar el cursor a una mano cuando se pueda hacer clic *//* Borde transparente */
+    transition: all 0.3s ease-in-out; /* Transición suave para el efecto de cambio de tamaño */
+}
+
+
+
+/* Estilos para las imágenes en el modal */
+.comentario-img-modal {
+    max-width: 1000px; /* Ajusta el tamaño máximo según tus preferencias */
+    max-height: 800px; /* Ajusta el tamaño máximo según tus preferencias */
+    height: auto;
+    border: none; /* Eliminar el borde blanco */
+    border-radius: 5px;
+    display: block;
+    margin: 0 ;
+    float: left; /* Centrar horizontalmente */
+}
+
+/* Estilos para el modal */
+.modal-content {
+    border: none; /* Eliminar el borde del modal */
+    border-radius: 0; /* Eliminar el radio de las esquinas del modal */
+}
+
+/* Estilos para el cuerpo del modal */
+.modal-body {
+    padding: 0; /* Eliminar el relleno en el cuerpo del modal */
+}
+
+
+
+
