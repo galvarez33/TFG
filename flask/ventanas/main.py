@@ -394,35 +394,66 @@ def detalle_duda(duda_id):
 
 @app.route('/votar_positivo/<string:duda_id>/<int:comentario_index>', methods=['POST'])
 def votar_positivo(duda_id, comentario_index):
+    logged_user = session.get('logged_user')
+    if not logged_user:
+        return 'Acceso no autorizado'
+
+    nombre_usuario = session.get('nombre_usuario')
+
     duda = form_collection.find_one({'_id': ObjectId(duda_id)})
+
     if duda:
         comentarios = duda.get('comentario', [])
+
         if 0 <= comentario_index < len(comentarios):
-            usuario_voto = session.get('nombre_usuario')  # Obtén el nombre de usuario
-            if usuario_voto not in comentarios[comentario_index]['usuarios_votados']:
-                comentarios[comentario_index]['votos_positivos'] += 1
-                comentarios[comentario_index]['usuarios_votados'].append(usuario_voto)  # Registra el voto del usuario
+            comentario = comentarios[comentario_index]
+
+            # Verifica si el usuario ya ha votado en este comentario
+            usuario_voto = nombre_usuario
+            if usuario_voto not in comentario.get('usuarios_votados', []):
+                comentario['votos_positivos'] += 1
+                comentario.setdefault('usuarios_votados', []).append(usuario_voto)
+
                 form_collection.update_one(
                     {'_id': duda['_id']},
                     {'$set': {'comentario': comentarios}}
                 )
-    return redirect(url_for('detalle_duda', duda_id=duda_id))
+
+        return redirect(url_for('detalle_duda', duda_id=duda_id))
+
+    return 'Acceso no autorizado'
 
 @app.route('/votar_negativo/<string:duda_id>/<int:comentario_index>', methods=['POST'])
 def votar_negativo(duda_id, comentario_index):
+    logged_user = session.get('logged_user')
+    if not logged_user:
+        return 'Acceso no autorizado'
+
+    nombre_usuario = session.get('nombre_usuario')
+
     duda = form_collection.find_one({'_id': ObjectId(duda_id)})
+
     if duda:
         comentarios = duda.get('comentario', [])
+
         if 0 <= comentario_index < len(comentarios):
-            usuario_voto = session.get('nombre_usuario')  # Obtén el nombre de usuario
-            if usuario_voto not in comentarios[comentario_index]['usuarios_votados']:
-                comentarios[comentario_index]['votos_negativos'] += 1
-                comentarios[comentario_index]['usuarios_votados'].append(usuario_voto)  # Registra el voto del usuario
+            comentario = comentarios[comentario_index]
+
+            # Verifica si el usuario ya ha votado en este comentario
+            usuario_voto = nombre_usuario
+            if usuario_voto not in comentario.get('usuarios_votados', []):
+                comentario['votos_negativos'] += 1
+                comentario.setdefault('usuarios_votados', []).append(usuario_voto)
+
                 form_collection.update_one(
                     {'_id': duda['_id']},
                     {'$set': {'comentario': comentarios}}
                 )
-    return redirect(url_for('detalle_duda', duda_id=duda_id))
+
+        return redirect(url_for('detalle_duda', duda_id=duda_id))
+
+    return 'Acceso no autorizado'
+
 
 
 
