@@ -341,6 +341,9 @@ def detalle_duda(duda_id):
     duda = obtener_detalle_duda(duda_id)
     
     if duda:
+        for comentario in duda['comentario']:
+            comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
+
         if request.method == 'POST':
             nuevo_comentario = request.form.get('comentario')
             imagen = request.files['imagen']
@@ -382,6 +385,11 @@ def detalle_duda(duda_id):
         return render_template('detalle_duda.html', duda=duda, logged_user=logged_user, nombre_usuario=nombre_usuario)
     else:
         return render_template('error.html', mensaje='Duda no encontrada')
+    
+
+
+
+
 
 @app.route('/votar_positivo/<string:duda_id>/<int:comentario_index>', methods=['POST'])
 def votar_positivo(duda_id, comentario_index):

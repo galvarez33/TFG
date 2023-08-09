@@ -58,28 +58,35 @@
         <ul>
             {% for comentario in duda.comentario %}
             <li>
-                <span class="label"><strong>{{ comentario.nombre }}</strong></span>
-                <p>{{ comentario.texto }}</p>
-                {% if comentario.imagen %}
-                <img src="data:image/jpeg;base64,{{ comentario.imagen }}" alt="Imagen del comentario"
-                    class="comentario-img comentario-img-thumbnail" data-toggle="modal"
-                    data-target="#modalImagen{{ loop.index }}">
-                {% endif %}
-                {% if logged_user and nombre_usuario == comentario.nombre %}
-                <form action="{{ url_for('borrar_comentario', duda_id=duda._id, comentario_index=loop.index - 1) }}"
-                    method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-danger">Borrar</button>
-                </form>
-                {% endif %}
-
-                <form action="{{ url_for('votar_positivo', duda_id=duda._id, comentario_index=loop.index - 1) }}"
-                    method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-success">Votar positivo</button>
-                </form>
-                <form action="{{ url_for('votar_negativo', duda_id=duda._id, comentario_index=loop.index - 1) }}"
-                    method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-danger">Votar negativo</button>
-                </form>
+                <div class="comentario-content">
+                    <div class="comentario-text">
+                        <span class="label"><strong>{{ comentario.nombre }}</strong></span>
+                        <p>{{ comentario.texto }}</p>
+                        {% if comentario.imagen %}
+                        <img src="data:image/jpeg;base64,{{ comentario.imagen }}" alt="Imagen del comentario"
+                            class="comentario-img comentario-img-thumbnail" data-toggle="modal"
+                            data-target="#modalImagen{{ loop.index }}">
+                        {% endif %}
+                        {% if logged_user and nombre_usuario == comentario.nombre %}
+                        <form action="{{ url_for('borrar_comentario', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                            method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Borrar</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <div class="util-buttons">
+                        <form action="{{ url_for('votar_positivo', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                            method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-success">Me ha sido útil</button>
+                            <span class="like-icon">👍</span>
+                            <span class="like-count">{{ comentario.votos_positivos }}</span>
+                        </form>
+                        <form action="{{ url_for('votar_negativo', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                            method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">No me ha sido útil</button>
+                        </form>
+                    </div>
+                </div>
             </li>
             <!-- Modal para mostrar la imagen en tamaño completo -->
             <div class="modal fade" id="modalImagen{{ loop.index }}" tabindex="-1" aria-hidden="true">

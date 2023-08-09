@@ -123,5 +123,17 @@
 }
 
 
+.util-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px; /* Ajusta este valor según tu diseño */
+}
+
+.util-buttons form {
+    margin-left: 10px; /* Espacio entre los botones */
+}
+
+
+
 
 
