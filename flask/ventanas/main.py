@@ -359,7 +359,8 @@ def detalle_duda(duda_id):
                 'texto': nuevo_comentario,
                 'imagen': imagen_base64,
                 'votos_positivos': 0,
-                'votos_negativos': 0
+                'votos_negativos': 0,
+                'usuarios_votados':[]
             }
 
             form_collection.update_one(
@@ -397,11 +398,14 @@ def votar_positivo(duda_id, comentario_index):
     if duda:
         comentarios = duda.get('comentario', [])
         if 0 <= comentario_index < len(comentarios):
-            comentarios[comentario_index]['votos_positivos'] += 1
-            form_collection.update_one(
-                {'_id': duda['_id']},
-                {'$set': {'comentario': comentarios}}
-            )
+            usuario_voto = session.get('nombre_usuario')  # Obtén el nombre de usuario
+            if usuario_voto not in comentarios[comentario_index]['usuarios_votados']:
+                comentarios[comentario_index]['votos_positivos'] += 1
+                comentarios[comentario_index]['usuarios_votados'].append(usuario_voto)  # Registra el voto del usuario
+                form_collection.update_one(
+                    {'_id': duda['_id']},
+                    {'$set': {'comentario': comentarios}}
+                )
     return redirect(url_for('detalle_duda', duda_id=duda_id))
 
 @app.route('/votar_negativo/<string:duda_id>/<int:comentario_index>', methods=['POST'])
@@ -410,12 +414,16 @@ def votar_negativo(duda_id, comentario_index):
     if duda:
         comentarios = duda.get('comentario', [])
         if 0 <= comentario_index < len(comentarios):
-            comentarios[comentario_index]['votos_negativos'] += 1
-            form_collection.update_one(
-                {'_id': duda['_id']},
-                {'$set': {'comentario': comentarios}}
-            )
+            usuario_voto = session.get('nombre_usuario')  # Obtén el nombre de usuario
+            if usuario_voto not in comentarios[comentario_index]['usuarios_votados']:
+                comentarios[comentario_index]['votos_negativos'] += 1
+                comentarios[comentario_index]['usuarios_votados'].append(usuario_voto)  # Registra el voto del usuario
+                form_collection.update_one(
+                    {'_id': duda['_id']},
+                    {'$set': {'comentario': comentarios}}
+                )
     return redirect(url_for('detalle_duda', duda_id=duda_id))
+
 
 
 

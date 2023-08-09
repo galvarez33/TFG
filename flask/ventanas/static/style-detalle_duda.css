@@ -133,6 +133,17 @@
     margin-left: 10px; /* Espacio entre los botones */
 }
 
+.votos-recuentos {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+}
+
+.like-icon,
+.dislike-icon {
+    margin-right: 5px;
+}
 
 
 

@@ -1,63 +1,63 @@
-{% include 'header.html' %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-detalle_duda.css') }}">
+    {% include 'header.html' %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-detalle_duda.css') }}">
 
-{% block content %}
-{% if duda %}
-<div class="duda-card">
-    <div class="card-img-zoom">
-        <a href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
-            <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
-        </a>
-    </div>
-    <div class="duda-card-content">
-        <h3 class="card-title">{{ duda.titulo }}</h3>
-        <h5 class="card-text">{{ duda.texto }}</h5>
-        <div class="additional-info">
-            <br>
-            <p class="info" style="color: gray;"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
-            <p class="info" style="color: gray;"><span class="label">Curso:</span> {{ duda.curso }}</p>
-            <p class="info" style="color: gray;"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
+    {% block content %}
+    {% if duda %}
+    <div class="duda-card">
+        <div class="card-img-zoom">
+            <a href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
+                <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
+            </a>
         </div>
-        <div class="stars">
-            <p class="dificultad"><span class="label">Dificultad:</span></p>
-            {% for i in range(5) %}
-            {% if i < duda.dificultad %} <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas">
-                </label>
-                {% else %}
-                <label class="star-empty" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
-                {% endif %}
-                {% endfor %}
+        <div class="duda-card-content">
+            <h3 class="card-title">{{ duda.titulo }}</h3>
+            <h5 class="card-text">{{ duda.texto }}</h5>
+            <div class="additional-info">
+                <br>
+                <p class="info" style="color: gray;"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
+                <p class="info" style="color: gray;"><span class="label">Curso:</span> {{ duda.curso }}</p>
+                <p class="info" style="color: gray;"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
+            </div>
+            <div class="stars">
+                <p class="dificultad"><span class="label">Dificultad:</span></p>
+                {% for i in range(5) %}
+                {% if i < duda.dificultad %} <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas">
+                    </label>
+                    {% else %}
+                    <label class="star-empty" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
+                    {% endif %}
+                    {% endfor %}
+            </div>
         </div>
     </div>
-</div>
 
-<br><br>
-<div class="titulo-comentario">
-    <h2><strong>COMENTARIOS</strong></h2>
-</div>
-<div class="comentarios-container">
-    <div class="nuevo-comentario-container">
-        {% if logged_user %}
-        <form action="{{ url_for('detalle_duda', duda_id=duda._id) }}" method="post" enctype="multipart/form-data">
-            <br>
-            <div class="form-group">
-                <textarea class="form-control" name="comentario" id="nuevo-comentario"
-                    placeholder="Escribe tu comentario aquí" rows="4"></textarea>
-            </div>
-            <div class="form-group">
-                <input type="file" name="imagen" id="nueva-imagen" accept="image/*">
-            </div>
-            <button type="submit" class="btn btn-primary">Enviar comentario</button>
-        </form>
-        {% endif %}
+    <br><br>
+    <div class="titulo-comentario">
+        <h2><strong>COMENTARIOS</strong></h2>
     </div>
+    <div class="comentarios-container">
+        <div class="nuevo-comentario-container">
+            {% if logged_user %}
+            <form action="{{ url_for('detalle_duda', duda_id=duda._id) }}" method="post" enctype="multipart/form-data">
+                <br>
+                <div class="form-group">
+                    <textarea class="form-control" name="comentario" id="nuevo-comentario"
+                        placeholder="Escribe tu comentario aquí" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="file" name="imagen" id="nueva-imagen" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar comentario</button>
+            </form>
+            {% endif %}
+        </div>
 
-    <div>
-        {% if duda.comentario %}
-        <br>
-        <ul>
-            {% for comentario in duda.comentario %}
-            <li>
+        <div>
+            {% if duda.comentario %}
+            <br>
+            <ul>
+                {% for comentario in duda.comentario %}
+                <li>
                 <div class="comentario-content">
                     <div class="comentario-text">
                         <span class="label"><strong>{{ comentario.nombre }}</strong></span>
@@ -84,32 +84,34 @@
                         <form action="{{ url_for('votar_negativo', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">No me ha sido útil</button>
+                            <span class="dislike-icon">👎</span>
+                            <span class="dislike-count">{{ comentario.votos_negativos }}</span>
                         </form>
                     </div>
                 </div>
             </li>
-            <!-- Modal para mostrar la imagen en tamaño completo -->
-            <div class="modal fade" id="modalImagen{{ loop.index }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <img src="data:image/jpeg;base64,{{ comentario.imagen }}" alt="Imagen del comentario"
-                                class="comentario-img-modal">
+                <!-- Modal para mostrar la imagen en tamaño completo -->
+                <div class="modal fade" id="modalImagen{{ loop.index }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <img src="data:image/jpeg;base64,{{ comentario.imagen }}" alt="Imagen del comentario"
+                                    class="comentario-img-modal">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>No hay comentarios aún.</p>
-        {% endif %}
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No hay comentarios aún.</p>
+            {% endif %}
+        </div>
     </div>
-</div>
 
-{% else %}
-<!-- Si la duda no se encontró en la base de datos, muestra un mensaje de error -->
-<h2>Error</h2>
-<p>{{ mensaje }}</p>
-{% endif %}
-{% endblock %}
+    {% else %}
+    <!-- Si la duda no se encontró en la base de datos, muestra un mensaje de error -->
+    <h2>Error</h2>
+    <p>{{ mensaje }}</p>
+    {% endif %}
+    {% endblock %}
