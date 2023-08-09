@@ -33,7 +33,7 @@
 
     <br><br>
     <div class="titulo-comentario">
-        <h2><strong>COMENTARIOS</strong></h2>
+        <h2><strong>AYUDA CON TU COMENTARIOS</strong></h2>
     </div>
     <div class="comentarios-container">
         <div class="nuevo-comentario-container">
@@ -50,6 +50,20 @@
                 <button type="submit" class="btn btn-primary">Enviar comentario</button>
             </form>
             {% endif %}
+            <br>
+            <div class="titulo-comentario2">
+                <h2><strong>VER RESPUESTAS COMPAÑEROS</strong></h2>
+            </div>
+            <br>
+            <div class="filtrar-comentarios">
+                <label for="filtro">Filtrar comentarios:</label>
+                <select id="filtro" name="filtro" onchange="filtrarComentarios(this.value)">
+                    <option value="default" selected>Seleccione una opción</option>
+                    <option value="mejor_votados">Mejor Votados</option>
+                    <option value="recientes">Añadidos Recientemente</option>
+                </select>
+            </div>
+            
         </div>
 
         <div>
@@ -115,3 +129,14 @@
     <p>{{ mensaje }}</p>
     {% endif %}
     {% endblock %}
+
+    <script>
+        function filtrarComentarios(opcion) {
+            if (opcion === 'mejor_votados') {
+                window.location.href = '{{ url_for("detalle_duda", duda_id=duda._id) }}?orden=mejor_votados';
+            } else if (opcion === 'recientes') {
+                window.location.href = '{{ url_for("detalle_duda", duda_id=duda._id) }}?orden=recientes';
+            }
+        }
+    </script>
+    

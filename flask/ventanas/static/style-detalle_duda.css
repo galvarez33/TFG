@@ -69,6 +69,10 @@
     margin-left: 600px; /* Ajusta el valor del margen según tus preferencias */
 }
 
+.titulo-comentario2 {
+    margin-left: 450px; /* Ajusta el valor del margen según tus preferencias */
+}
+
 
 .comentarios-container ul {
     list-style: none;

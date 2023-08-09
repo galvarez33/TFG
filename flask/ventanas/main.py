@@ -5,6 +5,7 @@ import re
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 import base64
+from datetime import datetime
 from math import ceil
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 
@@ -360,7 +361,7 @@ def detalle_duda(duda_id):
                 'imagen': imagen_base64,
                 'votos_positivos': 0,
                 'votos_negativos': 0,
-                'usuarios_votados':[]
+                'fecha_agregado': datetime.now()  # Agrega la fecha de agregado
             }
 
             form_collection.update_one(
@@ -383,11 +384,15 @@ def detalle_duda(duda_id):
             )
             return redirect(url_for('detalle_duda', duda_id=duda['_id']))
 
+        orden = request.args.get('orden')
+        if orden == 'mejor_votados':
+            duda['comentario'].sort(key=lambda x: x['votos_positivos'], reverse=True)
+        elif orden == 'recientes':
+            duda['comentario'].sort(key=lambda x: x['fecha_agregado'], reverse=True)
+
         return render_template('detalle_duda.html', duda=duda, logged_user=logged_user, nombre_usuario=nombre_usuario)
     else:
         return render_template('error.html', mensaje='Duda no encontrada')
-    
-
 
 
 
@@ -496,4 +501,4 @@ def borrar_comentario(duda_id, comentario_index):
 
 
 if __name__ == '__main__':
-    app.run(port=5001)
+    app.run(port=5000)
