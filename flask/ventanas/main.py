@@ -554,6 +554,23 @@ def perfil():
 
 
 
+@app.route('/borrar_duda/<string:duda_id>', methods=['POST'])
+def borrar_duda(duda_id):
+    logged_user = session.get('logged_user')
+    if not logged_user:
+        return 'Acceso no autorizado'
+
+    # Obtener la duda desde la base de datos
+    duda = form_collection.find_one({'_id': ObjectId(duda_id)})
+
+    if duda:
+        # Verificar si el usuario logueado es el propietario de la duda
+        if duda.get('correo_usuario') == logged_user['correo']:
+            # Borrar la duda de la base de datos
+            form_collection.delete_one({'_id': ObjectId(duda_id)})
+        
+    return redirect(url_for('perfil'))
+
 
 
 

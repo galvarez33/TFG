@@ -43,12 +43,17 @@
                         <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top fixed-size-image">
                         <div class="card-body duda-card-body">
                             <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
+                            <!-- Agregar el botón de Borrar -->
+                            <form method="POST" action="{{ url_for('borrar_duda', duda_id=duda._id) }}">
+                                <button type="submit" class="btn btn-danger">Borrar</button>
+                            </form>
                         </div>
                     </div>
                 </a>
             </div>
         {% endfor %}
     </div>
+    
 
     {% if pagination.pages|length > 1 %}
         <nav aria-label="Paginación">
