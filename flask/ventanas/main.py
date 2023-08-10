@@ -278,6 +278,9 @@ def publicar_duda():
 
 @app.route('/explorar', methods=['GET', 'POST'])
 def explorar():
+    logged_user = session.get('logged_user')
+    if not logged_user:
+        return 'Acceso no autorizado'
     if request.method == 'POST':
         # Verificar si el usuario está autenticado antes de procesar la solicitud POST
         logged_user = session.get('logged_user')
@@ -317,7 +320,7 @@ def explorar():
     # Crear el objeto de paginación
     pagination = Pagination(page=page, per_page=per_page, total=total_dudas, css_framework='bootstrap4')
 
-    return render_template('explorar.html', dudas=dudas, pagination=pagination)
+    return render_template('explorar.html', dudas=dudas, pagination=pagination, logged_user=logged_user)
 
 
 
