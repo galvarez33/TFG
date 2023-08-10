@@ -1,0 +1,96 @@
+{% include 'header.html' %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-explorar.css') }}">
+
+<div class="container">
+    {% if logged_user %}
+    <h2><strong>Perfil de {{logged_user.nombre}}</strong></h2>
+    {% endif %}
+
+    <br><br><br><h2><strong>MIS DUDAS</strong></h2>
+
+    <form method="POST" action="{{ url_for('explorar') }}" class="mb-4">
+        <div class="form-group">
+            <input type="text" class="form-control" id="consulta" name="consulta" placeholder="Buscar por título">
+        </div>
+        <div class="form-group">
+            <label for="carrera">Carrera:</label>
+            <select class="form-control" id="carrera" name="carrera">
+                <option value="">Todas las carreras</option>
+                <option value="ADE">Administración y Dirección de Empresas</option>
+                <option value="ISI">Ingeniería de Sistemas de Información</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="curso">Curso:</label>
+            <select class="form-control" id="curso" name="curso">
+                <option value="">Todos los cursos</option>
+                <option value="curso1">1º</option>
+                <option value="curso2">2º</option>
+                <option value="curso3">3º</option>
+                <option value="curso4">4º</option>
+                <option value="curso5">5º</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a href="{{ url_for('explorar') }}" class="btn btn-secondary">Deshacer filtros</a>
+    </form>
+    <div class="row">
+        {% for duda in dudas %}
+            <div class="col-md-4 mb-4">
+                <a href="{{ url_for('detalle_duda', duda_id=duda._id) }}" class="duda-link">
+                    <div class="card duda-card">
+                        <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top fixed-size-image">
+                        <div class="card-body duda-card-body">
+                            <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if pagination.pages|length > 1 %}
+        <nav aria-label="Paginación">
+            <ul class="pagination justify-content-center mt-4">
+                {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('explorar', page=1) }}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('explorar', page=pagination.prev_num) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for page_num in pagination.pages %}
+                    {% if pagination.page == page_num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('explorar', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('explorar', page=pagination.next_num) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('explorar', page=pagination.pages[-1]) }}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>

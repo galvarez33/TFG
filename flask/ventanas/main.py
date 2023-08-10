@@ -259,6 +259,9 @@ def publicar_duda():
         if imagen:
             imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
 
+        # Obtener el correo del usuario logueado desde la sesión
+        usuario_correo = session['logged_user']['correo']
+
         # Guardar la información en la base de datos
         form_data = {
             'imagen': imagen_base64,
@@ -267,14 +270,16 @@ def publicar_duda():
             'carrera': carrera,
             'curso': curso,
             'asignatura': asignatura,
-            'dificultad': dificultad,  # Agregar la dificultad al documento
-            'comentario':[]
+            'dificultad': dificultad,
+            'correo_usuario': usuario_correo,  # Agregar el correo del usuario
+            'comentario': []
         }
         form_collection.insert_one(form_data)
 
         return redirect(url_for('explorar'))
 
     return render_template('publicar_duda.html', logged_user=logged_user)
+
 
 @app.route('/explorar', methods=['GET', 'POST'])
 def explorar():
@@ -493,6 +498,60 @@ def borrar_comentario(duda_id, comentario_index):
         return redirect(url_for('detalle_duda', duda_id=duda_id))
 
     return 'Acceso no autorizado'
+
+
+@app.route('/perfil', methods=['GET', 'POST'])
+def perfil():
+    logged_user = session.get('logged_user')
+    if not logged_user:
+        return 'Acceso no autorizado'
+    
+    # Obtener el correo del usuario logueado desde la sesión
+    usuario_correo = logged_user['correo']
+    
+    if request.method == 'POST':
+        # Verificar si el usuario está autenticado antes de procesar la solicitud POST
+        logged_user = session.get('logged_user')
+        if not logged_user:
+            return 'Acceso no autorizado'
+
+        consulta = request.form.get('consulta', '')
+        carrera = request.form.get('carrera', '')
+        curso = request.form.get('curso', '')
+
+        # Aplicar filtros si se han seleccionado valores
+        filtros = {
+            'correo_usuario': usuario_correo  # Agregar filtro por correo del usuario
+        }
+        if carrera:
+            filtros['carrera'] = carrera
+        if curso:
+            filtros['curso'] = curso
+
+        # Consultar las dudas del usuario con los filtros aplicados
+        dudas = form_collection.find({'titulo': {'$regex': consulta, '$options': 'i'}, **filtros})
+    else:
+        # Si la solicitud no es POST, mostrar todas las dudas del usuario sin filtros
+        dudas = form_collection.find({'correo_usuario': usuario_correo})
+
+    # Obtener el número de página actual y la cantidad de elementos por página
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    per_page = 9  # Mostrar 9 elementos por página
+
+    # Calcular el desplazamiento para la consulta en la base de datos
+    offset = (page - 1) * per_page
+
+    # Consultar las dudas del usuario con el límite y desplazamiento adecuados
+    dudas = dudas.skip(offset).limit(per_page)
+
+    # Obtener el total de dudas del usuario para la paginación
+    total_dudas = form_collection.count_documents({'correo_usuario': usuario_correo})
+
+    # Crear el objeto de paginación
+    pagination = Pagination(page=page, per_page=per_page, total=total_dudas, css_framework='bootstrap4')
+
+    return render_template('perfil.html', dudas=dudas, pagination=pagination, logged_user=logged_user)
+
 
 
 
