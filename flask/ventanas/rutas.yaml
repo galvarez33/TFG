@@ -1,0 +1,159 @@
+openapi: 3.0.0
+info: 
+  title: Activos API
+  version: 1.0.0
+  description: API para gestionar activos de estudiantes, dudas, correos, comentarios, etc.
+paths: 
+  /activos/estudiantes:
+    get: 
+      summary: Lista los activos de estudiantes
+      description: Obtiene todos los activos de estudiantes que pueden ser consultados
+      responses: 
+        "200": 
+          description: OK
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/ActivosEstudiantes"
+              example:
+                - id: 12345
+                  nombre: 'Juan Perez'
+                  matricula: '2023001'
+                - id: 67890
+                  nombre: 'Maria Gonzalez'
+                  matricula: '2023002'
+        "204": 
+          description: No content
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/Respuesta204"
+  /activos/estudiantes/{idEstudiante}:
+    parameters:
+      - name: idEstudiante
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Obtiene un activo de estudiante específico.
+      description: Obtiene un activo de estudiante específico.
+      responses: 
+        "200": 
+          description: OK
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/ActivoEstudiante"
+              example:
+                id: 12345
+                nombre: 'Juan Perez'
+                matricula: '2023001'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Respuesta404"
+              example: "El estudiante con id 12345 no existe"
+    put:
+      summary: Modifica un activo de estudiante
+      description: Modifica un activo de estudiante.
+      requestBody:
+        content:
+          application/json: 
+            schema: 
+              $ref: "#/components/schemas/ActivoEstudiantePUT"
+            example:
+              nombre: 'Juanito Perez'
+              matricula: '2023001'
+      responses:
+        "200":
+          description: OK
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/Respuesta200"
+        "400":
+          description: Bad request
+          content:
+            application/json: 
+              schema:
+                $ref: "#/components/schemas/Respuesta400"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Respuesta404"
+    delete:
+      summary: Borra un activo de estudiante
+      description: Borra un activo de estudiante.
+      responses:
+        "200":
+          description: OK
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/Respuesta200"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Respuesta404"
+              
+components:
+  parameters:
+    idEstudiante:
+      name: idEstudiante
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    Respuesta200:
+      type: string
+      enum:
+        - Todo correcto
+    Respuesta204:
+      type: string
+      enum:
+        - No hay contenido
+    Respuesta400:
+      type: string
+      enum:
+        - Formato incorrecto
+    Respuesta404:
+      type: string
+      enum:
+        - No encontrado
+    ActivosEstudiantes:
+      type: array
+      items:
+        $ref: "#/components/schemas/ActivoEstudiante"
+    ActivoEstudiante:
+      type: object
+      required:
+        - id
+        - nombre
+        - matricula
+      properties: 
+        id: 
+          type: string  
+          description: Id del estudiante
+        nombre: 
+          type: string
+          description: Nombre del estudiante
+        matricula:
+          type: string
+          description: Matrícula del estudiante
+    ActivoEstudiantePUT:
+      type: object
+      properties: 
+        nombre: 
+          type: string
+          description: Nuevo nombre del estudiante
+        matricula:
+          type: string
+          description: Nueva matrícula del estudiante
