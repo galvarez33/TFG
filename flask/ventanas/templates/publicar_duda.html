@@ -3,26 +3,26 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-publicar_duda.css') }}">
 
     <div class="container">
-        <h2 class="mt-4">Formulario</h2>
+        <h2 class="mt-4" style="color: white;">Formulario</h2>
         <form id="formulario" method="POST" action="{{ url_for('publicar_duda') }}" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="imagen">Imagen:</label>
+                <label for="imagen" style="color: white;">Imagen:</label>
                 <input type="file" class="form-control-file" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>
                 <div id="vista-previa"></div>
                 <button type="button" class="btn btn-dark" onclick="borrarImagen()">Borrar imagen</button>
             </div>
             <div class="form-group">
-            <label for="titulo">Título:</label>
+            <label for="titulo" style="color: white;">Título:</label>
             <textarea class="form-control" id="titulo" name="titulo" rows="1" oninput="limitarPalabras(this, 10)" required></textarea>
             </div>
             
             <div class="form-group">
-                <label for="texto">Texto:</label>
+                <label for="texto" style="color: white;">Texto:</label>
                 <textarea class="form-control" id="texto" name="texto" rows="3" required></textarea>
             </div>
 
             <div class="form-group">
-                <label for="carrera">Carrera:</label>
+                <label for="carrera" style="color: white;">Carrera:</label>
                 <select class="form-control" id="carrera" name="carrera" onchange="updateAsignaturas()" required>
                     <option value="ADE">ADMINISTRACION Y DIRECCIÓN DE EMPRESAS</option>
                     <option value="ISI">INGENIERIA SISTEMAS DE INFORMACIÓN</option>
@@ -34,7 +34,7 @@
 
 
             <div class="form-group">
-                <label for="curso">Curso:</label>
+                <label for="curso" style="color: white;">Curso:</label>
                 <select class="form-control" id="curso" name="curso" onchange="updateAsignaturas()" required>
                     <option value="1º">1º</option>
                     <option value="2º">2º</option>
@@ -45,7 +45,7 @@
             </div>
 
             <div class="form-group">
-                <label for="asignatura">Asignatura:</label>
+                <label for="asignatura" style="color: white;">Asignatura:</label>
                 <select class="form-control" id="asignatura" name="asignatura" required>
                 </select>
             </div>
@@ -53,7 +53,7 @@
 
 
             <div class="form-group">
-                <label for="dificultad">Dificultad:</label>
+                <label for="dificultad" style="color: white;">Dificultad:</label>
                 <div class="stars">
                     <input type="radio" id="star5" name="dificultad" value="5">
                     <label for="star5" title="5 estrellas"></label>

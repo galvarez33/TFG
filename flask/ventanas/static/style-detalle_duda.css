@@ -1,3 +1,13 @@
+body {
+    font-family: "Poppins", sans-serif;
+    height: 100vh;
+    background-image: url('/static/imagen2.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+
+
 /* Ajustar el tamaño de la imagen */
 .card-img-top {
     width: 600px;
@@ -66,11 +76,11 @@
 }
 
 .titulo-comentario {
-    margin-left: 600px; /* Ajusta el valor del margen según tus preferencias */
+    margin-left: 400px; /* Ajusta el valor del margen según tus preferencias */
 }
 
 .titulo-comentario2 {
-    margin-left: 450px; /* Ajusta el valor del margen según tus preferencias */
+    margin-left: 250px; /* Ajusta el valor del margen según tus preferencias */
 }
 
 
@@ -80,7 +90,7 @@
 }
 
 .comentarios-container li {
-    border: 1px solid #ccc;
+    border: 1px solid #ffffff;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;

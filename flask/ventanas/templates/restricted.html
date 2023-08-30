@@ -1,13 +1,13 @@
-{% include 'header.html' %}
-{% if logged_user %}
-    <p>Bienvenido, {{ logged_user.nombre}}.</p>
-{% endif %}
-
-
-
-
+<!DOCTYPE html>
+<html>
+<head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-restricted.css') }}">
-
+</head>
+<body>
+  {% include 'header.html' %}
+  {% if logged_user %}
+      <p>Bienvenido, {{ logged_user.nombre}}.</p>
+  {% endif %}
   <div class="container">
     <div class="button-container">
       <a class="button duda" href="/publicar_duda">Publicar Duda</a>

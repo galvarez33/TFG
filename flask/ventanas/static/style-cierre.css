@@ -15,33 +15,20 @@ body {
 }
 
 a {
-    margin-top: 20px;
-    color: #000000;
+    color: #92badd;
     display: inline-block;
     text-decoration: none;
     font-weight: 400;
 }
 
 h2 {
-    margin-top: 20px;
     text-align: center;
     font-size: 16px;
     font-weight: 600;
     text-transform: uppercase;
     display: inline-block;
     margin: 40px 8px 10px 8px;
-    color: #000000;
-}
-
-input {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    display: inline-block;
-    margin: 40px 8px 10px 8px;
-    color: #000000;
+    color: #cccccc;
 }
 
 
@@ -58,17 +45,15 @@ input {
 }
 
 #formContent {
-    -webkit-border-radius: 50px 50px 50px 50px;
+    -webkit-border-radius: 10px 10px 10px 10px;
     border-radius: 50px 50px 50px 50px;
     background: #fff;
     padding: 30px;
     width: 90%;
-    height: 90%;
-    max-height: 900px;
     max-width: 1000px;
     position: relative;
     padding: 0px;
-    -webkit-box-shadow: 0 110px 110px 10000px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
     box-shadow: 0 110px 110px 10000px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
@@ -87,14 +72,10 @@ input {
 /* TABS */
 
 a.inactive {
-    margin-top: 40px;
-    margin-right: 5px;
-    margin-bottom: 8px;
     color: #cccccc;
 }
 
-a.active {
-    margin-left: 5px;
+h2.active {
     color: #0d0d0d;
     border-bottom: 2px solid #5fbae9;
 }
@@ -283,11 +264,6 @@ input[type=text]:placeholder {
     -webkit-animation-delay: 1s;
     -moz-animation-delay: 1s;
     animation-delay: 1s;
-}
-.fadeIn.fifth {
-    -webkit-animation-delay: 1.2s;
-    -moz-animation-delay: 1.2s;
-    animation-delay: 1.2s;
 }
 
 /* Simple CSS3 Fade-in Animation */

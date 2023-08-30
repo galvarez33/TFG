@@ -1,32 +1,51 @@
 .container {
-    height: 100vh;
-  }
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+body {
+  font-family: "Poppins", sans-serif;
+  height: 100vh;
+  background-image: url('/static/image.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1100px;
+  width: 100%;
+}
+
+.button {
+  width: 48%; /* Ancho ajustado para que haya espacio entre los botones */
+  height: 450px; /* Altura ajustada para hacer los botones más grandes */
   
-  .button-container {
-    height: 80vh; /* Ajusta el tamaño vertical del contenedor */
-  }
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -50px;
+  margin-bottom: -200px;
+}
+
+.duda {
   
-  .button {
-    width: 300px; /* Ancho específico en píxeles */
-    margin: 10px;
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    color: #700202;
-    border-radius: 10px;
-    display: inline-block; /* Cambio a display inline-block */
-  }
-  
-  .duda {
-    background-color: #725AC1;
-  }
-  
-  .ejercicios {
-    background-color: #E15759;
-  }
-  
-  .explorar {
-    background-color: #66CC99;
-  }
-  
+  background-image: url('/static/alumno-resuelve-duda.jpg');
+  background-size: cover; /* Ajusta el tamaño de la imagen de fondo */
+}
+
+.explorar {
+  background-image: url('/static/hombre-ordenador.jpg');
+  background-size: cover; /* Ajusta el tamaño de la imagen de fondo */
+}

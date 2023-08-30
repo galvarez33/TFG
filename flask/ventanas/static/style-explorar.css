@@ -8,6 +8,15 @@
   src: url(Typo.otf);
 }
 
+
+body {
+  font-family: "Poppins", sans-serif;
+  height: 100vh;
+  background-image: url('/static/image.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 .duda-card {
   width: 200px;
   margin-bottom: 20px;
