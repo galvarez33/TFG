@@ -4,17 +4,17 @@
 
 <div class="container">
     {% if logged_user %}
-    <h2><strong>Perfil de {{logged_user.nombre}}</strong></h2>
+    <h2 style="color: white;"><strong>Perfil de {{logged_user.nombre}}</strong></h2>
     {% endif %}
 
-    <br><br><br><h2><strong>MIS DUDAS</strong></h2>
+    <br><br><br><h2 style="color: white;"><strong>MIS DUDAS</strong></h2>
 
     <form method="POST" action="{{ url_for('explorar') }}" class="mb-4">
         <div class="form-group">
             <input type="text" class="form-control" id="consulta" name="consulta" placeholder="Buscar por título">
         </div>
         <div class="form-group">
-            <label for="carrera">Carrera:</label>
+            <label for="carrera" style="color: white;">Carrera:</label>
             <select class="form-control" id="carrera" name="carrera">
                 <option value="">Todas las carreras</option>
                 <option value="ADE">Administración y Dirección de Empresas</option>
@@ -22,7 +22,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="curso">Curso:</label>
+            <label for="curso" style="color: white;">Curso:</label>
             <select class="form-control" id="curso" name="curso">
                 <option value="">Todos los cursos</option>
                 <option value="curso1">1º</option>

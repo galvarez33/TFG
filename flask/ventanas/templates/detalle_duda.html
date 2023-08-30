@@ -5,18 +5,18 @@
     {% if duda %}
     <div class="duda-card">
         <div class="card-img-zoom">
-            <a href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
+            <a style="color: white;" href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
                 <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
             </a>
         </div>
         <div class="duda-card-content">
-            <h3 class="card-title">{{ duda.titulo }}</h3>
-            <h5 class="card-text">{{ duda.texto }}</h5>
+            <h3 style="color: white;" class="card-title">{{ duda.titulo }}</h3>
+            <h5 style="color: white;" class="card-text">{{ duda.texto }}</h5>
             <div class="additional-info">
                 <br>
-                <p class="info" style="color: gray;"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
-                <p class="info" style="color: gray;"><span class="label">Curso:</span> {{ duda.curso }}</p>
-                <p class="info" style="color: gray;"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
+                <p class="info" style="color: rgb(0, 0, 0);"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
+                <p class="info" style="color: rgb(4, 4, 4);"><span class="label">Curso:</span> {{ duda.curso }}</p>
+                <p class="info" style="color: rgb(0, 0, 0);"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
             </div>
             <div class="stars">
                 <p class="dificultad"><span class="label">Dificultad:</span></p>
@@ -33,7 +33,7 @@
 
     <br><br>
     <div class="titulo-comentario">
-        <h2><strong>AYUDA CON TU COMENTARIOS</strong></h2>
+        <h2 style="color: white;"><strong>AYUDA CON TU COMENTARIOS</strong></h2>
     </div>
     <div class="comentarios-container">
         <div class="nuevo-comentario-container">
@@ -52,7 +52,7 @@
             {% endif %}
             <br>
             <div class="titulo-comentario2">
-                <h2><strong>VER RESPUESTAS COMPAÑEROS</strong></h2>
+                <h2 style="color: white;"><strong>VER RESPUESTAS COMPAÑEROS</strong></h2>
             </div>
             <br>
             <div class="filtrar-comentarios">
@@ -74,8 +74,8 @@
                 <li>
                 <div class="comentario-content">
                     <div class="comentario-text">
-                        <span class="label"><strong>{{ comentario.nombre }}</strong></span>
-                        <p>{{ comentario.texto }}</p>
+                        <span style="color: black;" class="label"><strong>{{ comentario.nombre }}</strong></span>
+                        <p style="color: rgb(114, 110, 110);">{{ comentario.texto }}</p>
                         {% if comentario.imagen %}
                         <img src="data:image/jpeg;base64,{{ comentario.imagen }}" alt="Imagen del comentario"
                             class="comentario-img comentario-img-thumbnail" data-toggle="modal"
