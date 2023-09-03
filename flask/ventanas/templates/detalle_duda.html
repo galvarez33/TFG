@@ -14,12 +14,12 @@
             <h5 style="color: white;" class="card-text">{{ duda.texto }}</h5>
             <div class="additional-info">
                 <br>
-                <p class="info" style="color: rgb(0, 0, 0);"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
-                <p class="info" style="color: rgb(4, 4, 4);"><span class="label">Curso:</span> {{ duda.curso }}</p>
-                <p class="info" style="color: rgb(0, 0, 0);"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
+                <p class="info" style="color: rgb(211, 208, 208);"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
+                <p class="info" style="color: rgb(214, 212, 212);"><span class="label">Curso:</span> {{ duda.curso }}</p>
+                <p class="info" style="color: rgb(204, 199, 199);"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
             </div>
             <div class="stars">
-                <p class="dificultad"><span class="label">Dificultad:</span></p>
+                <p class="dificultad" style="color: white;"><span class="label">Dificultad:</span></p>
                 {% for i in range(5) %}
                 {% if i < duda.dificultad %} <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas">
                     </label>
@@ -56,8 +56,8 @@
             </div>
             <br>
             <div class="filtrar-comentarios">
-                <label for="filtro">Filtrar comentarios:</label>
-                <select id="filtro" name="filtro" onchange="filtrarComentarios(this.value)">
+                <label for="filtro" style="color: white;">Filtrar comentarios:</label>
+                <select id="filtro"  name="filtro" onchange="filtrarComentarios(this.value) ">
                     <option value="default" selected>Seleccione una opción</option>
                     <option value="mejor_votados">Mejor Votados</option>
                     <option value="recientes">Añadidos Recientemente</option>

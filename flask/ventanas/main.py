@@ -8,7 +8,6 @@ import base64
 from datetime import datetime
 from math import ceil
 from flask_paginate import Pagination, get_page_parameter, get_page_args
-from flask_restplus import Api, Resource
 
 
 
@@ -29,7 +28,6 @@ form_collection= db['publicar_duda']
 
 
 
-api = Api(app)
 
 
 
