@@ -7,10 +7,11 @@ from . import detalle_duda_bp
 
 
 
-# Conectar a la base de datos MongoDB (esto puede ir en tu archivo main.py)
+
 client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
 db = client['TFG']
 form_collection = db['publicar_duda']
+
 
 # Ruta para ver los detalles de una duda
 @detalle_duda_bp.route('/detalle_duda/<duda_id>', methods=['GET', 'POST'])
@@ -76,7 +77,8 @@ def detalle_duda(duda_id):
     else:
         return render_template('error.html', mensaje='Duda no encontrada')
 
-# Función para obtener los detalles de una duda por su ID
+
+
 def obtener_detalle_duda(duda_id):
     # Convertir el duda_id a ObjectId
     object_id = ObjectId(duda_id)

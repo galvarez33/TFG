@@ -4,12 +4,14 @@ from flask_paginate import Pagination, get_page_parameter, get_page_args
 from . import explorar_bp
 
 
-# Conectar a la base de datos MongoDB (esto puede ir en tu archivo main.py)
+
 client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
 db = client['TFG']
 form_collection = db['publicar_duda']
 
-# Ruta para explorar las dudas
+
+
+
 @explorar_bp.route('/explorar', methods=['GET', 'POST'])
 def explorar():
     logged_user = session.get('logged_user')

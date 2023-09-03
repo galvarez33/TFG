@@ -1,0 +1,40 @@
+{% include 'header.html' %}
+
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-cierre.css') }}">
+<div class="wrapper fadeInDown">
+  <div id="formContent">   
+
+
+  
+    <h2>Cambiar Contraseña</h2>
+    <form action="{{ url_for('auth.cambiar_contrasena') }}" method="post">
+      <input type="text" name="contrasena_actual" placeholder="Contraseña Actual" required><br>
+      <input type="text" name="nueva_contrasena" placeholder="Nueva Contraseña" required><br>
+      <input type="text" name="confirmar_contrasena" placeholder="Confirmar Contraseña" required><br>
+      <input type="submit" value="Restablecer Contraseña" href="/cambiar_contrasena">
+    </form>
+    {% if error %}
+    <p class="alert alert-danger" role="alert">{{ error }}</p>
+    {% elif mensaje_confirmacion %}
+    <p class="alert alert-success" role="alert">{{mensaje_confirmacion}}</p>
+    {% endif %}
+    
+    <div id="formFooter">
+      <a class="underlineHover" href="/restricted">Volver</a>
+    </div>
+
+  </div>
+</div>
+
+
+
+</body>
+
+</html>
+
+
+
+
+
+

@@ -3,12 +3,10 @@
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-cierre.css') }}">
 <div class="wrapper fadeInDown">
-  <div id="formContent">
-    <!-- Tabs Titles -->
-    
+  <div id="formContent">   
 
 
-    <!-- Login Form -->
+  
     <h2>¿Deseas cerrar sesión?</h2>
     <form action="/cierre" method="POST">
         <input type="submit" class="fadeIn fourth" name="confirm" value="yes"></input>
@@ -17,10 +15,10 @@
     {% if error %}
     <p class="alert alert-danger" role="alert">{{ error }}</p>
     {% elif correo %}
-    <p class="alert alert-success" role="alert">Tu correo electrónico {{ correo }} ha sido verificado exitosamente.</p>
+    
     {% endif %}
 
-    <!-- Remind Passowrd -->
+    
     <div id="formFooter">
       <a class="underlineHover" href="/restricted">Volver</a>
     </div>

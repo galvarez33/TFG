@@ -1,6 +1,7 @@
-from flask import render_template, session, request, redirect, url_for, Blueprint
+from flask import render_template, session, request, redirect, url_for, Blueprint, flash
 from pymongo import MongoClient
 from bson import ObjectId
+from werkzeug.security import check_password_hash, generate_password_hash
 import re
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
@@ -15,6 +16,7 @@ client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mong
 db = client['TFG']
 collection = db['usuarios']
 mail = Mail()
+
 
 # Ruta para iniciar sesión
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -217,3 +219,45 @@ def restablecer_contrasena(correo, token):
         return redirect(url_for('auth.login'))
 
     return render_template('restablecer_contrasena.html', correo=correo, token=token)	
+
+
+
+@auth_bp.route('/cambiar_contrasena', methods=['GET', 'POST'])
+def cambiar_contrasena():
+    logged_user = session.get('logged_user')
+
+    error = None  # Inicializa la variable de error
+    mensaje_confirmacion = None  # Inicializa la variable de confirmación
+
+    if request.method == 'POST':
+        correo = session['logged_user']['correo']
+        contrasena_actual = request.form['contrasena_actual']
+        nueva_contrasena = request.form['nueva_contrasena']
+        confirmar_contrasena = request.form['confirmar_contrasena']
+        print(correo)
+
+        # Obtener el usuario actual desde MongoDB
+        usuario = collection.find_one({'correo': correo})
+        print(usuario)
+        if not usuario:
+            error = 'El usuario no existe'  # Asigna el mensaje de error
+        elif usuario['contraseña'] != contrasena_actual:
+            error = 'La contraseña actual es incorrecta'  # Asigna el mensaje de error
+        elif nueva_contrasena == contrasena_actual:
+            error = 'La nueva contraseña no puede ser igual a la contraseña actual'  # Asigna el mensaje de error
+        elif nueva_contrasena != confirmar_contrasena:
+            error = 'La nueva contraseña y la confirmación no coinciden'  # Asigna el mensaje de error
+        else:
+            # Actualizar la contraseña en MongoDB
+            collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
+            mensaje_confirmacion = "La contraseña se ha actualizado correctamente"
+            # Actualizar la contraseña en la sesión
+            session['logged_user']['contraseña'] = nueva_contrasena
+
+    return render_template('cambiar_contrasena.html', error=error, mensaje_confirmacion=mensaje_confirmacion, logged_user=logged_user)
+
+
+
+            
+
+    return render_template('cambiar_contrasena.html', error=error,mensaje_confirmacion=mensaje_confirmacion, logged_user=logged_user)
