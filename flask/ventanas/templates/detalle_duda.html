@@ -33,12 +33,12 @@
 
     <br><br>
     <div class="titulo-comentario">
-        <h2 style="color: white;"><strong>AYUDA CON TU COMENTARIOS</strong></h2>
+        <h2 style="color: white;"><strong>AYUDA CON TUS COMENTARIOS</strong></h2>
     </div>
     <div class="comentarios-container">
         <div class="nuevo-comentario-container">
             {% if logged_user %}
-            <form action="{{ url_for('detalle_duda', duda_id=duda._id) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ url_for('detalle_duda.detalle_duda', duda_id=duda._id) }}" method="post" enctype="multipart/form-data">
                 <br>
                 <div class="form-group">
                     <textarea class="form-control" name="comentario" id="nuevo-comentario"
@@ -52,7 +52,7 @@
             {% endif %}
             <br>
             <div class="titulo-comentario2">
-                <h2 style="color: white;"><strong>VER RESPUESTAS COMPAÑEROS</strong></h2>
+                <h2 style="color: white;"><strong>VER RESPUESTAS DE COMPAÑEROS</strong></h2>
             </div>
             <br>
             <div class="filtrar-comentarios">
@@ -82,20 +82,20 @@
                             data-target="#modalImagen{{ loop.index }}">
                         {% endif %}
                         {% if logged_user and nombre_usuario == comentario.nombre %}
-                        <form action="{{ url_for('borrar_comentario', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                        <form action="{{ url_for('detalle_duda.borrar_comentario', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">Borrar</button>
                         </form>
                         {% endif %}
                     </div>
                     <div class="util-buttons">
-                        <form action="{{ url_for('votar_positivo', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                        <form action="{{ url_for('detalle_duda.votar_positivo', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
                             <button type="submit" class="btn btn-success">Me ha sido útil</button>
                             <span class="like-icon">👍</span>
                             <span class="like-count">{{ comentario.votos_positivos }}</span>
                         </form>
-                        <form action="{{ url_for('votar_negativo', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                        <form action="{{ url_for('detalle_duda.votar_negativo', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">No me ha sido útil</button>
                             <span class="dislike-icon">👎</span>
@@ -133,9 +133,9 @@
     <script>
         function filtrarComentarios(opcion) {
             if (opcion === 'mejor_votados') {
-                window.location.href = '{{ url_for("detalle_duda", duda_id=duda._id) }}?orden=mejor_votados';
+                window.location.href = '{{ url_for("detalle_duda.detalle_duda", duda_id=duda._id) }}?orden=mejor_votados';
             } else if (opcion === 'recientes') {
-                window.location.href = '{{ url_for("detalle_duda", duda_id=duda._id) }}?orden=recientes';
+                window.location.href = '{{ url_for("detalle_duda.detalle_duda", duda_id=duda._id) }}?orden=recientes';
             }
         }
     </script>

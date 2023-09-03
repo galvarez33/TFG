@@ -6,7 +6,7 @@
   <div id="formContent">
     <!-- Tabs Titles -->
     <h2>Restablecer contraseña</h2>
-    <form method="POST" action="{{ url_for('restablecer_contrasena', correo=correo, token=token) }}">
+    <form method="POST" action="{{ url_for('auth.restablecer_contrasena', correo=correo, token=token) }}">
       <input type="text" name="nueva_contrasena" placeholder="Nueva Contraseña" required><br>
       <input type="text" name="confirmar_contrasena" placeholder="Confirmar Contraseña" required><br>
       <input type="hidden" name="token" value="{{ token }}">

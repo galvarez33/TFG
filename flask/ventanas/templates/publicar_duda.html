@@ -4,7 +4,7 @@
 
     <div class="container">
         <h2 class="mt-4" style="color: white;">Formulario</h2>
-        <form id="formulario" method="POST" action="{{ url_for('publicar_duda') }}" enctype="multipart/form-data">
+        <form id="formulario" method="POST" action="{{ url_for('publicar_duda.publicar_duda') }}" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="imagen" style="color: white;">Imagen:</label>
                 <input type="file" class="form-control-file" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>

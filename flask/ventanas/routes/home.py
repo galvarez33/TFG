@@ -1,12 +1,7 @@
-from flask import Flask, render_template
+from flask import Blueprint, render_template, session
+from . import home_bp 
 
-app = Flask(__name__)
-
-@app.route('/home')
+@home_bp.route('/home')
 def home():
-    title = 'Tutulo'
-    logged_user = session.get('user')
-    return render_template('home.html', title=title, logged_user=logged_user)
-
-if __name__ == '__main__':
-    app.run()
+    logged_user = session.get('logged_user')
+    return render_template('home.html', logged_user=logged_user)

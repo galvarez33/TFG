@@ -9,7 +9,7 @@
 
     <br><br><br><h2 style="color: white;"><strong>MIS DUDAS</strong></h2>
 
-    <form method="POST" action="{{ url_for('explorar') }}" class="mb-4">
+    <form method="POST" action="{{ url_for('explorar.explorar') }}" class="mb-4">
         <div class="form-group">
             <input type="text" class="form-control" id="consulta" name="consulta" placeholder="Buscar por título">
         </div>
@@ -33,18 +33,18 @@
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
-        <a href="{{ url_for('explorar') }}" class="btn btn-secondary">Deshacer filtros</a>
+        <a href="{{ url_for('explorar.explorar') }}" class="btn btn-secondary">Deshacer filtros</a>
     </form>
     <div class="row">
         {% for duda in dudas %}
             <div class="col-md-4 mb-4">
-                <a href="{{ url_for('detalle_duda', duda_id=duda._id) }}" class="duda-link">
+                <a href="{{ url_for('detalle_duda.detalle_duda', duda_id=duda._id) }}" class="duda-link">
                     <div class="card duda-card">
                         <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top fixed-size-image">
                         <div class="card-body duda-card-body">
                             <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
                             <!-- Agregar el botón de Borrar -->
-                            <form method="POST" action="{{ url_for('borrar_duda', duda_id=duda._id) }}">
+                            <form method="POST" action="{{ url_for('perfil.borrar_duda', duda_id=duda._id) }}">
                                 <button type="submit" class="btn btn-danger">Borrar</button>
                             </form>
                         </div>
@@ -60,12 +60,12 @@
             <ul class="pagination justify-content-center mt-4">
                 {% if pagination.has_prev %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar', page=1) }}" aria-label="First">
+                        <a class="page-link" href="{{ url_for('explorar.explorar', page=1) }}" aria-label="First">
                             <span aria-hidden="true">&laquo;&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar', page=pagination.prev_num) }}" aria-label="Previous">
+                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.prev_num) }}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
@@ -78,19 +78,19 @@
                         </li>
                     {% else %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('explorar', page=page_num) }}">{{ page_num }}</a>
+                            <a class="page-link" href="{{ url_for('explorar.explorar', page=page_num) }}">{{ page_num }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
 
                 {% if pagination.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar', page=pagination.next_num) }}" aria-label="Next">
+                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.next_num) }}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar', page=pagination.pages[-1]) }}" aria-label="Last">
+                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.pages[-1]) }}" aria-label="Last">
                             <span aria-hidden="true">&raquo;&raquo;</span>
                         </a>
                     </li>
