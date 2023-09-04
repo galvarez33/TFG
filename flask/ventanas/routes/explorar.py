@@ -2,6 +2,8 @@ from flask import render_template, request, redirect, session, url_for, Blueprin
 from pymongo import MongoClient
 from flask_paginate import Pagination, get_page_parameter, get_page_args
 from . import explorar_bp
+from flasgger import Swagger, swag_from
+
 
 
 
@@ -13,6 +15,7 @@ form_collection = db['publicar_duda']
 
 
 @explorar_bp.route('/explorar', methods=['GET', 'POST'])
+@swag_from('../api/explorar.yml')
 def explorar():
     logged_user = session.get('logged_user')
 

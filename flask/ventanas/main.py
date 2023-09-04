@@ -1,10 +1,15 @@
 from flask import Flask, session
 from flask_mail import Mail, Message
 from routes import auth_bp, home_bp, publicar_duda_bp, explorar_bp, perfil_bp, detalle_duda_bp
-
+from api.resources import HomeResource
+from flask_restful import Api 
 
 
 app = Flask(__name__)
+
+api= Api(app)
+api.add_resource(HomeResource, '/home')
+
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
