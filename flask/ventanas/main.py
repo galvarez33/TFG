@@ -7,8 +7,7 @@ from flask_restful import Api
 
 app = Flask(__name__)
 
-api= Api(app)
-api.add_resource(HomeResource, '/home')
+
 
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
