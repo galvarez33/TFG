@@ -18,6 +18,7 @@ body {
   background-image: url('/static/image.jpg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  background-attachment: fixed; 
   margin: 0; /* Elimina el margen predeterminado del body */
 }
 

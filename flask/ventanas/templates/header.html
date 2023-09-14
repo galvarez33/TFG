@@ -1,15 +1,16 @@
-<!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-navbar.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Agregar los scripts de Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(179, 248, 225);">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(105, 209, 124);">
         {% if not logged_user %}
         <div class="mx-auto"> <!-- Centra el contenido horizontalmente -->
             <a class="navbar-brand" href="/home">PRACTICA CON ESTUDIANTES</a> <!-- Título en el medio del navbar -->
@@ -25,7 +26,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/restricted">
                         <!-- SVG en lugar de "HOME" -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
                             <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
                             <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
                         </svg>
@@ -35,6 +36,17 @@
             </ul>
             <ul class="navbar-nav">
                 {% if logged_user %}
+                
+                <li class="nav-item">
+                    <!-- Agregar el formulario de búsqueda aquí -->
+                    <div class="search-form">
+                    <form method="POST" action="{{ url_for('explorar.explorar') }}" class="form-inline ml-auto">
+                        <input type="text" class="form-control" id="consulta" name="consulta" placeholder="Buscar por título">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </form>
+                </div>
+                </li>
+
                 <li class="nav-item dropdown ml-auto">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">

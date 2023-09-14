@@ -2,17 +2,16 @@
 
 /* BASIC */
 
-html {
-    background-color: #56baed;
-}
 
 body {
     font-family: "Poppins", sans-serif;
     height: 100vh;
     background-image: url('/static/image.jpg');
-    background-size: 100% 100%;
+    background-size: cover;
     background-repeat: no-repeat;
-}
+    background-attachment: fixed; 
+    
+  }
 
 a {
     color: #92badd;
@@ -29,6 +28,7 @@ h2 {
     display: inline-block;
     margin: 40px 8px 10px 8px;
     color: #000000;
+    margin-bottom: 25px;
 }
 
 
@@ -40,7 +40,7 @@ h2 {
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    min-height: 100%;
+    min-height: 80%;
     padding: 20px;
 }
 
@@ -50,13 +50,15 @@ h2 {
     background: #fff;
     padding: 30px;
     width: 90%;
-    max-width: 1000px;
+    max-width: 800px;
     position: relative;
     padding: 0px;
-    -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
-    box-shadow: 0 110px 110px 10000px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 30px 60px 0 rgba(255, 255, 255, 0.977);
+    box-shadow: 0 10px 30px 0 rgba(255, 255, 255, 0.914); /* Reducido el valor de la sombra */
     text-align: center;
 }
+
+
 
 #formFooter {
     background-color: #f6f6f6;
@@ -267,16 +269,7 @@ input[type=text]:placeholder {
 }
 
 /* Simple CSS3 Fade-in Animation */
-.underlineHover:after {
-    display: block;
-    left: 0;
-    bottom: -10px;
-    width: 0;
-    height: 2px;
-    background-color: #56baed;
-    content: "";
-    transition: width 0.2s;
-}
+
 
 .underlineHover:hover {
     color: #0d0d0d;

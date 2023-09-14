@@ -1,0 +1,24 @@
+/* Estilos para el formulario de búsqueda */
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+
+.search-form {
+    font-family: "Poppins", sans-serif;
+    margin-right: 800px;
+    margin-top: 3px/* Espacio entre el icono de "Home" y el formulario de búsqueda */
+}
+
+.form-control {
+    width: 200px;
+    height: 200px; /* Ancho más pequeño para el campo de entrada */
+}
+
+.search-form button {
+    padding: 3px 10px; /* Ajusta el padding del botón */
+}
+
+.logo {
+    width: 20px; /* Ancho de la imagen */
+    height: 50px; /* Altura automática para mantener la proporción */
+    margin-right: 300px; /* Espacio a la derecha de la imagen */
+}
