@@ -4,12 +4,13 @@
 
 
 body {
-    font-family: "Poppins", sans-serif;
+
     height: 100vh;
     background-image: url('/static/image.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed; 
+    
     
   }
 
@@ -293,4 +294,24 @@ input[type=text]:placeholder {
 
 * {
     box-sizing: border-box;
+}
+
+
+
+
+/* Agrega un fondo semi-transparente detrás de la caja */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Color y opacidad del fondo */
+    z-index: 999; /* Asegura que esté encima de todos los demás elementos */
+}
+
+
+.overlay.hidden,
+#formContent.hidden {
+    display: none;
 }

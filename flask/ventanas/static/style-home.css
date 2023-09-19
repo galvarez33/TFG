@@ -10,31 +10,33 @@
 
 .navbar {
   position: relative;
+  background-color: #333; /* Color de fondo del navbar */
+  color: white;
+  padding: 5px; /* Espaciado interno del navbar */
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1; /* Asegura que el navbar esté en la parte superior */
 }
 
 body {
   font-family: "Poppins", sans-serif;
   height: 100vh;
   background-image: url('/static/image.jpg');
-  background-size: 100% 100%;
+  overflow-x: hidden;
+  background-size: cover;
   background-repeat: no-repeat;
-  background-attachment: fixed; 
-  margin: 0; /* Elimina el margen predeterminado del body */
-}
-
-nav {
-  color: #ff0000;
+  background-attachment: fixed;
+  nav {
+    color: #ff0000;
+  }
 }
 
 h1 {
   font-family: typo;
 }
 
-.imagen1{
-  height: 100px;
-}
-
-.imagen2{
+.imagen1, .imagen2 {
   height: 100px;
 }
 
@@ -65,17 +67,6 @@ body, html {
   background-color: #f0f0f0;
 }
 
-.navbar {
-  background-color: #333; /* Color de fondo del navbar */
-  color: white;
-  padding: 5px; /* Espaciado interno del navbar */
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1; /* Asegura que el navbar esté en la parte superior */
-}
-
-/* Estilos para el contenido centrado */
 .content-container {
   display: flex;
   flex-direction: column;
@@ -87,7 +78,6 @@ body, html {
 .welcome-container {
   text-align: center;
   color: white;
-  padding: 20px;
   background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -96,6 +86,6 @@ body, html {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
-  text-decoration: none;
-  border-radius: 5px;
+  border-radius: 10px;
+  border: none; /* Agregar esta línea para eliminar el borde */
 }

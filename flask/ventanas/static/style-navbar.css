@@ -2,10 +2,13 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 
 
+
+
 .search-form {
     font-family: "Poppins", sans-serif;
-    margin-right: 800px;
-    margin-top: 3px/* Espacio entre el icono de "Home" y el formulario de búsqueda */
+    margin-top: 3px;
+    float: left;
+    /* Espacio entre el icono de "Home" y el formulario de búsqueda */
 }
 
 .form-control {
@@ -21,4 +24,21 @@
     width: 20px; /* Ancho de la imagen */
     height: 50px; /* Altura automática para mantener la proporción */
     margin-right: 300px; /* Espacio a la derecha de la imagen */
+}
+
+.navbar-brand{
+    font-family: "Poppins", sans-serif;
+}
+
+.navbar-logo-ceu{
+    width: 80px;
+    height: 40px;
+    margin-left: 300px;
+}
+
+.navbar-logo-ceu2{
+    width: 80px;
+    height: 40px;
+    margin-left: 10px;
+    margin-right: 300px;
 }
