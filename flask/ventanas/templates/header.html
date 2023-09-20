@@ -1,4 +1,6 @@
+<!DOCTYPE html>
 <html>
+
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-navbar.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -6,7 +8,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </head>
 
 <body>
@@ -15,10 +16,6 @@
         <div class="mx-auto"> <!-- Centra el contenido horizontalmente -->
             <a class="navbar-brand" href="/home">PRACTICA CON ESTUDIANTES</a> <!-- Título en el medio del navbar -->
         </div>
-
-        
-        <a href="/home"><img class="navbar-logo-ceu" src="/static/ceu-logo.png" alt="ceu"></a>
-    
         {% endif %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,9 +27,11 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/restricted">
                         <!-- SVG en lugar de "HOME" -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
-                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
-                            <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                            class="bi bi-house-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z" />
+                            <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z" />
                         </svg>
                     </a>
                 </li>
@@ -40,49 +39,56 @@
             </ul>
             <ul class="navbar-nav">
                 {% if logged_user %}
-                
-                <li class="nav-item">
+                <li class="nav-item"> <!-- Lista de elementos de navegación para el formulario de búsqueda -->
                     <!-- Agregar el formulario de búsqueda aquí -->
                     <div class="search-form">
-                    <form method="POST" action="{{ url_for('explorar.explorar') }}" class="form-inline ml-auto" style="width: 350px; height: 30px;">
-                        <input type="text" class="form-control" id="consulta" name="consulta" placeholder="Buscar por título">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                    </form>
-                </div>
+                        <form method="POST" action="{{ url_for('explorar.explorar') }}" class="form-inline">
+                            <input type="text" class="form-control" id="consulta" name="consulta"
+                                placeholder="Buscar por título">
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </form>
+                    </div>
                 </li>
-
-                <a href="/restricted" style="position: absolute; width: 100px; height: 40px; left: 640px;"><img class="navbar-logo-ceu2" src="/static/ceu-logo.png" alt="ceu"></a>
-
-                <li class="nav-item dropdown ml-auto">
-                    <div  style="transform: translateX(870px);">
-                        <a  style="position: absolute;" class="nav-link dropdown-toggle" href="#" id="userDropdown" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <!-- SVG de persona -->
-                            <svg  xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                            </svg>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="/perfil">Perfil</a>
-                            <a class="dropdown-item" href="/cambiar_contrasena">Cambiar Contraseña</a>
-                            <a class="dropdown-item" href="/cierre">Cerrar Sesión</a>
-                            
+                </ul>
+                <ul class="navbar-nav ml-auto"> <!-- Lista de elementos de navegación para el icono del perfil y el acceso -->
+                    <li class="nav-item">
+                        <div>
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <!-- SVG de persona -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                    <path fill-rule="evenodd"
+                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                </svg>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="/perfil">Perfil</a>
+                                <a class="dropdown-item" href="/cambiar_contrasena">Cambiar Contraseña</a>
+                                <a class="dropdown-item" href="/cierre">Cerrar Sesión</a>
+                            </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
+                </ul>
                 {% else %}
-                <li class="nav-item dropdown" style="transform: translateX(500px);">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        Acceso
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="/login">Iniciar Sesión</a>
-                        <a class="dropdown-item" href="/registro">Registrarse</a>
-                    </div>
-                </li>
+                <ul class="navbar-nav ml-auto"> <!-- Lista de elementos de navegación para el acceso -->
+                    <li class="nav-item dropdown ml-auto"> <!-- Utiliza la clase ml-auto para pegar a la derecha -->
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Acceso
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="/login">Iniciar Sesión</a>
+                            <a class="dropdown-item" href="/registro">Registrarse</a>
+                        </div>
+                    </li>
+                </ul>
                 {% endif %}
             </ul>
         </div>
     </nav>
+</body>
+
+</html>
