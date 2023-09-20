@@ -1,18 +1,17 @@
-# Usar una imagen base de Python
-FROM python:3.8
+# Usa la imagen oficial de MongoDB como base
+FROM mongo:latest
 
-# Establecer el directorio de trabajo en la raíz de la aplicación
-WORKDIR /app
+# Establece una variable de entorno (si es necesario)
+# ENV MONGO_INITDB_ROOT_USERNAME=admin
+# ENV MONGO_INITDB_ROOT_PASSWORD=password
 
-# Copiar el archivo de requisitos y los archivos de la aplicación a la imagen
-COPY requirements.txt requirements.txt
-COPY . .
+# (Opcional) Copia archivos de configuración personalizados, si los tienes
+# COPY mongodb.conf /etc/mongod.conf
 
-# Instalar las dependencias
-RUN pip install -r requirements.txt
+# (Opcional) Expone el puerto en el que MongoDB escucha (por defecto, 27017)
+# EXPOSE 27017
 
-# Exponer el puerto en el que se ejecutará la aplicación Flask
-EXPOSE 5001
+# (Opcional) Puedes agregar otros comandos o configuraciones personalizadas aquí
 
-# Comando para ejecutar la aplicación cuando se inicie el contenedor
-CMD ["python", "app.py"]
+# Comando para iniciar MongoDB
+CMD ["mongod"]
