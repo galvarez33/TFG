@@ -1,7 +1,7 @@
 from flask import Flask, session
 from flask_mail import Mail, Message
 from routes import auth_bp, home_bp, publicar_duda_bp, explorar_bp, perfil_bp, detalle_duda_bp
-from api.resources import ExplorarResource
+from api.resources import ExplorarResource, PerfilResource
 from flask_restful import Api 
 
 
@@ -21,6 +21,7 @@ app.secret_key = '12345'
 app.debug = False
 
 api.add_resource(ExplorarResource, '/api/explorar')
+api.add_resource(PerfilResource, '/api/perfil/<string:correo_usuario>')
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)

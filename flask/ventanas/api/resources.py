@@ -1,12 +1,16 @@
-# api/resources.py
-
 from flask_restful import Resource
+from flask_jwt import jwt_required
 from funciones.explorar_funciones import obtener_parametros_dudas
+from funciones.perfil_funciones import obtener_dudas_usuario,borrar_duda_por_id
 
 class ExplorarResource(Resource):
     def get(self):
-        # Llama a la función obtener_parametros_dudas para obtener los parámetros de las dudas
         parametros_dudas = obtener_parametros_dudas()
-
-        # Convierte los parámetros de las dudas en una respuesta JSON
         return {'dudas': parametros_dudas}
+
+
+class PerfilResource(Resource):
+    def get(self, correo_usuario):
+        dudas_usuario = obtener_dudas_usuario(correo_usuario)
+        dudas_en_json = [{'_id': str(duda['_id']), 'titulo': duda.get('titulo', '')} for duda in dudas_usuario]
+        return {'dudas': dudas_en_json}

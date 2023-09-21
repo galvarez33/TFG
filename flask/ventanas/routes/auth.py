@@ -1,4 +1,4 @@
-from flask import render_template, session, request, redirect, url_for, Blueprint, flash
+from flask import render_template, session, request, redirect, url_for, Blueprint, flash, jsonify
 from pymongo import MongoClient
 from bson import ObjectId
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -8,15 +8,15 @@ from itsdangerous import URLSafeTimedSerializer
 import base64
 from datetime import datetime
 from . import auth_bp
+from flask_jwt import jwt
 
-
-secret_key ='12345'
+# Define la clave secreta para JWT
+secret_key = '12345'
 
 client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
 db = client['TFG']
 collection = db['usuarios']
 mail = Mail()
-
 
 # Ruta para iniciar sesión
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -30,6 +30,13 @@ def login():
 
         user = collection.find_one({'correo': username, 'contraseña': password})
         if user:
+            # Verificar las credenciales del usuario
+            # Si son válidas, genera un token de acceso
+            access_token = jwt.encode({'identity': user['correo']}, secret_key)
+
+            # Guardar el token de acceso en la sesión
+            session['access_token'] = access_token
+
             # Guardar el correo del usuario en la sesión
             session['logged_user'] = {
                 'correo': user['correo'],
@@ -46,6 +53,7 @@ def login():
 
     mensaje_confirmacion = session.pop('mensaje_confirmacion', None)
     return render_template('login.html', mensaje_confirmacion=mensaje_confirmacion)
+
 
 
 # Ruta para el registro de usuarios
