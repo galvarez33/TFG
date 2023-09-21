@@ -23,12 +23,14 @@ app.debug = False
 api.add_resource(ExplorarResource, '/api/explorar')
 api.add_resource(PerfilResource, '/api/perfil/<string:correo_usuario>')
 
+
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(publicar_duda_bp)
 app.register_blueprint(explorar_bp)
 app.register_blueprint(perfil_bp)
-app.register_blueprint(detalle_duda_bp)
+app.register_blueprint(detalle_duda_bp, url_prefix='/detalle_duda')
+
 
 
 if __name__ == '__main__':

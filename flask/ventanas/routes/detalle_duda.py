@@ -1,21 +1,13 @@
+
 from flask import render_template, request, redirect, session, url_for, Blueprint
-from pymongo import MongoClient
+from funciones.detalle_duda_funciones import conectar_db, obtener_detalle_duda, votar_positivo_comentario, votar_negativo_comentario, borrar_comentario, agregar_comentario
+from . import detalle_duda_bp
 from datetime import datetime
 import base64
-from bson import ObjectId
-from . import detalle_duda_bp
 
 
-
-
-client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
-db = client['TFG']
-form_collection = db['publicar_duda']
-
-
-# Ruta para ver los detalles de una duda
 @detalle_duda_bp.route('/detalle_duda/<duda_id>', methods=['GET', 'POST'])
-def detalle_duda(duda_id):
+def detalle_duda_view(duda_id):
     logged_user = session.get('logged_user')
     if not logged_user:
         return redirect(url_for('auth.login'))  # Redirigir al inicio de sesión si el usuario no está autenticado
@@ -44,28 +36,24 @@ def detalle_duda(duda_id):
                 'imagen': imagen_base64,
                 'votos_positivos': 0,
                 'votos_negativos': 0,
-                'fecha_agregado': datetime.now()  # Agrega la fecha de agregado
+                'fecha_agregado': datetime.now()  
             }
 
-            form_collection.update_one(
-                {'_id': duda['_id']},
-                {'$push': {'comentario': comentario_con_imagen}}
-            )
+            resultado = agregar_comentario(duda, comentario_con_imagen)
 
-            return redirect(url_for('detalle_duda.detalle_duda', duda_id=duda['_id']))
+            if resultado:
+                return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda['_id']))
+            else:
+                return render_template('error.html', mensaje='Error al agregar el comentario')
 
         comentario_index = request.args.get('comentario_index')
         if comentario_index is not None:
             comentario_index = int(comentario_index)
-            form_collection.update_one(
-                {'_id': duda['_id']},
-                {'$unset': {f'comentario.{comentario_index}': 1}}
-            )
-            form_collection.update_one(
-                {'_id': duda['_id']},
-                {'$pull': {'comentario': None}}
-            )
-            return redirect(url_for('detalle_duda.detalle_duda', duda_id=duda['_id']))
+            resultado = borrar_comentario(duda['_id'], comentario_index)
+            if resultado:
+                return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda['_id']))
+            else:
+                return render_template('error.html', mensaje='Error al borrar el comentario')
 
         orden = request.args.get('orden')
         if orden == 'mejor_votados':
@@ -78,108 +66,36 @@ def detalle_duda(duda_id):
         return render_template('error.html', mensaje='Duda no encontrada')
 
 
-
-def obtener_detalle_duda(duda_id):
-    # Convertir el duda_id a ObjectId
-    object_id = ObjectId(duda_id)
-    duda = form_collection.find_one({'_id': object_id})
-
-    return duda
-
-
-
 @detalle_duda_bp.route('/votar_positivo/<string:duda_id>/<int:comentario_index>', methods=['POST'])
-def votar_positivo(duda_id, comentario_index):
+def votar_positivo_view(duda_id, comentario_index):
     logged_user = session.get('logged_user')
     if not logged_user:
         return 'Acceso no autorizado'
 
     nombre_usuario = session.get('nombre_usuario')
 
-    duda = form_collection.find_one({'_id': ObjectId(duda_id)})
+    votar_positivo_comentario(duda_id, comentario_index, nombre_usuario)
 
-    if duda:
-        comentarios = duda.get('comentario', [])
-
-        if 0 <= comentario_index < len(comentarios):
-            comentario = comentarios[comentario_index]
-
-            # Verifica si el usuario ya ha votado en este comentario
-            usuario_voto = nombre_usuario
-            if usuario_voto not in comentario.get('usuarios_votados', []):
-                comentario['votos_positivos'] += 1
-                comentario.setdefault('usuarios_votados', []).append(usuario_voto)
-
-                form_collection.update_one(
-                    {'_id': duda['_id']},
-                    {'$set': {'comentario': comentarios}}
-                )
-
-        return redirect(url_for('detalle_duda.detalle_duda', duda_id=duda_id))
-
-    return 'Acceso no autorizado'
-
-
+    return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda_id))
 
 @detalle_duda_bp.route('/votar_negativo/<string:duda_id>/<int:comentario_index>', methods=['POST'])
-def votar_negativo(duda_id, comentario_index):
+def votar_negativo_view(duda_id, comentario_index):
     logged_user = session.get('logged_user')
     if not logged_user:
         return 'Acceso no autorizado'
 
     nombre_usuario = session.get('nombre_usuario')
 
-    duda = form_collection.find_one({'_id': ObjectId(duda_id)})
+    votar_negativo_comentario(duda_id, comentario_index, nombre_usuario)
 
-    if duda:
-        comentarios = duda.get('comentario', [])
-
-        if 0 <= comentario_index < len(comentarios):
-            comentario = comentarios[comentario_index]
-
-            # Verifica si el usuario ya ha votado en este comentario
-            usuario_voto = nombre_usuario
-            if usuario_voto not in comentario.get('usuarios_votados', []):
-                comentario['votos_negativos'] += 1
-                comentario.setdefault('usuarios_votados', []).append(usuario_voto)
-
-                form_collection.update_one(
-                    {'_id': duda['_id']},
-                    {'$set': {'comentario': comentarios}}
-                )
-
-        return redirect(url_for('detalle_duda.detalle_duda', duda_id=duda_id))
-
-    return 'Acceso no autorizado'
-
-
-
-
-
-
+    return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda_id))
 
 @detalle_duda_bp.route('/borrar_comentario/<duda_id>/<int:comentario_index>', methods=['POST'])
-def borrar_comentario(duda_id, comentario_index):
+def borrar_comentario_view(duda_id, comentario_index):
     logged_user = session.get('logged_user')
     if not logged_user:
         return 'Acceso no autorizado'
 
-    nombre_usuario = session.get('nombre_usuario')
+    borrar_comentario(duda_id, comentario_index)
 
-    duda = form_collection.find_one({'_id': ObjectId(duda_id)})
-
-    if duda:
-        comentarios = duda.get('comentario', [])
-
-        if 0 <= comentario_index < len(comentarios):
-            if nombre_usuario == comentarios[comentario_index]['nombre']:
-                comentarios.pop(comentario_index)
-
-                form_collection.update_one(
-                    {'_id': duda['_id']},
-                    {'$set': {'comentario': comentarios}}
-                )
-
-        return redirect(url_for('detalle_duda.detalle_duda', duda_id=duda_id))
-
-    return 'Acceso no autorizado'
+    return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda_id))
