@@ -4,6 +4,10 @@
 
 <div class="container">
     <h2 class="mt-4" style="color: white;">Explorar</h2>
+    <!-- Agrega un enlace a la API para obtener detalles de una duda específica -->
+    <a href="{{ url_for('publicar_duda.publicar_duda_json', duda_id=la_id_de_la_duda) }}">Ver detalles de la duda en JSON</a>
+
+
     <form method="POST" action="{{ url_for('explorar.explorar') }}" class="mb-4">
         <div class="form-group">
             <input type="text" class="form-control" id="consulta" name="consulta" placeholder="Buscar por título">
