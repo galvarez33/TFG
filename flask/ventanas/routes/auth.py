@@ -14,6 +14,8 @@ from flask_jwt import jwt
 from funciones.auth_funciones import iniciar_sesion, usuario_ya_autenticado, cerrar_sesion
 from funciones.auth_funciones import conectar_bd, generar_token, obtener_correo_desde_token, enviar_correo_verificacion, confirmar_correo_en_bd, verificar_credenciales_en_bd
 from funciones.auth_funciones import verificar_usuario_por_correo, actualizar_contrasena_en_bd, enviar_correo_restablecer_contrasena
+from funciones.auth_funciones import conectar_bd, obtener_usuario_por_correo, actualizar_contrasena
+
 
 
 

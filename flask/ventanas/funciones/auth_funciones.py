@@ -131,3 +131,18 @@ def enviar_correo_restablecer_contrasena(correo, token):
     except Exception as e:
         print(f"Error al enviar el correo de restablecimiento de contraseña: {str(e)}")
         return False
+    
+
+    #----------------------------------Funciones para cambiar contraseña cuando estas logeado---------------
+
+
+def obtener_usuario_por_correo(db, correo):
+# Implementa la lógica para obtener un usuario por correo desde la base de datos
+    usuario = db.collection.find_one({'correo': correo})
+    return usuario
+
+def actualizar_contrasena(db, correo, nueva_contrasena):
+    # Implementa la lógica para actualizar la contraseña en la base de datos
+    db.collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
+
+    
