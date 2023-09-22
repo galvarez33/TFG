@@ -12,6 +12,7 @@ from flask_jwt import jwt
 
 
 from funciones.auth_funciones import iniciar_sesion, usuario_ya_autenticado, cerrar_sesion
+from funciones.auth_funciones import conectar_bd, generar_token, obtener_correo_desde_token, enviar_correo_verificacion, confirmar_correo_en_bd, verificar_credenciales_en_bd
 
 
 # Define la clave secreta para JWT
@@ -24,7 +25,7 @@ mail = Mail()
 
 # Ruta para iniciar sesión
 @auth_bp.route('/login', methods=['GET', 'POST'])
-def login_view():
+def login():
     if usuario_ya_autenticado():
         return redirect(url_for('auth.restricted'))
 
@@ -42,8 +43,108 @@ def login_view():
     return render_template('login.html', mensaje_confirmacion=mensaje_confirmacion)
 
 
-# Ruta para el registro de usuarios
+# Ruta para el registro----------------------------------------------------------------#
+
+
+
+
 @auth_bp.route('/registro', methods=['GET', 'POST'])
+def registro():
+    if 'logged_user' in session:
+        return redirect(url_for('auth.restricted'))
+
+    if request.method == 'POST':
+        correo = request.form['correo']
+        contraseña = request.form['contraseña']
+        nia = request.form['nia']
+        nombre = request.form['nombre']
+
+        correo_valido = re.match(r'^[a-zA-Z0-9.]+@usp\.ceu\.es$', correo)
+        if not correo_valido:
+            error = 'El correo electrónico no tiene el formato válido.'
+            return render_template('registro.html', error=error)
+
+        if len(nia) != 6 or not nia.isdigit():
+            error = 'El NIA debe ser un número de 6 dígitos.'
+            return render_template('registro.html', error=error)
+
+        usuario_existente = verificar_credenciales_en_bd(correo, contraseña)
+        if usuario_existente:
+            error = "El correo electrónico ya está registrado."
+            return render_template('registro.html', error=error)
+
+        if not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', contraseña):
+            error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
+            return render_template('registro.html', error=error)
+
+        enviar_correo_verificacion(correo, contraseña, nia, nombre)
+        confirmar_correo_en_bd(correo, contraseña, nia, nombre)
+        session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico.'
+
+        return redirect(url_for('auth.login'))
+
+    return render_template('registro.html')
+
+@auth_bp.route('/confirmar-correo/<token>')
+def confirmar_correo(token):
+    correo = obtener_correo_desde_token(token)
+    if correo:
+        contraseña = request.args.get('contraseña')
+        nia = request.args.get('nia')
+        nombre = request.args.get('nombre')
+
+        confirmar_correo_en_bd(correo, contraseña, nia, nombre)
+        return render_template('login.html', correo=correo)
+    else:
+        return render_template('login.html', error='Token inválido o expirado')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+""""@auth_bp.route('/registro', methods=['GET', 'POST'])
 def registro():
     if 'logged_user' in session:
         return redirect(url_for('auth.restricted'))
@@ -133,6 +234,9 @@ def confirmar_correo(token):
     else:
         return render_template('login.html', error='Token inválido o expirado')
 
+        
+
+        """
 
 @auth_bp.route('/restricted')
 def restricted():
