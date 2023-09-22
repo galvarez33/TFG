@@ -39,25 +39,22 @@ class DetalleDudaResource(Resource):
 
 class PublicarDudaResource(Resource):
     def get(self):
-        # Aquí obtienes los detalles de la duda con el ID especificado desde tu base de datos
         duda = obtener_ultima_duda()
         if duda:
-            # Si la duda existe, la devuelves como un JSON
             duda_en_json = {
                 '_id': str(duda['_id']),
                 'titulo': duda.get('titulo', ''),
                 'descripcion': duda.get('descripcion', ''),
-                'imagen': duda.get('imagen', ''),  # Agrega el campo imagen si está disponible
-                'carrera': duda.get('carrera', ''),  # Agrega el campo carrera si está disponible
-                'curso': duda.get('curso', ''),  # Agrega el campo curso si está disponible
-                'asignatura': duda.get('asignatura', ''),  # Agrega el campo asignatura si está disponible
-                'dificultad': duda.get('dificultad', ''),  # Agrega el campo dificultad si está disponible
-                'correo_usuario': duda.get('correo_usuario', ''),  # Agrega el campo correo_usuario si está disponible
-                'comentario': duda.get('comentario', [])  # Agrega el campo comentario si está disponible
+                'imagen': duda.get('imagen', '')[:10],  
+                'carrera': duda.get('carrera', ''),  
+                'curso': duda.get('curso', ''),  
+                'asignatura': duda.get('asignatura', ''),  
+                'dificultad': duda.get('dificultad', ''), 
+                'correo_usuario': duda.get('correo_usuario', ''),  
+                'comentario': duda.get('comentario', [])  
             }
             return jsonify({'duda': duda_en_json})
         else:
-            # Si la duda no existe, devuelves un mensaje de error y un código de estado 404 (No encontrado)
             return jsonify({'message': 'Duda no encontrada'}), 404
         
     
