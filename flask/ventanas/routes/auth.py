@@ -10,6 +10,10 @@ from datetime import datetime
 from . import auth_bp
 from flask_jwt import jwt
 
+
+from funciones.auth_funciones import iniciar_sesion, usuario_ya_autenticado, cerrar_sesion
+
+
 # Define la clave secreta para JWT
 secret_key = '12345'
 
@@ -20,32 +24,15 @@ mail = Mail()
 
 # Ruta para iniciar sesión
 @auth_bp.route('/login', methods=['GET', 'POST'])
-def login():
-    if 'logged_user' in session:
+def login_view():
+    if usuario_ya_autenticado():
         return redirect(url_for('auth.restricted'))
 
     if request.method == 'POST':
         username = request.form['correo']
         password = request.form['contrasena']
 
-        user = collection.find_one({'correo': username, 'contraseña': password})
-        if user:
-            # Verificar las credenciales del usuario
-            # Si son válidas, genera un token de acceso
-            access_token = jwt.encode({'identity': user['correo']}, secret_key)
-
-            # Guardar el token de acceso en la sesión
-            session['access_token'] = access_token
-
-            # Guardar el correo del usuario en la sesión
-            session['logged_user'] = {
-                'correo': user['correo'],
-                'nombre': user['nombre']
-            }
-
-            # Guardar el nombre del usuario en la sesión
-            session['nombre_usuario'] = user['nombre']
-
+        if iniciar_sesion(username, password):
             return redirect(url_for('auth.restricted'))
         else:
             error = 'El correo o la contraseña son incorrectos'
@@ -53,7 +40,6 @@ def login():
 
     mensaje_confirmacion = session.pop('mensaje_confirmacion', None)
     return render_template('login.html', mensaje_confirmacion=mensaje_confirmacion)
-
 
 
 # Ruta para el registro de usuarios
