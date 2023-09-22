@@ -94,3 +94,40 @@ def verificar_credenciales_en_bd(username, password):
     return user
 
 
+
+#----------------------------------------Funciones para restablecer contraseña---------------------------
+
+# Verificar si un usuario existe en la base de datos por su correo
+def verificar_usuario_por_correo(correo):
+    db = conectar_bd()
+    collection = db['usuarios']
+    usuario = collection.find_one({'correo': correo})
+    return usuario is not None 
+
+# Actualizar la contraseña de un usuario en la base de datos
+def actualizar_contrasena_en_bd(correo, nueva_contrasena):
+    db = conectar_bd()
+    collection = db['usuarios']
+    
+    # Actualizar la contraseña en la base de datos
+    resultado = collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
+    
+    # Verificar si la actualización fue exitosa
+    return resultado.modified_count > 0
+
+
+def enviar_correo_restablecer_contrasena(correo, token):
+    mail = Mail()  # Asegúrate de haber configurado la extensión Mail en tu aplicación Flask
+
+    # Genera la URL para restablecer la contraseña
+    url_restablecer = url_for('auth.restablecer_contrasena', correo=correo, token=token, _external=True)
+
+    mensaje = Message('Restablecer contraseña', sender='tu_correo@gmail.com', recipients=[correo])
+    mensaje.body = f'Haz clic en el siguiente enlace para restablecer tu contraseña: {url_restablecer}'
+
+    try:
+        mail.send(mensaje)  # Envía el correo
+        return True
+    except Exception as e:
+        print(f"Error al enviar el correo de restablecimiento de contraseña: {str(e)}")
+        return False
