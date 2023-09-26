@@ -1,10 +1,12 @@
 from flask_restful import Resource,reqparse
-from flask import jsonify
-from flask_jwt import jwt_required
+from flask import jsonify,session, Response
+import json
+
 from funciones.explorar_funciones import obtener_parametros_dudas
 from funciones.perfil_funciones import obtener_dudas_usuario,borrar_duda_por_id
 from funciones.detalle_duda_funciones import conectar_db, obtener_detalle_duda, votar_positivo_comentario, votar_negativo_comentario, borrar_comentario, agregar_comentario
 from funciones.publicar_duda_funciones import guardar_nueva_duda,obtener_ultima_duda
+from funciones.auth_funciones import usuario_ya_autenticado,iniciar_sesion
 
 class ExplorarResource(Resource):
     def get(self):
@@ -58,4 +60,29 @@ class PublicarDudaResource(Resource):
             return jsonify({'message': 'Duda no encontrada'}), 404
         
     
+
+
+class SesionResource(Resource):
+    def get(self):
+        if usuario_ya_autenticado():
+            correo = session.get('correo_usuario')
+            nombre = session.get('nombre_usuario')
+            nia = session.get('nia_usuario')  # Agregar la obtención del NIA
+            contraseña = session.get('contraseña_usuario')  # Agregar la obtención de la contraseña
+
+            if correo and nombre:
+                user_json = {
+                    'correo': correo,
+                    'nombre': nombre,
+                    'nia': nia,  
+                    'contrasena': contraseña,  
+                }
+            
+                response_json = json.dumps(user_json)
+            
+                return response_json, 200, {'Content-Type': 'application/json'}
+            else:
+                return json.dumps({'message': 'No se encontraron datos de usuario en la sesión'}), 401, {'Content-Type': 'application/json'}
+        else:
+            return json.dumps({'message': 'Acceso no autorizado'}), 401, {'Content-Type': 'application/json'}
 

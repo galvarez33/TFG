@@ -203,15 +203,17 @@ def cambiar_contrasena():
     mensaje_confirmacion = None  # Inicializa la variable de confirmación
 
     if request.method == 'POST':
+        data = session['logged_user']
+        print(data)
         correo = session['logged_user']['correo']
         contrasena_actual = request.form['contrasena_actual']
         nueva_contrasena = request.form['nueva_contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
-        print(correo)
+        
 
         # Obtener el usuario actual desde MongoDB
         usuario = collection.find_one({'correo': correo})
-        print(usuario)
+        
         if not usuario:
             error = 'El usuario no existe'  # Asigna el mensaje de error
         elif usuario['contraseña'] != contrasena_actual:

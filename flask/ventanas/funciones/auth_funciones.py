@@ -26,7 +26,9 @@ def verificar_credenciales(username, password):
             'access_token': jwt.encode({'identity': user['correo']}, secret_key),
             'user_data': {
                 'correo': user['correo'],
-                'nombre': user['nombre']
+                'nombre': user['nombre'],
+                'nia': user['nia'], 
+                'contraseña': user['contraseña'] 
             }
         }
     else:
@@ -39,6 +41,9 @@ def iniciar_sesion(username, password):
         session['logged_user'] = credenciales['user_data']
         session['nombre_usuario'] = credenciales['user_data']['nombre']
         session['correo_usuario'] = credenciales['user_data']['correo']
+        session['nia_usuario'] = credenciales['user_data']['nia'] 
+        session['contraseña_usuario'] = credenciales['user_data']['contraseña']
+
 
         return True
     return False
