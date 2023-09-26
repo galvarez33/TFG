@@ -26,7 +26,7 @@ def agregar_comentario(duda, comentario):
     if imagen_data:
         imagen_base64 = base64.b64encode(imagen_data).decode('utf-8')
         comentario['imagen'] = imagen_base64
-        del comentario['imagen_data']  # Elimina los datos binarios de la imagen
+        del comentario['imagen_data']
 
     if form_collection.update_one(
         {'_id': duda['_id']},

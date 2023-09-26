@@ -21,6 +21,8 @@ def detalle_duda_view(duda_id):
             comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
 
         if request.method == 'POST':
+            correo_usuario = session.get('correo_usuario')
+
             nuevo_comentario = request.form.get('comentario')
             imagen = request.files['imagen']
 
@@ -32,6 +34,7 @@ def detalle_duda_view(duda_id):
             # Crear la tupla de comentario e imagen
             comentario_con_imagen = {
                 'nombre': nombre_usuario,
+                'correo': correo_usuario,
                 'texto': nuevo_comentario,
                 'imagen': imagen_base64,
                 'votos_positivos': 0,

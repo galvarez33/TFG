@@ -38,6 +38,8 @@ def iniciar_sesion(username, password):
         session['access_token'] = credenciales['access_token']
         session['logged_user'] = credenciales['user_data']
         session['nombre_usuario'] = credenciales['user_data']['nombre']
+        session['correo_usuario'] = credenciales['user_data']['correo']
+
         return True
     return False
 

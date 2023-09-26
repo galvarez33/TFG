@@ -1,7 +1,9 @@
+# En tu vista perfil
+
 from flask import render_template, request, redirect, session, url_for, Blueprint
 from flask_paginate import Pagination, get_page_args
 from . import perfil_bp
-from funciones.perfil_funciones import obtener_dudas_usuario, obtener_total_dudas_usuario, borrar_duda_por_id
+from funciones.perfil_funciones import obtener_dudas_usuario, obtener_total_dudas_usuario, borrar_duda_por_id, obtener_total_votos_positivos  # Añade la función importada
 
 @perfil_bp.route('/perfil', methods=['GET', 'POST'])
 def perfil():
@@ -15,9 +17,20 @@ def perfil():
         carrera = request.form.get('carrera', '')
         curso = request.form.get('curso', '')
 
-        dudas_usuario = obtener_dudas_usuario(usuario_correo)
+        # Obtener el número de página actual y la cantidad de elementos por página
+        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        per_page = 9  # Mostrar 9 elementos por página
+
+        # Llamada a la función con los valores de página y per_page
+        dudas_usuario = obtener_dudas_usuario(usuario_correo, page, per_page)
+        
+        # Obtener el total de votos positivos usando la función
+        total_votos_positivos = obtener_total_votos_positivos(usuario_correo)
     else:
         dudas_usuario = obtener_dudas_usuario(usuario_correo)
+        
+        # Obtener el total de votos positivos usando la función
+        total_votos_positivos = obtener_total_votos_positivos(usuario_correo)
 
     # Obtener el número de página actual y la cantidad de elementos por página
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -30,7 +43,9 @@ def perfil():
 
     # Crear el objeto de paginación
     pagination = Pagination(page=page, per_page=per_page, total=total_dudas_usuario, css_framework='bootstrap4')
-    return render_template('perfil.html', dudas=dudas_usuario, pagination=pagination, logged_user=logged_user)
+    
+    # Pasa el total de votos positivos a la plantilla
+    return render_template('perfil.html', dudas=dudas_usuario, pagination=pagination, logged_user=logged_user, total_votos_positivos=total_votos_positivos)
 
 
 

@@ -86,6 +86,7 @@ def registro():
         enviar_correo_verificacion(correo, contraseña, nia, nombre)
         confirmar_correo_en_bd(correo, contraseña, nia, nombre)
         session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico.'
+        session['correo_usuario'] = correo
 
         return redirect(url_for('auth.login'))
 
