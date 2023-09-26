@@ -63,6 +63,26 @@ class TestExplorarFunciones(unittest.TestCase):
         self.assertIsInstance(dudas, pymongo.cursor.Cursor)
         self.assertIsInstance(total_dudas, int)
 
+    def test_obtener_dudas_error_pagina_invalida(self):
+        consulta = ""
+        carrera = None
+        curso = None
+        page = -1
+        per_page = 10
+
+        with self.assertRaises(ValueError):
+            obtener_dudas(consulta, carrera, curso, page, per_page)
+
+    def test_obtener_dudas_error_per_page_invalido(self):
+        consulta = ""
+        carrera = None
+        curso = None
+        page = 1
+        per_page = -5
+
+        with self.assertRaises(ValueError):
+            obtener_dudas(consulta, carrera, curso, page, per_page)
+
         
 
 if __name__ == '__main__':
