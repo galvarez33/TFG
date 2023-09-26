@@ -14,10 +14,7 @@ def obtener_dudas_usuario(correo_usuario, page=1, per_page=9):
     db = client['TFG']
     form_collection = db['publicar_duda']
 
-    # Calcular el desplazamiento para la consulta en la base de datos
     offset = (page - 1) * per_page
-
-    # Obtener las dudas del usuario con paginación
     dudas = form_collection.find({'correo_usuario': correo_usuario}).skip(offset).limit(per_page)
     
     return dudas
@@ -44,9 +41,22 @@ def obtener_total_dudas_usuario(correo_usuario):
 def obtener_total_votos_positivos(correo_usuario):
     client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
     db = client['TFG']
-    comentarios_collection = db['comentarios']  # Supongo el nombre de la colección de comentarios
+    comentarios_collection = db['publicar_duda']  # Cambia el nombre de la colección a la de tus comentarios
 
-    # Utiliza la función `count_documents` para contar los votos positivos en los comentarios del usuario
-    total_votos_positivos = comentarios_collection.count_documents({'correo_usuario': correo_usuario, 'voto_positivo': True})
+    # Inicializa una variable para almacenar el total de votos positivos
+    total_votos_positivos = 0
+
+    # Consulta los comentarios del usuario
+    dudas = comentarios_collection.find({'comentario.correo': correo_usuario})
+
+    # Itera a través de las dudas
+    for duda in dudas:
+        comentarios = duda.get('comentario', [])  # Obtén la lista de comentarios de la duda
+        for comentario in comentarios:
+            # Dentro del comentario, busca el campo 'votos_positivos'
+            comentario_votos_positivos = comentario.get('votos_positivos', 0)
+            total_votos_positivos += comentario_votos_positivos
 
     return total_votos_positivos
+
+
