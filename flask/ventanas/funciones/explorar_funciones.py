@@ -6,6 +6,9 @@ def obtener_dudas(consulta, carrera, curso, page, per_page):
     db = client['TFG']
     form_collection = db['publicar_duda']
 
+    if per_page <= 0:
+        raise ValueError("per_page debe ser un valor positivo")
+
     filtros = {}
     if carrera:
         filtros['carrera'] = carrera

@@ -12,6 +12,7 @@ def explorar():
     logged_user = session.get('logged_user')
 
     if request.method == 'POST':
+        
         # Verificar si el usuario está autenticado antes de procesar la solicitud POST
         if not logged_user:
             return redirect(url_for('auth.login'))  # Redirigir al inicio de sesión si el usuario no está autenticado
