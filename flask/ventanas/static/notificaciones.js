@@ -1,39 +1,34 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Datos de ejemplo para las notificaciones
-    var notificaciones = [
-        { nombre: "Nombre1", asignatura: "Asignatura1", url: "/notificacion1" },
-        { nombre: "Nombre2", asignatura: "Asignatura2", url: "/notificacion2" }
-        // Agrega más notificaciones según sea necesario
-    ];
-
+function toggleNotificaciones() {
+    // Obtener el contenedor de notificaciones
     var notificacionesContainer = document.getElementById('notificaciones-container');
 
-    function cargarNotificaciones() {
-        var notificacionesHTML = '';
+    // Simular obtener las notificaciones de tu API (puedes hacer una solicitud AJAX aquí)
+    var notificaciones = obtenerNotificaciones(); // Esta función debe devolver las notificaciones desde tu API
 
-        // Generar HTML para las notificaciones con enlaces (href)
-        notificaciones.forEach(function(notificacion) {
-            notificacionesHTML += `<a class="dropdown-item" href="${notificacion.url}">${notificacion.nombre} ha respondido a tu duda de ${notificacion.asignatura}</a>`;
-        });
+    // Limpiar el contenedor de notificaciones antes de agregar nuevas notificaciones
+    notificacionesContainer.innerHTML = '';
 
-        // Mostrar las notificaciones en el contenedor
-        notificacionesContainer.innerHTML = notificacionesHTML;
-    }
+    // Iterar sobre las notificaciones y agregarlas al contenedor
+    notificaciones.forEach(function(notificacion) {
+        var notificacionElement = document.createElement('div');
+        notificacionElement.className = 'dropdown-item';
+        notificacionElement.innerText = notificacion.texto; // Asegúrate de tener una propiedad 'texto' en tus objetos de notificación
 
-    function toggleNotificaciones(event) {
-        // Prevenir el comportamiento predeterminado del enlace
-        event.preventDefault();
+        // Agregar la notificación al contenedor
+        notificacionesContainer.appendChild(notificacionElement);
+    });
 
-        if (notificacionesContainer.style.display === 'block') {
-            notificacionesContainer.style.display = 'none';
-        } else {
-            // Cargar y mostrar las notificaciones cuando se hace clic en el enlace
-            cargarNotificaciones();
-            notificacionesContainer.style.display = 'block';
-        }
-    }
+    // Mostrar el contenedor de notificaciones
+    notificacionesContainer.style.display = 'block';
+}
 
-    // Asociar la función toggleNotificaciones al clic del enlace
-    var enlaceNotificaciones = document.querySelector('.nav-link');
-    enlaceNotificaciones.onclick = toggleNotificaciones;
-});
+// Función simulada para obtener las notificaciones desde tu API
+function obtenerNotificaciones() {
+    // Aquí deberías hacer una solicitud AJAX para obtener las notificaciones desde tu API
+    // Por ahora, solo devolveré un array de ejemplo para fines de demostración
+    return [
+        { texto: 'Nueva notificación 1' },
+        { texto: 'Nueva notificación 2' },
+        // ... más notificaciones
+    ];
+}
