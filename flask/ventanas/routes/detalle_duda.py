@@ -6,7 +6,7 @@ from datetime import datetime
 import base64
 
 
-@detalle_duda_bp.route('/detalle_duda/<duda_id>', methods=['GET', 'POST'])
+@detalle_duda_bp.route('/<duda_id>', methods=['GET', 'POST'])
 def detalle_duda_view(duda_id):
     logged_user = session.get('logged_user')
     if not logged_user:

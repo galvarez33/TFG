@@ -101,6 +101,7 @@ class ComentariosResource(Resource):
         comentarios_formateados = []
         for comentario in comentarios:
             comentario_formateado = {
+                'duda_id': str(comentario['duda_id']),
                 'nombre_usuario_comentario': comentario['nombre_usuario_comentario'],
                 'asignatura': comentario['asignatura']
             }
