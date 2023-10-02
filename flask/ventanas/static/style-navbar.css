@@ -41,3 +41,15 @@
     margin-left: 10px;
     margin-right: 300px;
 }
+
+
+
+.dropdown-content {
+    display: none;
+    /* Otros estilos como posición, fondo, bordes, etc. según sea necesario */
+}
+
+/* Estilo para mostrar el contenedor cuando tiene la clase 'show' */
+.dropdown-content.show {
+    display: block;
+}

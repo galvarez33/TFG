@@ -1,5 +1,5 @@
 from flask_restful import Resource,reqparse
-from flask import jsonify,session, Response
+from flask import jsonify,session, Response, request
 import json
 
 from funciones.explorar_funciones import obtener_parametros_dudas
@@ -86,3 +86,28 @@ class SesionResource(Resource):
         else:
             return json.dumps({'message': 'Acceso no autorizado'}), 401, {'Content-Type': 'application/json'}
 
+class ComentariosResource(Resource):
+    def get(self):
+        # Obtén el correo del usuario que ha iniciado sesión
+        correo_usuario = session.get('correo_usuario')
+
+        # Establecer la conexión a la base de datos MongoDB
+        _, notificaciones_collection = conectar_db()
+
+        # Obtener los comentarios de la colección de notificaciones
+        comentarios = list(notificaciones_collection.find({'correo_usuario_duda': correo_usuario}))
+
+        # Formatear comentarios como una lista de diccionarios
+        comentarios_formateados = []
+        for comentario in comentarios:
+            comentario_formateado = {
+                'nombre_usuario_comentario': comentario['nombre_usuario_comentario'],
+                'asignatura': comentario['asignatura']
+            }
+            comentarios_formateados.append(comentario_formateado)
+
+        # Usar json.dumps con ensure_ascii=False para manejar caracteres especiales correctamente
+        comentarios_json = json.dumps(comentarios_formateados, ensure_ascii=False)
+
+        # Usar jsonify para crear la respuesta JSON
+        return jsonify(json.loads(comentarios_json))
