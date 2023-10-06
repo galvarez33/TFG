@@ -90,11 +90,22 @@
                                 var notificaciones = JSON.parse(xhr.responseText);
 
                                 notificaciones.forEach(function (notificacion) {
-                                    var notificacionElement = document.createElement('a');
-                                    notificacionElement.className = 'dropdown-item';
-                                    notificacionElement.href = '/detalle_duda/' + notificacion.duda_id; 
-                                    notificacionElement.innerText = notificacion.nombre_usuario_comentario + ' ha respondido a tu duda de ' + notificacion.asignatura;
-                                    notificacionesContainer.appendChild(notificacionElement);
+                                    // Validar si el ID de notificación es válido
+                                    if (notificacion._id && notificacion._id !== 'undefined') {
+                                        var notificacionElement = document.createElement('a');
+                                        notificacionElement.className = 'dropdown-item';
+                                        notificacionElement.href = '/detalle_duda/' + notificacion.duda_id;
+                                        notificacionElement.innerText = notificacion.nombre_usuario_comentario + ' ha respondido a tu duda de ' + notificacion.asignatura;
+                                        notificacionElement.addEventListener('click', function (event) {
+                                            
+
+                                            // Realizar una solicitud DELETE para eliminar la notificación
+                                            eliminarNotificacion(notificacion._id, notificacionElement.href);
+                                        });
+                                        notificacionesContainer.appendChild(notificacionElement);
+                                    } else {
+                                        console.error('Error: ID de notificación no válido.');
+                                    }
                                 });
 
                                 notificacionesContainer.style.display = 'block';
@@ -107,6 +118,25 @@
                         };
                         xhr.send();
                     }
+
+                    function eliminarNotificacion(notificacionId, redirectUrl) {
+                        var eliminarNotificacionXhr = new XMLHttpRequest();
+                        eliminarNotificacionXhr.open('DELETE', '/api/notificaciones/' + notificacionId, true);
+                        eliminarNotificacionXhr.onload = function () {
+                            if (eliminarNotificacionXhr.status === 200) {
+                                // Redirigir al usuario solo si la eliminación es exitosa
+                                window.location.href = redirectUrl;
+                            } else {
+                                console.error('Error al eliminar la notificación: ' + eliminarNotificacionXhr.status);
+                            }
+                        };
+                        eliminarNotificacionXhr.onerror = function () {
+                            console.error('Error de red al eliminar la notificación');
+                        };
+                        eliminarNotificacionXhr.send();
+                    }
+
+
 
                 </script>
 
@@ -154,7 +184,7 @@
         </div>
     </nav>
     </div>
-    <script src="{{ url_for('static', filename='notificaciones.js') }}"></script>
+
 </body>
 
 

@@ -49,7 +49,7 @@ def agregar_comentario(duda, comentario):
 
 # Función para votar positivamente un comentario
 def votar_positivo_comentario(duda_id, comentario_index, usuario_voto):
-    form_collection = conectar_db()
+    form_collection, notificaciones_collection = conectar_db()
     duda = form_collection.find_one({'_id': ObjectId(duda_id)})
 
     if duda:
@@ -69,7 +69,7 @@ def votar_positivo_comentario(duda_id, comentario_index, usuario_voto):
 
 # Función para votar negativamente un comentario
 def votar_negativo_comentario(duda_id, comentario_index, usuario_voto):
-    form_collection = conectar_db()
+    form_collection, notificaciones_collection = conectar_db()
     duda = form_collection.find_one({'_id': ObjectId(duda_id)})
 
     if duda:
@@ -90,7 +90,7 @@ def votar_negativo_comentario(duda_id, comentario_index, usuario_voto):
 # Función para borrar un comentario
 def borrar_comentario(duda_id, comentario_index):
     try:
-        form_collection, _ = conectar_db()  # Desempaqueta la tupla para obtener la colección form_collection
+        form_collection, _ = conectar_db()  
 
         duda = form_collection.find_one({'_id': ObjectId(duda_id)})
 

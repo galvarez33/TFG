@@ -53,3 +53,21 @@
 .dropdown-content.show {
     display: block;
 }
+
+
+.dropdown-item {
+    padding: 10px 20px;
+    border-bottom: 1px solid #8b6161;
+    transition: background-color 0.3s;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+/* Estilo cuando se hace clic en una notificación */
+.dropdown-item.clicked {
+    background-color: #637d97; /* Cambia el color de fondo cuando se hace clic */
+}
+
+

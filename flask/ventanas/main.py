@@ -1,12 +1,11 @@
-from flask import Flask, session
-from flask_mail import Mail, Message
+from flask import Flask
+from flask_mail import Mail
+from flask_restful import Api
 from routes import auth_bp, home_bp, publicar_duda_bp, explorar_bp, perfil_bp, detalle_duda_bp
-from api.resources import ExplorarResource, PerfilResource, DetalleDudaResource, PublicarDudaResource, SesionResource, ComentariosResource
-from flask_restful import Api 
-
+from api.resources import ExplorarResource, PerfilResource, DetalleDudaResource, PublicarDudaResource, SesionResource, ComentariosResource, NotificacionesResource
 
 app = Flask(__name__)
-api =Api(app)
+api = Api(app)
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -16,28 +15,24 @@ app.config['MAIL_PASSWORD'] = 'lkytkgkbhirfyxlv'
 
 mail = Mail(app)
 
-
 app.secret_key = '12345'
-app.debug = False
 
+# Agrega tus recursos de API a la ruta correspondiente
 api.add_resource(ExplorarResource, '/api/explorar')
 api.add_resource(PerfilResource, '/api/perfil/<string:correo_usuario>')
 api.add_resource(DetalleDudaResource, '/api/detalle_duda/<duda_id>')
 api.add_resource(PublicarDudaResource, '/api/publicar_duda')
 api.add_resource(SesionResource, '/api/sesion')
 api.add_resource(ComentariosResource, '/api/comentarios')
+api.add_resource(NotificacionesResource, '/api/notificaciones/<string:notificacion_id>')
 
-
-
-
+# Registra tus blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(publicar_duda_bp)
 app.register_blueprint(explorar_bp)
 app.register_blueprint(perfil_bp)
 app.register_blueprint(detalle_duda_bp, url_prefix='/detalle_duda')
-
-
 
 if __name__ == '__main__':
     app.config['JSON_AS_ASCII'] = False
