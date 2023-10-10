@@ -115,19 +115,12 @@ class ComentariosResource(Resource):
 
 class NotificacionesResource(Resource):
     def delete(self, notificacion_id):
-        # Obtén el correo del usuario que ha iniciado sesión
         correo_usuario = session.get('correo_usuario')
-
-        # Establecer la conexión a la base de datos MongoDB
         _, notificaciones_collection = conectar_db()
-
-        # Convertir el notificacion_id de cadena a ObjectId
         notificacion_id_obj = ObjectId(notificacion_id)
-
-        # Intenta eliminar la notificación basada en el _id y el correo del usuario
+        
         resultado = notificaciones_collection.delete_one({'_id': notificacion_id_obj, 'correo_usuario_duda': correo_usuario})
 
-        # Verificar si se eliminó la notificación correctamente
         if resultado.deleted_count == 1:
             return {'mensaje': 'Notificación eliminada correctamente'}, 200
         else:

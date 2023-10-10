@@ -2,8 +2,11 @@ import pytest
 import sys,os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pytest
-from funciones.perfil_funciones import obtener_dudas_usuario, form_collection, borrar_duda_por_id, obtener_total_dudas_usuario
+from funciones.perfil_funciones import obtener_dudas_usuario, form_collection, borrar_duda_por_id, obtener_total_dudas_usuario,obtener_total_votos
 from bson import ObjectId
+from unittest.mock import Mock
+
+
 
 @pytest.fixture
 def form_collection_mock():
@@ -61,3 +64,5 @@ def test_obtener_total_dudas_usuario(form_collection_mock):
     total_dudas = obtener_total_dudas_usuario(correo_usuario_prueba)
 
     assert total_dudas == form_collection_mock.count_documents({"correo_usuario": correo_usuario_prueba})
+
+

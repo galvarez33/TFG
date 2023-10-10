@@ -5,7 +5,6 @@ from bson import ObjectId
 client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
 db = client['TFG']
 form_collection = db['publicar_duda']
-comentarios_collection = db['publicar_duda']
 
 # Función para conectar a la base de datos
 def conectar_db():
@@ -31,7 +30,7 @@ def obtener_total_votos(correo_usuario):
     total_votos_positivos = 0
     total_votos_negativos = 0
 
-    dudas = comentarios_collection.find({'comentario.correo': correo_usuario})
+    dudas = form_collection.find({'comentario.correo': correo_usuario})
 
     for duda in dudas:
         comentarios = duda.get('comentario', [])

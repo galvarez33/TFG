@@ -124,7 +124,7 @@ def actualizar_contrasena_en_bd(correo, nueva_contrasena):
 
 
 def enviar_correo_restablecer_contrasena(correo, token):
-    mail = Mail()  # Asegúrate de haber configurado la extensión Mail en tu aplicación Flask
+    mail = Mail()
 
     # Genera la URL para restablecer la contraseña
     url_restablecer = url_for('auth.restablecer_contrasena', correo=correo, token=token, _external=True)
@@ -144,12 +144,10 @@ def enviar_correo_restablecer_contrasena(correo, token):
 
 
 def obtener_usuario_por_correo(db, correo):
-# Implementa la lógica para obtener un usuario por correo desde la base de datos
     usuario = db.collection.find_one({'correo': correo})
     return usuario
 
 def actualizar_contrasena(db, correo, nueva_contrasena):
-    # Implementa la lógica para actualizar la contraseña en la base de datos
     db.collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
 
     
