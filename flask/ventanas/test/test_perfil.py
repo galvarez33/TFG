@@ -2,7 +2,7 @@ import pytest
 import sys,os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pytest
-from funciones.perfil_funciones import obtener_dudas_usuario, form_collection, borrar_duda_por_id
+from funciones.perfil_funciones import obtener_dudas_usuario, form_collection, borrar_duda_por_id, obtener_total_dudas_usuario
 from bson import ObjectId
 
 @pytest.fixture
@@ -51,3 +51,13 @@ def test_borrar_duda_por_id(form_collection_mock):
 
     duda_eliminada = form_collection_mock.find_one({"_id": duda_id_prueba})
     assert duda_eliminada is None  # 
+
+def test_obtener_total_dudas_usuario(form_collection_mock):
+    correos_prueba = ["usuario1@example.com", "usuario2@example.com", "usuario3@example.com"]
+    for correo in correos_prueba:
+        form_collection_mock.insert_one({"correo_usuario": correo, "texto": "Duda de prueba"})
+
+    correo_usuario_prueba = "usuario1@example.com"
+    total_dudas = obtener_total_dudas_usuario(correo_usuario_prueba)
+
+    assert total_dudas == form_collection_mock.count_documents({"correo_usuario": correo_usuario_prueba})
