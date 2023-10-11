@@ -36,7 +36,7 @@ def obtener_dudas(consulta, carrera, curso, imagen, page, per_page):
         resultados.append(parametros_duda)
 
     print(f"Total de dudas después de la paginación: {len(resultados)}")  # Agrega este print para ver el total de dudas después de la paginación
-    return resultados, total_dudas
+    return resultados
 
 
 
