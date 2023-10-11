@@ -12,7 +12,7 @@ from funciones.auth_funciones import usuario_ya_autenticado,iniciar_sesion
 class ExplorarResource(Resource):
     def get(self):
         parametros_dudas = obtener_parametros_dudas()
-        return {'dudas': parametros_dudas}
+        return jsonify({'dudas': parametros_dudas})
 
 
 class PerfilResource(Resource):

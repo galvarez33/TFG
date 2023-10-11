@@ -4,6 +4,7 @@ from flask_paginate import Pagination, get_page_parameter, get_page_args
 from . import explorar_bp
 from flasgger import Swagger, swag_from
 from funciones.explorar_funciones import obtener_dudas
+import requests
 
 
 
@@ -25,14 +26,19 @@ def explorar():
         carrera = ''
         curso = ''
 
-    # Obtener el número de página actual y la cantidad de elementos por página
+    api_url = 'http://localhost:5001/api/explorar'  # Reemplaza con la URL de tu API
+    response = requests.get(api_url)
+    data = response.json().get('dudas', [])
+
+    # Paginación
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     per_page = 9  # Mostrar 9 elementos por página
+    start = (page - 1) * per_page
+    end = start + per_page
 
-    # Obtener las dudas y el total de dudas utilizando la función obtener_dudas
-    dudas, total_dudas = obtener_dudas(consulta, carrera, curso, page, per_page)
+    dudas = data[start:end]
+    total_dudas = len(data)
 
-    # Crear el objeto de paginación
     pagination = Pagination(page=page, per_page=per_page, total=total_dudas, css_framework='bootstrap4')
 
     return render_template('explorar.html', dudas=dudas, pagination=pagination, logged_user=logged_user)
