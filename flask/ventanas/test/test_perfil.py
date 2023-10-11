@@ -39,6 +39,8 @@ def test_obtener_dudas_usuario(form_collection_mock):
     dudas_cursor = obtener_dudas_usuario(correo_usuario, page, per_page)
     dudas_lista = list(dudas_cursor) 
     assert len(dudas_lista) == 2 
+    for duda in dudas_prueba:
+        form_collection_mock.delete_one(duda)
 
 
 def test_borrar_duda_por_id(form_collection_mock):
@@ -56,7 +58,7 @@ def test_borrar_duda_por_id(form_collection_mock):
     assert duda_eliminada is None  # 
 
 def test_obtener_total_dudas_usuario(form_collection_mock):
-    correos_prueba = ["usuario1@example.com", "usuario2@example.com", "usuario3@example.com"]
+    correos_prueba = ["usuario1@example.com", "usuario2@example.com"]
     for correo in correos_prueba:
         form_collection_mock.insert_one({"correo_usuario": correo, "texto": "Duda de prueba"})
 
@@ -64,5 +66,7 @@ def test_obtener_total_dudas_usuario(form_collection_mock):
     total_dudas = obtener_total_dudas_usuario(correo_usuario_prueba)
 
     assert total_dudas == form_collection_mock.count_documents({"correo_usuario": correo_usuario_prueba})
+    for correo in correos_prueba:
+        form_collection_mock.delete_one({"correo_usuario": correo, "texto": "Duda de prueba"})
 
 
