@@ -19,14 +19,14 @@ def obtener_dudas(consulta, carrera, curso, imagen, page, per_page):
     if curso:
         filtros['curso'] = curso
     
-    print(f"Filtros aplicados: {filtros}")  # Agrega este print para ver los filtros aplicados
     total_dudas = form_collection.count_documents(filtros)
-    print(f"Total de dudas antes de la paginación: {total_dudas}")  # Agrega este print para ver el total de dudas antes de la paginación
     offset = (page - 1) * per_page
     dudas = form_collection.find(filtros).skip(offset).limit(per_page)
+
     resultados = []
     for duda in dudas:
         parametros_duda = {
+            'id': str(duda['_id']),
             'titulo': duda.get('titulo', ''),
             'descripcion': duda.get('descripcion', ''),
             'carrera': duda.get('carrera', ''),
@@ -51,6 +51,7 @@ def obtener_parametros_dudas():
 
     for duda in dudas:
         parametros_duda = {
+            'id': str(duda['_id']),
             'titulo': duda.get('titulo', ''),
             'descripcion': duda.get('texto', ''),
             'carrera': duda.get('carrera', ''),

@@ -38,11 +38,12 @@
     <div class="row">
         {% for duda in dudas %}
             <div class="col-md-4 mb-4">
-                <a href="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda._id) }}" class="duda-link">
+                <a href="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda.id) }}" class="duda-link">
+                    
                     <div class="card duda-card">
                         <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top fixed-size-image">
                         <div class="card-body duda-card-body">
-                            <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
+                            <h5 class="card-title duda-card-title">{{ duda.titulo}}</h5>
                         </div>
                     </div>
                 </a>

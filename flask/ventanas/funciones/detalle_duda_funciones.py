@@ -17,6 +17,7 @@ def obtener_detalle_duda(duda_id):
     form_collection, _ = conectar_db()
     object_id = ObjectId(duda_id)
     duda = form_collection.find_one({'_id': object_id})
+    print(duda)
     return duda
 
 

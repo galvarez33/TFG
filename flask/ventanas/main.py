@@ -20,7 +20,7 @@ app.secret_key = '12345'
 # Agrega tus recursos de API a la ruta correspondiente
 api.add_resource(ExplorarResource, '/api/explorar')
 api.add_resource(PerfilResource, '/api/perfil/<string:correo_usuario>')
-api.add_resource(DetalleDudaResource, '/api/detalle_duda/<duda_id>')
+api.add_resource(DetalleDudaResource, '/api/detalle_duda')
 api.add_resource(PublicarDudaResource, '/api/publicar_duda')
 api.add_resource(SesionResource, '/api/sesion')
 api.add_resource(ComentariosResource, '/api/comentarios')
@@ -32,7 +32,8 @@ app.register_blueprint(home_bp)
 app.register_blueprint(publicar_duda_bp)
 app.register_blueprint(explorar_bp)
 app.register_blueprint(perfil_bp)
-app.register_blueprint(detalle_duda_bp, url_prefix='/detalle_duda')
+app.register_blueprint(detalle_duda_bp)
+
 
 if __name__ == '__main__':
     app.config['JSON_AS_ASCII'] = False
