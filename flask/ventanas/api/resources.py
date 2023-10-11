@@ -3,19 +3,44 @@ from flask import jsonify,session, Response, request
 import json
 from bson import ObjectId
 
-from funciones.explorar_funciones import obtener_parametros_dudas
+from funciones.explorar_funciones import obtener_parametros_dudas, obtener_dudas
 from funciones.perfil_funciones import obtener_dudas_usuario,borrar_duda_por_id
 from funciones.detalle_duda_funciones import conectar_db, obtener_detalle_duda, votar_positivo_comentario, votar_negativo_comentario, borrar_comentario, agregar_comentario
 from funciones.publicar_duda_funciones import guardar_nueva_duda,obtener_ultima_duda
 from funciones.auth_funciones import usuario_ya_autenticado,iniciar_sesion
 
 class ExplorarResource(Resource):
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('consulta', type=str, required=True)
+        parser.add_argument('carrera', type=str)
+        parser.add_argument('curso', type=str)
+        parser.add_argument('imagen', type=str)
+        parser.add_argument('page', type=int, default=1)  # Agregamos los argumentos de paginación
+        parser.add_argument('per_page', type=int, default=9)
+        args = parser.parse_args()
+
+        consulta = args['consulta']
+        carrera = args['carrera']
+        curso = args['curso']
+        imagen = args['imagen']
+        page = args['page']  # Obtenemos el valor de 'page' del argumento
+        per_page = args['per_page']
+
+        # Llamamos a la función para obtener las dudas filtradas
+        dudas_filtradas = obtener_dudas(consulta, carrera, curso, imagen,page,per_page)
+        
+        # Devolvemos las dudas filtradas en formato JSON
+        return jsonify({'dudas': dudas_filtradas})
+   
     def get(self):
         parametros_dudas = obtener_parametros_dudas()
         return jsonify({'dudas': parametros_dudas})
 
 
 class PerfilResource(Resource):
+    
     def get(self, correo_usuario):
         dudas_usuario = obtener_dudas_usuario(correo_usuario)
         dudas_en_json = [{'_id': str(duda['_id']), 'titulo': duda.get('titulo', '')} for duda in dudas_usuario]
