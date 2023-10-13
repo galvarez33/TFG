@@ -43,14 +43,14 @@ def obtener_dudas_usuario(correo_usuario, consulta=None, carrera=None, curso=Non
     return dudas
 
 
-
-
-
-# Función para borrar una duda por su ID
-def borrar_duda_por_id(duda_id):
-    duda = form_collection.find_one({'_id': ObjectId(duda_id)})
+def borrar_duda_por_id(duda_id, correo_usuario):
+    duda = form_collection.find_one({'_id': ObjectId(duda_id), 'correo_usuario': correo_usuario})
     if duda:
-        form_collection.delete_one({'_id': ObjectId(duda_id)})
+        form_collection.delete_one({'_id': ObjectId(duda_id), 'correo_usuario': correo_usuario})
+        return True
+    else:
+        return False
+
 
 def obtener_total_dudas_usuario(correo_usuario):
     total_dudas_usuario = form_collection.count_documents({'correo_usuario': correo_usuario})

@@ -36,7 +36,7 @@
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
-        <a href="{{ url_for('explorar.explorar') }}" class="btn btn-secondary">Deshacer filtros</a>
+        <a href="{{ url_for('perfil.perfil') }}" class="btn btn-secondary">Deshacer filtros</a>
     </form>
     <div class="row">
         {% for duda in dudas %}
@@ -48,6 +48,7 @@
                             <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
                             <!-- Agregar el botón de Borrar -->
                             <form method="POST" action="{{ url_for('perfil.borrar_duda', duda_id=duda._id) }}">
+                                <input type="hidden" name="duda_id" value="{{ duda._id }}">
                                 <button type="submit" class="btn btn-danger">Borrar</button>
                             </form>
                         </div>

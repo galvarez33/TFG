@@ -54,10 +54,8 @@ class PerfilResource(Resource):
         curso = args['curso']
     
 
-        # Llamamos a la función para obtener las dudas filtradas
         dudas_filtradas = obtener_dudas_usuario(correo_usuario,consulta, carrera, curso)
         
-        # Devolvemos las dudas filtradas en formato JSON
         return {
             'dudas': dudas_filtradas,
             'total_votos_positivos': total_votos_positivos,
@@ -79,6 +77,31 @@ class PerfilResource(Resource):
             'total_votos_positivos': total_votos_positivos,
             'total_votos_negativos': total_votos_negativos
         }
+
+    def delete(self, correo_usuario):
+        parser = reqparse.RequestParser()
+        parser.add_argument('duda_id', type=str, required=True)  # Espera el ID de la duda en el cuerpo JSON
+        args = parser.parse_args()
+        duda_id = args['duda_id']
+
+        if borrar_duda_por_id(duda_id, correo_usuario):
+            # Lógica para obtener las dudas actualizadas después de la eliminación
+            dudas_actualizadas = obtener_dudas_usuario(correo_usuario)
+
+            # Convierte las dudas a formato JSON y devuelve un mensaje de éxito
+            dudas_en_json = [
+                {
+                    '_id': str(duda['_id']),
+                    'titulo': duda.get('titulo', ''),
+                    'descripcion': duda.get('texto', ''),
+                    'imagen': duda.get('imagen', '')
+                } for duda in dudas_actualizadas
+            ]
+
+            return {'message': 'Duda eliminada correctamente', 'dudas': dudas_en_json}, 200
+        else:
+            # Si hay un problema al borrar la duda, devuelve un mensaje de error
+            return {'message': 'Duda no encontrada o no tienes permisos para borrarla'}, 404
 
 
 class DetalleDudaResource(Resource):

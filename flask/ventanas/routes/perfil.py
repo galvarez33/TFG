@@ -74,12 +74,23 @@ def perfil():
     return render_template('perfil.html', dudas=dudas_usuario, pagination=pagination, logged_user=logged_user, total_votos_positivos=total_votos_positivos, total_votos_negativos=total_votos_negativos)
 
 
-
-@perfil_bp.route('/borrar_duda/<string:duda_id>', methods=['POST'])
-def borrar_duda(duda_id):
+@perfil_bp.route('/borrar_duda', methods=['POST'])
+def borrar_duda():
     logged_user = session.get('logged_user')
     if not logged_user:
         return 'Acceso no autorizado'
 
-    borrar_duda_por_id(duda_id)
-    return redirect(url_for('perfil.perfil'))
+    correo_usuario = logged_user['correo']
+    duda_id = request.form.get('duda_id')  
+
+
+    if duda_id:
+        api_url = f'http://localhost:5001/api/perfil/{correo_usuario}'
+        response = requests.delete(api_url, json={'duda_id': duda_id})  
+
+        if response.status_code == 200:
+            return redirect(url_for('perfil.perfil'))
+        else:
+            return 'Error al borrar la duda', 500
+    else:
+        return 'ID de duda inválido', 400
