@@ -11,10 +11,40 @@ def conectar_db():
     return form_collection
 
 # Función para obtener las dudas de un usuario
-def obtener_dudas_usuario(correo_usuario, page=1, per_page=9):
+def obtener_dudas_usuario(correo_usuario, consulta=None, carrera=None, curso=None, page=1, per_page=9):
+    query = {'correo_usuario': correo_usuario}
+    
+    if consulta:
+        query['$or'] = [
+            {'titulo': {'$regex': consulta, '$options': 'i'}},
+            {'texto': {'$regex': consulta, '$options': 'i'}}
+        ]
+
+    if carrera:
+        query['carrera'] = carrera
+
+    if curso:
+        query['curso'] = curso
+    
     offset = (page - 1) * per_page
-    dudas = form_collection.find({'correo_usuario': correo_usuario}).skip(offset).limit(per_page)
+    dudas_cursor = form_collection.find(query).skip(offset).limit(per_page)
+    
+    # Convertir ObjectId a cadena y crear la lista de dudas
+    dudas = [
+        {
+            '_id': str(duda['_id']),  # Convertir ObjectId a cadena
+            'titulo': duda.get('titulo', ''),
+            'descripcion': duda.get('texto', ''),
+            'imagen': duda.get('imagen', '')
+        }
+        for duda in dudas_cursor
+    ]
+    
     return dudas
+
+
+
+
 
 # Función para borrar una duda por su ID
 def borrar_duda_por_id(duda_id):
