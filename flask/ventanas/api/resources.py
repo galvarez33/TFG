@@ -1,5 +1,6 @@
 from flask_restful import Resource,reqparse
 from flask import jsonify,session, Response, request
+from datetime import datetime
 import json
 from bson import ObjectId
 
@@ -120,6 +121,8 @@ class DetalleDudaResource(Resource):
                 '_id': str(duda['_id']),
                 'titulo': duda.get('titulo', ''),
                 'curso': duda.get('curso', ''),
+                'correo': duda.get('correo', ''),
+                'asignatura': duda.get('asignatura', ''),
                 'imagen': duda.get('imagen', ''),
                 'carrera': duda.get('carrera', ''),
                 'dificultad': duda.get('dificultad', ''),
@@ -130,6 +133,15 @@ class DetalleDudaResource(Resource):
         else:
             return jsonify({'message': 'Duda no encontrada'}), 404
         
+    def post(self, duda_id):
+        data = request.get_json()
+        data['fecha_agregado'] = datetime.now()
+        resultado = agregar_comentario(duda_id, data)
+
+        if resultado:
+            return {'message': 'Comentario agregado correctamente'}, 201
+        else:
+            return {'message': 'Error al agregar el comentario'}, 500
 
 
 

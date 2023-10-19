@@ -11,7 +11,7 @@ import base64
 
 
 
-@detalle_duda_bp.route('/detalle_duda/<string:duda_id>', methods=['GET'])
+@detalle_duda_bp.route('/detalle_duda/<string:duda_id>', methods=['GET', 'POST'])
 def detalle_duda_view(duda_id):
     logged_user = session.get('logged_user')
     if not logged_user:
@@ -19,11 +19,48 @@ def detalle_duda_view(duda_id):
 
     api_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
     api_response = requests.get(api_url)
+    nombre_usuario = session.get('nombre_usuario')
+
+    if request.method == 'POST':
+        duda = api_response.json().get('duda')
+
+        for comentario in duda['comentarios']:
+            comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
+
+        correo_usuario = session.get('correo_usuario')
+        nuevo_comentario = request.form.get('comentario')
+        imagen = request.files.get('imagen')
+
+        if imagen:
+            imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
+        else:
+            imagen_base64 = None
+
+        # Crear la tupla de comentario e imagen
+        comentario_con_imagen = {
+            'nombre': nombre_usuario,
+            'correo': correo_usuario,
+            'texto': nuevo_comentario,
+            'imagen': imagen_base64,
+            'votos_positivos': 0,
+            'votos_negativos': 0,
+            'fecha_agregado': datetime.now().isoformat() 
+        }
+
+        # Hacer la solicitud a la API para agregar el comentario
+        api_agregar_comentario_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
+        api_agregar_comentario_response = requests.post(api_agregar_comentario_url, json=comentario_con_imagen)
+
+        if api_agregar_comentario_response.status_code == 201:
+            return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda['_id']))
+        else:
+            return render_template('error.html', mensaje='Error al agregar el comentario')
+
+
 
     if api_response.status_code == 200:
         duda = api_response.json().get('duda')
         comentarios = duda.get('comentarios', [])
-        print(comentarios)
         for comentario in duda['comentarios']:
             comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
 
@@ -33,82 +70,6 @@ def detalle_duda_view(duda_id):
 
 
 
-
-
-
-
-
-
-
-'''
-@detalle_duda_bp.route('/detalle_duda/<string:duda_id>', methods=['GET', 'POST'])
-def detalle_duda_view(duda_id):
-
-    logged_user = session.get('logged_user')
-    if not logged_user:
-        return redirect(url_for('auth.login'))  # Redirigir al inicio de sesión si el usuario no está autenticado
-
-    nombre_usuario = session.get('nombre_usuario')
-
-    duda = obtener_detalle_duda(duda_id)
-    api_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
-    api_response = requests.get(api_url)
-
-    if api_response.status_code == 200:
-        duda = api_response.json().get('duda')
-
-        for comentario in duda['comentarios']:
-            comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
-
-        if request.method == 'POST':
-            correo_usuario = session.get('correo_usuario')
-
-            nuevo_comentario = request.form.get('comentario')
-            imagen = request.files['imagen']
-
-            if imagen:
-                imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
-            else:
-                imagen_base64 = None
-
-            # Crear la tupla de comentario e imagen
-            comentario_con_imagen = {
-                'nombre': nombre_usuario,
-                'correo': correo_usuario,
-                'texto': nuevo_comentario,
-                'imagen': imagen_base64,
-                'votos_positivos': 0,
-                'votos_negativos': 0,
-                'fecha_agregado': datetime.now()  
-            }
-
-            resultado = agregar_comentario(duda, comentario_con_imagen)
-
-            if resultado:
-                return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda['_id']))
-            else:
-                return render_template('error.html', mensaje='Error al agregar el comentario')
-
-        comentario_index = request.args.get('comentario_index')
-        if comentario_index is not None:
-            comentario_index = int(comentario_index)
-            resultado = borrar_comentario(duda['_id'], comentario_index)
-            if resultado:
-                return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda['_id']))
-            else:
-                return render_template('error.html', mensaje='Error al borrar el comentario')
-
-        orden = request.args.get('orden')
-        if orden == 'mejor_votados':
-            duda['comentario'].sort(key=lambda x: x['votos_positivos'], reverse=True)
-        elif orden == 'recientes':
-            duda['comentario'].sort(key=lambda x: x['fecha_agregado'], reverse=True)
-
-        return render_template('detalle_duda.html', duda=duda, logged_user=logged_user, nombre_usuario=nombre_usuario)
-    else:
-        return render_template('error.html', mensaje='Duda no encontrada')
-
-'''
 @detalle_duda_bp.route('/votar_positivo/<string:duda_id>/<int:comentario_index>', methods=['POST'])
 def votar_positivo_view(duda_id, comentario_index):
     logged_user = session.get('logged_user')
