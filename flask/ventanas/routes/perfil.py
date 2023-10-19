@@ -21,8 +21,9 @@ def perfil():
         curso = request.form.get('curso', '')
         imagen = request.form.get('imagen', '')  
         api_url = f'http://localhost:5001/api/perfil/{correo_usuario}' 
-
+        print(curso)
         response = requests.post(api_url, json={'consulta': consulta, 'carrera': carrera, 'curso': curso, 'imagen': imagen})
+        
         if response.status_code == 200:
             data = response.json()
             dudas = data.get('dudas', [])

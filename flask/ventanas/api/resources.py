@@ -52,6 +52,7 @@ class PerfilResource(Resource):
         consulta = args['consulta']
         carrera = args['carrera']
         curso = args['curso']
+        print(curso)
     
 
         dudas_filtradas = obtener_dudas_usuario(correo_usuario,consulta, carrera, curso)

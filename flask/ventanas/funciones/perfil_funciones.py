@@ -12,6 +12,7 @@ def conectar_db():
 
 # Función para obtener las dudas de un usuario
 def obtener_dudas_usuario(correo_usuario, consulta=None, carrera=None, curso=None, page=1, per_page=9):
+    
     query = {'correo_usuario': correo_usuario}
     
     if consulta:
