@@ -1,6 +1,7 @@
 
 from flask import render_template, request, redirect, session, url_for, Blueprint
 import requests
+from operator import itemgetter
 
 from funciones.detalle_duda_funciones import conectar_db, obtener_detalle_duda, votar_positivo_comentario, votar_negativo_comentario, borrar_comentario, agregar_comentario
 from . import detalle_duda_bp
@@ -16,7 +17,7 @@ def detalle_duda_view(duda_id):
     logged_user = session.get('logged_user')
     if not logged_user:
         return redirect(url_for('auth.login'))
-
+    orden = request.args.get('orden')
     api_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
     api_response = requests.get(api_url)
     nombre_usuario = session.get('nombre_usuario')
@@ -64,14 +65,18 @@ def detalle_duda_view(duda_id):
     if api_response.status_code == 200:
         duda = api_response.json().get('duda')
         comentarios = duda.get('comentarios', [])
+        if orden == 'recientes':
+            comentarios.sort(key=itemgetter('fecha_agregado'), reverse=True)
+        
+        elif orden == 'mejor_votados':
+            comentarios.sort(key=itemgetter('votos_positivos'), reverse=True)
+
         for comentario in duda['comentarios']:
             comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
 
         return render_template('detalle_duda.html', duda=duda, comentarios=comentarios, logged_user=logged_user, nombre_usuario=session.get('nombre_usuario'))
     else:
         return render_template('error.html', mensaje='Duda no encontrada')
-
-
 
 
 
