@@ -6,6 +6,7 @@ html {
     background-color: #56baed;
 }
 
+
 body {
     font-family: "Poppins", sans-serif;
     height: 100vh;
@@ -14,6 +15,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed; 
 }
+
 
 a {
     color: #92badd;
@@ -125,7 +127,8 @@ input[type=reset]:active {
     transform: scale(0.95);
 }
 
-input[type=text] {
+input[type=text],
+input[type=password] {
     background-color: #f6f6f6;
     border: none;
     color: #0d0d0d;
