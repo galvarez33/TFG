@@ -20,7 +20,7 @@ app.secret_key = '12345'
 # Agrega tus recursos de API a la ruta correspondiente
 api.add_resource(ExplorarResource, '/api/explorar')
 api.add_resource(PerfilResource, '/api/perfil/<string:correo_usuario>')
-api.add_resource(DetalleDudaResource, '/api/detalle_duda')
+api.add_resource(DetalleDudaResource, '/api/detalle_duda/<string:duda_id>')
 api.add_resource(PublicarDudaResource, '/api/publicar_duda')
 api.add_resource(SesionResource, '/api/sesion')
 api.add_resource(ComentariosResource, '/api/comentarios')

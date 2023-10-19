@@ -106,6 +106,12 @@ class PerfilResource(Resource):
 
 
 class DetalleDudaResource(Resource):
+
+
+
+
+
+
     def get(self, duda_id):
         duda = obtener_detalle_duda(duda_id)
         if duda:
@@ -113,7 +119,11 @@ class DetalleDudaResource(Resource):
             duda_en_json = {
                 '_id': str(duda['_id']),
                 'titulo': duda.get('titulo', ''),
-                'descripcion': duda.get('descripcion', ''),
+                'curso': duda.get('curso', ''),
+                'imagen': duda.get('imagen', ''),
+                'carrera': duda.get('carrera', ''),
+                'dificultad': duda.get('dificultad', ''),
+                'descripcion': duda.get('texto', ''),
                 'comentarios': duda.get('comentario', []),
             }
             return jsonify({'duda': duda_en_json})

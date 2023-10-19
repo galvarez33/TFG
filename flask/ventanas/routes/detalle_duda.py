@@ -1,10 +1,46 @@
 
 from flask import render_template, request, redirect, session, url_for, Blueprint
+import requests
+
 from funciones.detalle_duda_funciones import conectar_db, obtener_detalle_duda, votar_positivo_comentario, votar_negativo_comentario, borrar_comentario, agregar_comentario
 from . import detalle_duda_bp
 from datetime import datetime
 import base64
 
+
+
+
+
+@detalle_duda_bp.route('/detalle_duda/<string:duda_id>', methods=['GET'])
+def detalle_duda_view(duda_id):
+    logged_user = session.get('logged_user')
+    if not logged_user:
+        return redirect(url_for('auth.login'))
+
+    api_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
+    api_response = requests.get(api_url)
+
+    if api_response.status_code == 200:
+        duda = api_response.json().get('duda')
+        comentarios = duda.get('comentarios', [])
+        print(comentarios)
+        for comentario in duda['comentarios']:
+            comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
+
+        return render_template('detalle_duda.html', duda=duda, comentarios=comentarios, logged_user=logged_user, nombre_usuario=session.get('nombre_usuario'))
+    else:
+        return render_template('error.html', mensaje='Duda no encontrada')
+
+
+
+
+
+
+
+
+
+
+'''
 @detalle_duda_bp.route('/detalle_duda/<string:duda_id>', methods=['GET', 'POST'])
 def detalle_duda_view(duda_id):
 
@@ -15,9 +51,13 @@ def detalle_duda_view(duda_id):
     nombre_usuario = session.get('nombre_usuario')
 
     duda = obtener_detalle_duda(duda_id)
+    api_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
+    api_response = requests.get(api_url)
 
-    if duda:
-        for comentario in duda['comentario']:
+    if api_response.status_code == 200:
+        duda = api_response.json().get('duda')
+
+        for comentario in duda['comentarios']:
             comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
 
         if request.method == 'POST':
@@ -68,7 +108,7 @@ def detalle_duda_view(duda_id):
     else:
         return render_template('error.html', mensaje='Duda no encontrada')
 
-
+'''
 @detalle_duda_bp.route('/votar_positivo/<string:duda_id>/<int:comentario_index>', methods=['POST'])
 def votar_positivo_view(duda_id, comentario_index):
     logged_user = session.get('logged_user')
