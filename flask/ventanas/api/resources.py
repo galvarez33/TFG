@@ -109,10 +109,6 @@ class PerfilResource(Resource):
 class DetalleDudaResource(Resource):
 
 
-
-
-
-
     def get(self, duda_id):
         duda = obtener_detalle_duda(duda_id)
         if duda:
@@ -142,6 +138,19 @@ class DetalleDudaResource(Resource):
             return {'message': 'Comentario agregado correctamente'}, 201
         else:
             return {'message': 'Error al agregar el comentario'}, 500
+
+    
+    def delete(self,duda_id):
+        data = request.form
+        comentario_index = int(request.form.get('comentario_index'))
+
+        print(comentario_index)
+        resultado = borrar_comentario(duda_id, comentario_index)
+
+        if resultado:
+            return {'message': 'Comentario borrado correctamente'}, 200
+        else:
+            return {'message': 'Error al borrar el comentario'}, 500
 
 
 

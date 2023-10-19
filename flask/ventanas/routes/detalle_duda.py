@@ -58,6 +58,9 @@ def detalle_duda_view(duda_id):
 
 
 
+    
+
+
     if api_response.status_code == 200:
         duda = api_response.json().get('duda')
         comentarios = duda.get('comentarios', [])
@@ -67,6 +70,9 @@ def detalle_duda_view(duda_id):
         return render_template('detalle_duda.html', duda=duda, comentarios=comentarios, logged_user=logged_user, nombre_usuario=session.get('nombre_usuario'))
     else:
         return render_template('error.html', mensaje='Duda no encontrada')
+
+
+
 
 
 
@@ -94,12 +100,21 @@ def votar_negativo_view(duda_id, comentario_index):
 
     return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda_id))
 
-@detalle_duda_bp.route('/borrar_comentario/<duda_id>/<int:comentario_index>', methods=['POST'])
+
+@detalle_duda_bp.route('/borrar_comentario/<string:duda_id>/<int:comentario_index>', methods=['POST'])
 def borrar_comentario_view(duda_id, comentario_index):
     logged_user = session.get('logged_user')
     if not logged_user:
         return 'Acceso no autorizado'
 
-    borrar_comentario(duda_id, comentario_index)
+    api_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
 
-    return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda_id))
+    data = {
+    'comentario_index': comentario_index
+    }
+    response = requests.delete(api_url, data=data)
+    if response.status_code == 200:
+        return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda_id))
+    else:
+        return 'Error al borrar el comentario'
+
