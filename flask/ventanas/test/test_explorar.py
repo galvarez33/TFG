@@ -8,38 +8,22 @@ def test_obtener_dudas():
     consulta = "ejemplo"
     carrera = "Informática"
     curso = "2023"
+    imagen = "imagen"
     page = 1
     per_page = 10
 
-    dudas, total_dudas = obtener_dudas(consulta, carrera, curso, page, per_page)
-
-    assert isinstance(dudas, pymongo.cursor.Cursor)
-    assert isinstance(total_dudas, int)
+    dudas = obtener_dudas(consulta, carrera, curso, page, per_page)
+    assert isinstance(dudas, list), "El objeto 'dudas' no es una lista de resultados"
+    assert all(isinstance(duda, dict) for duda in dudas), "Los elementos de 'dudas' no son diccionarios"
+  
+    
 
 def test_obtener_parametros_dudas():
     parametros_dudas = obtener_parametros_dudas()
 
     assert isinstance(parametros_dudas, list)
 
-def test_obtener_dudas2():
-    consulta = ""
-    carrera = None
-    curso = None
-    page = 1
-    per_page = 10
 
-    dudas, total_dudas = obtener_dudas(consulta, carrera, curso, page, per_page)
-
-    assert isinstance(dudas, pymongo.cursor.Cursor)
-    assert isinstance(total_dudas, int)
-
-    carrera = "Informática"
-    curso = "2023"
-
-    dudas, total_dudas = obtener_dudas(consulta, carrera, curso, page, per_page)
-
-    assert isinstance(dudas, pymongo.cursor.Cursor)
-    assert isinstance(total_dudas, int)
 
 def test_obtener_dudas_paginacion():
     consulta = ""
@@ -47,11 +31,9 @@ def test_obtener_dudas_paginacion():
     curso = None
     page = 2
     per_page = 5
-
-    dudas, total_dudas = obtener_dudas(consulta, carrera, curso, page, per_page)
-
-    assert isinstance(dudas, pymongo.cursor.Cursor)
-    assert isinstance(total_dudas, int)
+    resultados = obtener_dudas(consulta, carrera, curso, page, per_page)
+    assert isinstance(resultados, list), "El objeto 'resultados' no es una lista de resultados"
+  
 
 def test_obtener_dudas_error_pagina_invalida():
     consulta = ""

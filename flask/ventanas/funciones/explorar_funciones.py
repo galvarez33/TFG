@@ -2,7 +2,7 @@
 from pymongo import MongoClient
 
 
-def obtener_dudas(consulta, carrera, curso, imagen, page, per_page):
+def obtener_dudas(consulta, carrera, curso, page, per_page):
     client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
     db = client['TFG']
     form_collection = db['publicar_duda']
@@ -34,7 +34,7 @@ def obtener_dudas(consulta, carrera, curso, imagen, page, per_page):
             'imagen': duda.get('imagen', '')
         }
         resultados.append(parametros_duda)
-
+    
     print(f"Total de dudas después de la paginación: {len(resultados)}")  # Agrega este print para ver el total de dudas después de la paginación
     return resultados
 
