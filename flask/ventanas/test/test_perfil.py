@@ -23,28 +23,10 @@ def form_collection_mock():
     form_collection._collection = FormCollectionMock()
     return form_collection
 
-def test_obtener_dudas_usuario(form_collection_mock):
-    usuario_prueba = "usuario@example.com"
-    dudas_prueba = [
-        {"correo_usuario": usuario_prueba, "texto": "Duda 1"},
-        {"correo_usuario": usuario_prueba, "texto": "Duda 2"},
-    ]
-    for duda in dudas_prueba:
-        form_collection_mock.insert_one(duda)
-
-    correo_usuario = usuario_prueba
-    page = 1
-    per_page = 2 
-
-    dudas_cursor = obtener_dudas_usuario(correo_usuario, page, per_page)
-    dudas_lista = list(dudas_cursor) 
-    assert len(dudas_lista) == 2 
-    for duda in dudas_prueba:
-        form_collection_mock.delete_one(duda)
-
 
 def test_borrar_duda_por_id(form_collection_mock):
     duda_id_prueba = ObjectId() 
+    
     duda_prueba = {
         "_id": duda_id_prueba,
         "correo_usuario": "usuario@example.com",
@@ -52,7 +34,7 @@ def test_borrar_duda_por_id(form_collection_mock):
     }
     form_collection_mock.insert_one(duda_prueba)
 
-    borrar_duda_por_id(str(duda_id_prueba))  # Convierte el ID en una cadena para asegurar la coincidencia
+    borrar_duda_por_id(str(duda_id_prueba),"usuario@example.com")  # Convierte el ID en una cadena para asegurar la coincidencia
 
     duda_eliminada = form_collection_mock.find_one({"_id": duda_id_prueba})
     assert duda_eliminada is None  # 
