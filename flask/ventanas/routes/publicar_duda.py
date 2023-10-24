@@ -3,6 +3,7 @@ from datetime import datetime
 import base64
 from . import publicar_duda_bp
 from funciones.publicar_duda_funciones import guardar_nueva_duda
+from ia.validacion import detectar_texto_en_imagen
 
 @publicar_duda_bp.route('/publicar_duda', methods=['GET', 'POST'])
 def publicar_duda():
@@ -22,6 +23,12 @@ def publicar_duda():
 
         if imagen:
             imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
+            if not detectar_texto_en_imagen(imagen_base64):
+                # La imagen no tiene texto, mostrar mensaje de error
+                error= "La imagen no contiene texto. Por favor, sube una imagen con texto."
+                return render_template('publicar_duda.html', logged_user=logged_user, error=error)
+
+            
         else:
             imagen_base64 = None
 
@@ -46,5 +53,3 @@ def publicar_duda():
         return redirect(url_for('explorar.explorar'))
 
     return render_template('publicar_duda.html', logged_user=logged_user)
-
-# Otras rutas y funciones de vistas pueden ir aquí.

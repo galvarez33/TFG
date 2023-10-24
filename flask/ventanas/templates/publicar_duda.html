@@ -7,6 +7,9 @@
         <form id="formulario" method="POST" action="{{ url_for('publicar_duda.publicar_duda') }}" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="imagen" style="color: white;">Imagen:</label>
+                {% if error %}
+                <p class="alert alert-danger" role="alert">{{ error }}</p>
+                {% endif %}
                 <input type="file" class="form-control-file" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>
                 <div id="vista-previa"></div>
                 <button type="button" class="btn btn-dark" onclick="borrarImagen()">Borrar imagen</button>

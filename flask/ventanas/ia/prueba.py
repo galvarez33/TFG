@@ -10,7 +10,7 @@ ruta_modelo = 'modelo.h5'
 modelo = load_model(ruta_modelo)
 
 # Ruta de la imagen que deseas probar
-ruta_imagen = '/mnt/c/Users/gonza/Downloads/imagen5.png'
+ruta_imagen = '/mnt/c/Users/gonza/Downloads/imagen1.png'
 
 # Cargar y preprocesar la imagen
 img = image.load_img(ruta_imagen, target_size=(150, 150))

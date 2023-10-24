@@ -34,7 +34,6 @@ validation_generator = datagen.flow_from_directory(
 model = Sequential([
     Conv2D(32, (3, 3), activation='relu', input_shape=(altura, ancho, 3)),
     MaxPooling2D((2, 2)),
-    model.add(Dropout(0.25)) 
     Conv2D(64, (3, 3), activation='relu'),
     MaxPooling2D((2, 2)),
     Conv2D(128, (3, 3), activation='relu'),
@@ -54,7 +53,7 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 model.fit(
     train_generator,
     steps_per_epoch=train_generator.samples // batch_size,
-    epochs=10,
+    epochs=5,
     validation_data=validation_generator,
     validation_steps=validation_generator.samples // batch_size
 )
