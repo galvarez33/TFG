@@ -25,10 +25,10 @@ def obtener_detalle_duda(duda_id):
 def agregar_comentario(duda_id, comentario):
     form_collection, notificaciones_collection = conectar_db()
     
-    # Obtener el objeto duda de la base de datos
+    
     duda = obtener_detalle_duda(duda_id)
     if not duda:
-        return False  # Maneja el caso en que no se encuentre la duda
+        return False  
 
     imagen_data = comentario.get('imagen_data')
     if imagen_data:
@@ -40,12 +40,12 @@ def agregar_comentario(duda_id, comentario):
         {'_id': duda['_id']},
         {'$push': {'comentario': comentario}}
     ):
-        # Agregar notificación a la colección de notificaciones
+        
         notificacion = {
             'duda_id': duda['_id'],
-            'correo_usuario_duda': duda.get('correo', ''),  # Asegúrate de manejar casos donde 'correo' no exista en duda
+            'correo_usuario_duda': duda.get('correo', ''),  
             'nombre_usuario_comentario': comentario['nombre'],  
-            'asignatura': duda.get('asignatura', ''),  # Asegúrate de manejar casos donde 'asignatura' no exista en duda
+            'asignatura': duda.get('asignatura', ''),  
             'fecha': datetime.now()
         }
         notificaciones_collection.insert_one(notificacion)
