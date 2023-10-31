@@ -10,8 +10,8 @@ from sklearn.metrics import roc_auc_score, precision_recall_fscore_support
 
 # Rutas de las carpetas de imágenes
 carpeta_con_texto = '/mnt/c/Users/gonza/Documents/IA/archive/dataset/texto'
-carpeta_sin_texto = '/mnt/c/Users/gonza/Documents/IA/archive/dataset/notexto'
-carpeta= "/mnt/c/Users/gonza/Documents/IA/archive/dataset"
+carpeta_sin_texto = '/mnt/c/Users/ASUS/Documents/IA/archive/dataset/notexto'
+carpeta= "/mnt/c/Users/ASUS/Documents/IA/archive/dataset"
 # Parámetros para preprocesamiento y entrenamiento
 altura, ancho = 150, 150  # Dimensiones de las imágenes
 batch_size = 32
