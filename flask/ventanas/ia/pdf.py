@@ -1,4 +1,3 @@
-
 import docx
 
 def extract_text_from_docx(file_path):
@@ -9,11 +8,11 @@ def extract_text_from_docx(file_path):
     return '\n'.join(full_text)
 
 # Ejemplo de uso
-file_path = '/mnt/c/Users/ASUS/Documents/IA/categorico/fisica_I/fisica.docx'  # Reemplaza esto con la ruta real de tu archivo .docx
+file_path = '/mnt/c/Users/gonza/Documents/IA/textos/progra_I.docx'  # Reemplaza esto con la ruta real de tu archivo .docx
 extracted_text = extract_text_from_docx(file_path)
 
 # Guardar el texto en un archivo .txt
-output_file_path = 'fisica_I.txt'  # Ruta para guardar el archivo .txt
+output_file_path = 'progra_I.txt'  # Ruta para guardar el archivo .txt
 with open(output_file_path, 'w', encoding='utf-8') as file:
     file.write(extracted_text)
 

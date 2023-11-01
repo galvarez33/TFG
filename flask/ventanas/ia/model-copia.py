@@ -1,60 +1,123 @@
-import os
 import numpy as np
+import re
+from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, LSTM, Dense
-from sklearn.preprocessing import LabelEncoder
+from tensorflow.keras.layers import Embedding, LSTM, Dense,Dropout,GRU
 
-# Ruta de la carpeta con los archivos de texto
-carpeta = '/mnt/c/Users/ASUS/Documents/IA/textos'
+# Lista de palabras comunes en español que quieres eliminar
+palabras_comunes = ['el', 'la', 'los', 'las', 'en', 'un', 'una', 'unos', 'unas', 'y', 'o', 'pero', 'si', 'no', 'por', 'para',
+    'es', 'son', 'de', 'del', 'al', 'con', 'se', 'lo', 'a', 'más', 'como', 'su', 'sus', 'tu', 'tus', 'nuestro', 'nuestra',
+    'nuestros', 'nuestras', 'este', 'esta', 'estos', 'estas', 'ese', 'esa', 'esos', 'esas', 'esto', 'eso', 'estas',
+    'estos', 'aquel', 'aquella', 'aquellos', 'aquellas', 'porque', 'para', 'entre', 'desde', 'hasta', 'cuando', 'donde',
+    'cómo', 'qué', 'quiénes', 'cuál', 'cuáles', 'ser', 'estar', 'tener', 'hacer', 'poder', 'decir', 'ir', 'ver', 'saber',
+    'me', 'te', 'nos', 'os', 'se', 'mi', 'mis', 'tu', 'tus', 'su', 'sus', 'nuestro', 'nuestra', 'nuestros', 'nuestras',
+    'mío', 'tuyo', 'suyo', 'nuestro', 'nuestros', 'suyos', 'suyas', 'él', 'ella', 'ellos', 'ellas', 'esto', 'ese', 'eso',
+    'estos', 'estas', 'aquí', 'ahí', 'allí', 'allá', 'cuánto', 'cuánta', 'cuántos', 'cuántas', 'mucho', 'mucha', 'muchos',
+    'muchas', 'poco', 'poca', 'pocos', 'pocas', 'algo', 'algún', 'alguna', 'algunos', 'algunas', 'varios', 'varias', 'todo',
+    'toda', 'todos', 'todas', 'ningún', 'ninguna', 'ningunos', 'ningunas', 'cualquier', 'cualesquiera', 'alguno', 'algunos',
+    'alguna', 'algunas', 'ninguno', 'ninguna', 'ningunos', 'ningunas', 'otro', 'otros', 'otra', 'otras', 'mismo', 'misma',
+    'mismos', 'mismas', 'tan', 'tanto', 'tantos', 'tanta', 'tantas', 'más', 'menos', 'bastante', 'bastantes', 'demasiado',
+    'demasiados', 'demasiada', 'demasiadas', 'todo', 'nada', 'alguien', 'nadie', 'cada', 'cual', 'cuales', 'ambos', 'ambas',
+    'mucho', 'poco', 'vario', 'varia', 'tantos', 'tantas', 'demás', 'otro', 'otra', 'otros', 'otras', 'mismo', 'misma',
+    'mismos', 'mismas', 'tan', 'tanta', 'tantos', 'tantas', 'tanto', 'poca', 'pocos', 'pocas', 'bastante', 'bastantes',
+    'demasiado', 'demasiados', 'demasiada', 'demasiadas', 'ninguno', 'ninguna', 'nada', 'alguien', 'nadie', 'algo', 'ningún',
+    'ninguna', 'ningunos', 'ningunas', 'cualquier', 'cualesquiera', 'cualquiera', 'cualesquiera', 'cualquier', 'cualesquiera',
+    'aquel', 'aquella', 'aquello', 'aquellos', 'aquellas', 'todos', 'todas', 'uno', 'una', 'unos', 'unas', 'sí', 'no',
+    'si', 'como', 'muy', 'bien', 'mal', 'aunque', 'porque', 'para', 'con', 'sin', 'antes', 'después', 'durante', 'fuera',
+    'dentro', 'casi', 'siempre', 'nunca', 'quizás', 'tal', 'vez', 'sobre', 'bajo', 'ante', 'alrededor', 'mediante', 'tras',
+    'encima', 'debajo', 'lejos', 'cerca', 'hacia', 'dónde', 'aquí', 'allí', 'ahí', 'arriba', 'abajo', 'adelante', 'atrás',
+    'derecha', 'izquierda', 'cerca', 'lejos', 'pronto', 'tarde', 'ayer', 'hoy', 'mañana', 'ya', 'aún', 'todavía', 'entonces',
+    'ahora', 'cuando', 'mientras', 'porque', 'como', 'si', 'no', 'pero', 'o', 'sino', 'aunque', 'a', 'con', 'sin', 'en',
+    'durante', 'hasta', 'según', 'para', 'cómo', 'cuándo', 'dónde', 'cuál', 'cuáles', 'qué', 'quién', 'quiénes', 'cuánto',
+    'cuántos', 'cuánta', 'cuántas', 'por qué', 'para qué', 'con qué', 'con quién', 'a qué', 'de qué', 'cuál es', 'qué es',
+    'quién es', 'quién era', 'cuál era', 'qué significa', 'cuál significa', 'cuándo es', 'cómo es', 'dónde está', 'por qué es',
+    'qué hay', 'cuántos son', 'cuántas son','the', 'and', 'or', 'but', 'if', 'is', 'are', 'am', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'this', 'that', 
+    'these', 'those', 'my', 'your', 'his', 'her', 'its', 'our', 'their', 'a', 'an', 'in', 'on', 'at', 'to', 'with', 
+    'from', 'by', 'of', 'for', 'about', 'as', 'be', 'have', 'do', 'can', 'could', 'will', 'would', 'shall', 'should', 
+    'may', 'might', 'must', 'here', 'there', 'where', 'when', 'why', 'how', 'what', 'which', 'who', 'whom', 'whose', 
+    'this', 'that', 'these', 'those', 'some', 'any', 'few', 'many', 'several', 'more', 'most', 'all', 'none', 'each', 
+    'every', 'both', 'either', 'neither', 'no', 'not', 'nor', 'so', 'too', 'very', 'just', 'now', 'then', 'since', 
+    'while', 'before', 'after', 'during', 'between', 'among', 'against', 'under', 'over', 'through', 'with', 'without', 
+    'throughout', 'along', 'beside', 'amongst', 'upon', 'within', 'toward', 'against', 'across', 'behind', 'among', 
+    'beyond', 'above', 'below', 'near', 'far', 'inside', 'outside', 'into', 'onto', 'up', 'down', 'forward', 'backward', 
+    'right', 'left', 'at', 'by', 'with', 'about', 'against', 'between', 'for', 'during', 'from', 'in', 'into', 'of', 
+    'on', 'over', 'through', 'to', 'under', 'until', 'up', 'upon', 'with', 'within','use','used', '' ]
 
-# Leer los textos de los archivos en la carpeta
-textos = []
-categorias = []
 
-for archivo in os.listdir(carpeta):
-    with open(os.path.join(carpeta, archivo), 'r', encoding='utf-8') as file:
-        texto = file.read()
-        textos.append(texto)
-        categorias.append(archivo.split('_')[0])  # El nombre del archivo se usa como categoría
+def leer_archivo(ruta):
+    with open(ruta, "r", encoding="utf-8") as archivo:
+        lineas = archivo.readlines()[:100000]
+    return lineas
 
-# Convertir las categorías a números
-label_encoder = LabelEncoder()
-categorias_encoded = label_encoder.fit_transform(categorias)
+archivo_a = leer_archivo("/mnt/c/Users/gonza/Documents/IA/textos/fisica_I.txt")
+archivo_b = leer_archivo("/mnt/c/Users/gonza/Documents/IA/textos/matematicas_I.txt")
+archivo_c = leer_archivo("/mnt/c/Users/gonza/Documents/IA/textos/progra_I.txt")
 
-# Tokenización de texto
+# Crear etiquetas para los datos
+etiquetas_a = ['a'] * len(archivo_a)
+etiquetas_b = ['b'] * len(archivo_b)
+etiquetas_c = ['c'] * len(archivo_c)
+
+# Unir los datos y etiquetas
+textos = archivo_a + archivo_b + archivo_c
+etiquetas = etiquetas_a + etiquetas_b + etiquetas_c
+
+# Filtrar palabras comunes
+textos_filtrados = []
+for texto in textos:   
+    texto_limpio = re.sub(r'[^a-zA-Z\s]', '', texto)  # Eliminar números y caracteres especiales
+    palabras = texto_limpio.split()  # Tokenizar palabras utilizando espacios como delimitadores
+    palabras_filtradas = [palabra for palabra in palabras if palabra.lower() not in palabras_comunes]
+    texto_filtrado = ' '.join(palabras_filtradas)
+
+    if texto_filtrado.strip() != "" and texto_filtrado not in textos_filtrados:
+        textos_filtrados.append(texto_filtrado)
+    
+textos_sin_vacios = [texto for texto in textos if texto.strip() != ""]
+# Imprimir la cantidad de textos filtrados
+print(len(textos_filtrados))
+print(textos_sin_vacios)
+
+
 tokenizer = Tokenizer()
-tokenizer.fit_on_texts(textos)
+tokenizer.fit_on_texts(textos_sin_vacios)
 total_palabras = len(tokenizer.word_index) + 1
 
-# Convertir texto a secuencias numéricas
-secuencias = tokenizer.texts_to_sequences(textos)
+# Convertir textos a secuencias numéricas
+secuencias = tokenizer.texts_to_sequences(textos_filtrados)
 
-# Padding para que todas las secuencias tengan la misma longitud
-max_longitud = max([len(seq) for seq in secuencias])
+# Pad secuencias para que tengan la misma longitud
+max_longitud = max([len(s) for s in secuencias])
 secuencias_padded = pad_sequences(secuencias, maxlen=max_longitud, padding='post')
 
-# Construcción del modelo RNN
-model = Sequential([
-    Embedding(total_palabras, 64, input_length=max_longitud),
-    LSTM(128),
-    Dense(len(label_encoder.classes_), activation='softmax')  # Salida con función de activación softmax para clasificación no binaria
-])
+# Convertir etiquetas a datos categóricos
+etiquetas_categoricas = np.array([0 if etiqueta == 'a' else 1 if etiqueta == 'b' else 2 for etiqueta in etiquetas[:69635]])
 
-# Compilación del modelo
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+x_train, x_test, y_train, y_test = train_test_split(secuencias_padded, etiquetas_categoricas, test_size=0.2, random_state=42)
 
-# Datos de entrenamiento y etiquetas
-datos_entrenamiento = secuencias_padded
-etiquetas = np.array(categorias_encoded)
+modelo = Sequential()
+modelo.add(Embedding(total_palabras, 64, input_length=max_longitud))
+modelo.add(GRU(64))  # Cambiado de LSTM a GRU
+modelo.add(Dense(3, activation='softmax'))
 
-# Entrenamiento del modelo
-model.fit(datos_entrenamiento, etiquetas, epochs=10, batch_size=1)
+modelo.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# Entrenar el modelo
+historia = modelo.fit(x_train, y_train, epochs=5, batch_size=64, validation_data=(x_test, y_test))
+
+# Evaluar el modelo
+resultado = modelo.evaluate(x_test, y_test)
+print("Precisión en el conjunto de prueba:", resultado[1])
 
 # Guardar el modelo
-model.save('modelo_texto_no_binario.h5')
+modelo.save('modelo_simple.h5')
 
-# Guardar el encoder para convertir categorías a números durante la predicción
-import joblib
-joblib.dump(label_encoder, 'label_encoder.pkl')
+print("Métricas de entrenamiento:")
+print("Precisión:", historia.history['accuracy'][-1])
+print("Pérdida:", historia.history['loss'][-1])
+
+print("\nMétricas de validación:")
+print("Precisión:", historia.history['val_accuracy'][-1])
+print("Pérdida:", historia.history['val_loss'][-1])
