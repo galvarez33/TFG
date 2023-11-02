@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 import re
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -51,9 +52,9 @@ def leer_archivo(ruta):
         lineas = archivo.readlines()[:100000]
     return lineas
 
-archivo_a = leer_archivo("/mnt/c/Users/gonza/Documents/IA/textos/fisica_I.txt")
-archivo_b = leer_archivo("/mnt/c/Users/gonza/Documents/IA/textos/matematicas_I.txt")
-archivo_c = leer_archivo("/mnt/c/Users/gonza/Documents/IA/textos/progra_I.txt")
+archivo_a = leer_archivo("C:/Users/gonza/Documents/IA/textos/fisica_I.txt")
+archivo_b = leer_archivo("C:/Users/gonza/Documents/IA/textos/matematicas_I.txt")
+archivo_c = leer_archivo("C:/Users/gonza/Documents/IA/textos/progra_I.txt")
 
 # Crear etiquetas para los datos
 etiquetas_a = ['a'] * len(archivo_a)
@@ -112,12 +113,14 @@ resultado = modelo.evaluate(x_test, y_test)
 print("Precisión en el conjunto de prueba:", resultado[1])
 
 # Guardar el modelo
-modelo.save('modelo_simple.h5')
+modelo.save('modelo_y_tokenizer.h5')
+
+# Guardar el tokenizer a un archivo
+with open('tokenizer.pkl', 'wb') as tokenizer_file:
+    pickle.dump(tokenizer, tokenizer_file)
 
 print("Métricas de entrenamiento:")
 print("Precisión:", historia.history['accuracy'][-1])
 print("Pérdida:", historia.history['loss'][-1])
 
-print("\nMétricas de validación:")
-print("Precisión:", historia.history['val_accuracy'][-1])
-print("Pérdida:", historia.history['val_loss'][-1])
+    
