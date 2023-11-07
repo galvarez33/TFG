@@ -2,6 +2,7 @@ import pickle
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.text import text_to_word_sequence
 from keras.preprocessing.sequence import pad_sequences
+import re
 
 
 from tensorflow.keras.models import load_model
@@ -30,15 +31,18 @@ class ValidadorTextoImagen:
         if texto is None:
             return ""
         else:
-            return " ".join(text_to_word_sequence(texto.lower()))
+            # Utilizar expresiones regulares para eliminar números y caracteres especiales
+            texto_limpio = re.sub(r'[^a-zA-Z\s]', '', texto)
+            return " ".join(text_to_word_sequence(texto_limpio.lower()))
 
     def predecir_texto_en_imagen(self, ruta_imagen):
         # Leer la imagen
         texto_extraido = pytesseract.image_to_string(Image.open(ruta_imagen))
-        print(texto_extraido)
+        
 
         # Preprocesar el texto (si es necesario)
         texto_procesado = self.preprocesar_texto(texto_extraido)
+        print(texto_procesado)
 
         # Convertir texto a secuencia numérica
         secuencia = self.tokenizer.texts_to_sequences([texto_procesado])
@@ -57,10 +61,10 @@ class ValidadorTextoImagen:
 if __name__ == "__main__":
     modelo_path = 'modelo_y_tokenizer.h5'  # Ruta al archivo del modelo
     tokenizer_path = 'tokenizer.pkl'  # Ruta al archivo del tokenizer
-    max_longitud = 138  # Define la longitud máxima para las secuencias (reemplaza con el valor adecuado)
+    max_longitud = 130  # Define la longitud máxima para las secuencias (reemplaza con el valor adecuado)
 
     validador = ValidadorTextoImagen(modelo_path, tokenizer_path, max_longitud)
-    ruta_imagen = 'C:/Users/gonza/Downloads/imagenp.jpg'
+    ruta_imagen = 'C:/Users/gonza/Downloads/imagen_fisica2.png'
     clase_predicha = validador.predecir_texto_en_imagen(ruta_imagen)
     print("la clase predicha es:")
     print(clase_predicha)

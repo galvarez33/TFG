@@ -52,9 +52,12 @@ def leer_archivo(ruta):
         lineas = archivo.readlines()[:100000]
     return lineas
 
-archivo_a = leer_archivo("C:/Users/gonza/Documents/IA/textos/fisica_I.txt")
-archivo_b = leer_archivo("C:/Users/gonza/Documents/IA/textos/matematicas_I.txt")
-archivo_c = leer_archivo("C:/Users/gonza/Documents/IA/textos/progra_I.txt")
+archivo_a = leer_archivo("C:/Users/gonza/Documents/IA/textos-copia/progra_I.txt")
+archivo_b = leer_archivo("C:/Users/gonza/Documents/IA/textos-copia/mates_es.txt")
+archivo_c = leer_archivo("C:/Users/gonza/Documents/IA/textos-copia/fisica_I.txt")
+print(len(archivo_a))
+print(len(archivo_b))
+print(len(archivo_c))
 
 # Crear etiquetas para los datos
 etiquetas_a = ['a'] * len(archivo_a)
@@ -63,6 +66,7 @@ etiquetas_c = ['c'] * len(archivo_c)
 
 # Unir los datos y etiquetas
 textos = archivo_a + archivo_b + archivo_c
+print(len(textos))
 etiquetas = etiquetas_a + etiquetas_b + etiquetas_c
 
 # Filtrar palabras comunes
@@ -79,7 +83,7 @@ for texto in textos:
 textos_sin_vacios = [texto for texto in textos if texto.strip() != ""]
 # Imprimir la cantidad de textos filtrados
 print(len(textos_filtrados))
-print(textos_sin_vacios)
+
 
 
 tokenizer = Tokenizer()
@@ -94,9 +98,9 @@ max_longitud = max([len(s) for s in secuencias])
 secuencias_padded = pad_sequences(secuencias, maxlen=max_longitud, padding='post')
 
 # Convertir etiquetas a datos categóricos
-etiquetas_categoricas = np.array([0 if etiqueta == 'a' else 1 if etiqueta == 'b' else 2 for etiqueta in etiquetas[:69635]])
+etiquetas_categoricas = np.array([0 if etiqueta == 'a' else 1 if etiqueta == 'b' else 2 for etiqueta in etiquetas[:14930]])
 
-x_train, x_test, y_train, y_test = train_test_split(secuencias_padded, etiquetas_categoricas, test_size=0.2, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(secuencias_padded, etiquetas_categoricas, test_size=0.1, random_state=42)
 
 modelo = Sequential()
 modelo.add(Embedding(total_palabras, 64, input_length=max_longitud))
@@ -106,7 +110,7 @@ modelo.add(Dense(3, activation='softmax'))
 modelo.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Entrenar el modelo
-historia = modelo.fit(x_train, y_train, epochs=5, batch_size=64, validation_data=(x_test, y_test))
+historia = modelo.fit(x_train, y_train, epochs=40, batch_size=64, validation_data=(x_test, y_test))
 
 # Evaluar el modelo
 resultado = modelo.evaluate(x_test, y_test)
@@ -122,5 +126,3 @@ with open('tokenizer.pkl', 'wb') as tokenizer_file:
 print("Métricas de entrenamiento:")
 print("Precisión:", historia.history['accuracy'][-1])
 print("Pérdida:", historia.history['loss'][-1])
-
-    
