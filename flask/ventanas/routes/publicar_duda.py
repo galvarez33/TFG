@@ -1,9 +1,8 @@
-from flask import render_template, request, redirect, session, url_for, Blueprint
-from datetime import datetime
-import base64
-from . import publicar_duda_bp
+from flask import render_template, request, redirect, session, url_for, Blueprint, jsonify
 from funciones.publicar_duda_funciones import guardar_nueva_duda
 from ia.validacion import detectar_texto_en_imagen
+
+publicar_duda_bp = Blueprint('publicar_duda', __name__)
 
 @publicar_duda_bp.route('/publicar_duda', methods=['GET', 'POST'])
 def publicar_duda():
@@ -25,10 +24,9 @@ def publicar_duda():
             imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
             if not detectar_texto_en_imagen(imagen_base64):
                 # La imagen no tiene texto, mostrar mensaje de error
-                error= "La imagen no contiene texto. Por favor, sube una imagen con texto."
+                error = "La imagen no contiene texto. Por favor, sube una imagen con texto."
                 return render_template('publicar_duda.html', logged_user=logged_user, error=error)
 
-            
         else:
             imagen_base64 = None
 
@@ -50,6 +48,13 @@ def publicar_duda():
         # Guardar la nueva duda en la base de datos usando la función
         guardar_nueva_duda(form_data)
 
-        return redirect(url_for('explorar.explorar'))
+        # Enviar una respuesta JSON con los resultados obtenidos del modelo de IA
+        # (carrera, curso y asignatura)
+        asignatura_predicha = obtener_prediccion_asignatura(imagen_base64)
+        return jsonify({
+            'carrera': asignatura_predicha['carrera'],
+            'curso': asignatura_predicha['curso'],
+            'asignatura': asignatura_predicha['asignatura']
+        })
 
     return render_template('publicar_duda.html', logged_user=logged_user)

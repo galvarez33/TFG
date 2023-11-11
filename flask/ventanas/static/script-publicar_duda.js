@@ -8,28 +8,32 @@ function limitarPalabras(elemento, maxPalabras) {
     }
   }
   
-
-function mostrarVistaPrevia() {
+  function mostrarVistaPrevia() {
     const fileInput = document.getElementById('imagen');
     const previewContainer = document.getElementById('vista-previa');
     const previewImage = document.createElement('img');
-  
-    // Borra la vista previa anterior si existe
-    while (previewContainer.firstChild) {
-      previewContainer.removeChild(previewContainer.firstChild);
-    }
-  
-    const file = fileInput.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.addEventListener('load', function () {
-        previewImage.setAttribute('src', reader.result);
-        previewImage.setAttribute('class', 'preview-img'); // Agrega una clase CSS para controlar el tamaño de la imagen
-      });
-      reader.readAsDataURL(file);
-      previewContainer.appendChild(previewImage);
-    }
-  }
+
+    // Resto del código para mostrar la vista previa de la imagen...
+
+    // Hacer una solicitud AJAX al servidor para obtener las predicciones del modelo
+    const formData = new FormData();
+    formData.append('imagen', fileInput.files[0]);
+
+    fetch('/api/prediccion_asignatura', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Rellenar los campos del formulario con los resultados obtenidos
+        document.getElementById('carrera').value = data.carrera;
+        document.getElementById('curso').value = data.curso;
+        document.getElementById('asignatura').value = data.asignatura;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
   
   function borrarImagen() {
     const fileInput = document.getElementById('imagen');
@@ -248,4 +252,8 @@ function updateAsignaturas() {
             // Agregar asignaturas para ADE - 5º
         }
     }
+
 }
+
+
+

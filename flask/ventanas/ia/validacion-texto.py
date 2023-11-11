@@ -32,7 +32,7 @@ class ValidadorTextoImagen:
             return ""
         else:
             # Utilizar expresiones regulares para eliminar números y caracteres especiales
-            texto_limpio = re.sub(r'[^a-zA-Z\s]', '', texto)
+            texto_limpio = re.sub(r'[^a-zA-ZáóéúÁÉÍÓÚüÜñÑ\s]', '', texto)
             return " ".join(text_to_word_sequence(texto_limpio.lower()))
 
     def predecir_texto_en_imagen(self, ruta_imagen):
@@ -43,7 +43,6 @@ class ValidadorTextoImagen:
         # Preprocesar el texto (si es necesario)
         texto_procesado = self.preprocesar_texto(texto_extraido)
         print(texto_procesado)
-
         # Convertir texto a secuencia numérica
         secuencia = self.tokenizer.texts_to_sequences([texto_procesado])
 
@@ -61,10 +60,22 @@ class ValidadorTextoImagen:
 if __name__ == "__main__":
     modelo_path = 'modelo_y_tokenizer.h5'  # Ruta al archivo del modelo
     tokenizer_path = 'tokenizer.pkl'  # Ruta al archivo del tokenizer
-    max_longitud = 130  # Define la longitud máxima para las secuencias (reemplaza con el valor adecuado)
+    max_longitud = 5 # Define la longitud máxima para las secuencias (reemplaza con el valor adecuado)
 
+    
     validador = ValidadorTextoImagen(modelo_path, tokenizer_path, max_longitud)
-    ruta_imagen = 'C:/Users/gonza/Downloads/imagen_fisica2.png'
+    ruta_imagen = 'C:/Users/gonza/Downloads/imagen_progra2.jpg'
     clase_predicha = validador.predecir_texto_en_imagen(ruta_imagen)
-    print("la clase predicha es:")
+        
+    print("La clase predicha es:")
     print(clase_predicha)
+
+
+'''
+    for _ in range(10):
+        validador = ValidadorTextoImagen(modelo_path, tokenizer_path, max_longitud)
+        ruta_imagen = 'C:/Users/gonza/Downloads/imagenp.jpg'
+        clase_predicha = validador.predecir_texto_en_imagen(ruta_imagen)
+        
+        print("La clase predicha es:")
+        print(clase_predicha)'''
