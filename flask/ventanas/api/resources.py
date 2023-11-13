@@ -2,13 +2,20 @@ from flask_restful import Resource,reqparse
 from flask import jsonify,session, Response, request
 from datetime import datetime
 import json
+import io 
+from PIL import Image
 from bson import ObjectId
+import joblib
+import pytesseract
 
 from funciones.explorar_funciones import obtener_parametros_dudas, obtener_dudas
 from funciones.perfil_funciones import obtener_dudas_usuario,borrar_duda_por_id, obtener_total_votos
 from funciones.detalle_duda_funciones import conectar_db, obtener_detalle_duda, votar_positivo_comentario, votar_negativo_comentario, borrar_comentario, agregar_comentario
 from funciones.publicar_duda_funciones import guardar_nueva_duda,obtener_ultima_duda
 from funciones.auth_funciones import usuario_ya_autenticado,iniciar_sesion
+from ia.clasificador_texto import TextClassifier
+
+
 
 class ExplorarResource(Resource):
 
@@ -229,6 +236,7 @@ class ComentariosResource(Resource):
 
 class NotificacionesResource(Resource):
     def delete(self, notificacion_id):
+        
         correo_usuario = session.get('correo_usuario')
         _, notificaciones_collection = conectar_db()
         notificacion_id_obj = ObjectId(notificacion_id)
@@ -239,3 +247,38 @@ class NotificacionesResource(Resource):
             return {'mensaje': 'Notificación eliminada correctamente'}, 200
         else:
             return {'mensaje': 'No se encontró la notificación o no tienes permisos para eliminarla'}, 404
+
+
+class PrediccionResource(Resource):
+    def post(self):
+        try:
+            # Obtén la imagen en formato de bytes desde la solicitud
+            imagen_bytes = request.data
+
+            # Crea un objeto BytesIO correctamente inicializado con los bytes de la imagen
+            imagen_io = io.BytesIO(imagen_bytes)
+
+            # Usa Pillow (PIL) para abrir la imagen desde BytesIO
+            imagen_pil = Image.open(imagen_io)
+
+            # Realiza la predicción utilizando el modelo de Naive Bayes (Joblib)
+            modelo_path = 'text_classifier_model.joblib'  # Ajusta la ruta según la ubicación de tu modelo
+            model = joblib.load(modelo_path)
+
+            # Extraer texto de la imagen
+            texto_extraido = pytesseract.image_to_string(imagen_pil)
+            
+
+            # Hacer la predicción utilizando el modelo de Naive Bayes
+            clase_predicha = model.predict([texto_extraido])
+            print(clase_predicha)
+
+            # Devuelve un diccionario serializable a JSON con la asignatura predicha
+            return {'asignatura': clase_predicha[0]}, 200
+
+        except Exception as e:
+            print(f"Error al procesar la imagen: {e}")
+            # Devuelve un diccionario con el error y un código de estado 500
+            return {'error': 'Error en la predicción'}, 500
+
+        

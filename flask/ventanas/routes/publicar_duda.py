@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, session, url_for, Blueprin
 from funciones.publicar_duda_funciones import guardar_nueva_duda
 from ia.validacion import detectar_texto_en_imagen
 
-publicar_duda_bp = Blueprint('publicar_duda', __name__)
+from . import publicar_duda_bp
 
 @publicar_duda_bp.route('/publicar_duda', methods=['GET', 'POST'])
 def publicar_duda():

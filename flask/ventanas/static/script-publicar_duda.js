@@ -6,36 +6,87 @@ function limitarPalabras(elemento, maxPalabras) {
       palabras = palabras.slice(0, maxPalabras);
       elemento.value = palabras.join(" ");
     }
-  }
+}
   
-  function mostrarVistaPrevia() {
+
+
+
+
+
+
+function mostrarVistaPrevia() {
     const fileInput = document.getElementById('imagen');
     const previewContainer = document.getElementById('vista-previa');
     const previewImage = document.createElement('img');
 
-    // Resto del código para mostrar la vista previa de la imagen...
+    // Eliminar la vista previa anterior si existe
+    while (previewContainer.firstChild) {
+        previewContainer.removeChild(previewContainer.firstChild);
+    }
 
-    // Hacer una solicitud AJAX al servidor para obtener las predicciones del modelo
-    const formData = new FormData();
-    formData.append('imagen', fileInput.files[0]);
+    // Verificar si se seleccionó un archivo
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
 
-    fetch('/api/prediccion_asignatura', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Rellenar los campos del formulario con los resultados obtenidos
-        document.getElementById('carrera').value = data.carrera;
-        document.getElementById('curso').value = data.curso;
-        document.getElementById('asignatura').value = data.asignatura;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        // Verificar si el archivo es una imagen
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                // Crear la etiqueta de imagen y establecer su atributo src con los datos de la imagen
+                previewImage.src = e.target.result;
+                previewContainer.appendChild(previewImage);
+
+                // Convertir la imagen a bytes (base64)
+                const imagenBase64 = e.target.result;
+                const byteCharacters = atob(imagenBase64.split(',')[1]);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+
+                // Hacer una solicitud POST a la API para clasificar el texto
+                fetch('http://localhost:5001/api/predecir_texto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/octet-stream',
+                    },
+                    body: byteArray,
+                })
+
+                .then(response => response.json())
+                .then(data => {
+                    // Rellenar el campo de asignatura en el formulario con los resultados obtenidos
+                    document.getElementById('asignatura').textContent = data.asignatura;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            };
+
+            // Leer el contenido del archivo como URL
+            reader.readAsDataURL(file);
+        } else {
+            // Mostrar un mensaje de error si el archivo no es una imagen
+            const errorMessage = document.createElement('p');
+            errorMessage.textContent = 'El archivo seleccionado no es una imagen válida.';
+            previewContainer.appendChild(errorMessage);
+        }
+    } else {
+        // Mostrar un mensaje de error si no se seleccionó ningún archivo
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = 'Por favor, selecciona una imagen.';
+        previewContainer.appendChild(errorMessage);
+    }
 }
+
+
+
+
+
   
-  function borrarImagen() {
+function borrarImagen() {
     const fileInput = document.getElementById('imagen');
     fileInput.value = ''; // Borra el valor del input de archivo
   
@@ -43,7 +94,7 @@ function limitarPalabras(elemento, maxPalabras) {
     while (previewContainer.firstChild) {
       previewContainer.removeChild(previewContainer.firstChild);
     }
-  }
+}
   
 
 function updateAsignaturas() {
