@@ -140,8 +140,8 @@ function updateAsignaturas(asignatura) {
     // Busca la información de carrera y curso basándose en la asignatura
     var infoAsignatura = asignaturasDefinidas[asignatura];
 
+    // Si hay información para la asignatura predicha, agrégala al desplegable
     if (infoAsignatura) {
-        // Añade la asignatura al desplegable
         var option = document.createElement("option");
         option.text = asignatura;
         option.value = asignatura;
@@ -151,11 +151,24 @@ function updateAsignaturas(asignatura) {
         carreraSelect.value = infoAsignatura.carrera;
         cursoSelect.value = infoAsignatura.curso;
     } else {
-        console.error("No se encontró información para la asignatura: " + asignatura);
+        console.warn("No se encontró información para la asignatura: " + asignatura);
+    }
+
+    // Cargar todas las asignaturas disponibles en el desplegable
+    for (var asignaturaKey in asignaturasDefinidas) {
+        if (asignaturasDefinidas.hasOwnProperty(asignaturaKey)) {
+            var option = document.createElement("option");
+            option.text = asignaturaKey;
+            option.value = asignaturaKey;
+            asignaturaSelect.add(option);
+        }
     }
 }
 
+// Llama a la función al cargar la página para mostrar todas las asignaturas
+updateAsignaturas();
 
+// Llama a la función al cargar la página para mostrar todas las asignaturas
 updateAsignaturas();
 
 
