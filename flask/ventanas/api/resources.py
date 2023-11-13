@@ -252,24 +252,17 @@ class NotificacionesResource(Resource):
 class PrediccionResource(Resource):
     def post(self):
         try:
-            # Obtén la imagen en formato de bytes desde la solicitud
             imagen_bytes = request.data
-
-            # Crea un objeto BytesIO correctamente inicializado con los bytes de la imagen
             imagen_io = io.BytesIO(imagen_bytes)
 
-            # Usa Pillow (PIL) para abrir la imagen desde BytesIO
             imagen_pil = Image.open(imagen_io)
 
-            # Realiza la predicción utilizando el modelo de Naive Bayes (Joblib)
             modelo_path = 'text_classifier_model.joblib'  # Ajusta la ruta según la ubicación de tu modelo
             model = joblib.load(modelo_path)
 
-            # Extraer texto de la imagen
             texto_extraido = pytesseract.image_to_string(imagen_pil)
             
 
-            # Hacer la predicción utilizando el modelo de Naive Bayes
             clase_predicha = model.predict([texto_extraido])
             print(clase_predicha)
 

@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     # Concatenar los datos y etiquetas
     data = mates_data + progra_data + fisica_data
-    labels = ['matematicas'] * len(mates_data) + ['programacion'] * len(progra_data) + ['fisica'] * len(fisica_data)
+    labels = ['Fundamentos Matemáticos de la Informática I'] * len(mates_data) + ['Programación I'] * len(progra_data) + ['Fundamentos Físicos de la Informática I'] * len(fisica_data)
 
    
 
