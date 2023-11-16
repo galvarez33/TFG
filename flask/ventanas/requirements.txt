@@ -11,6 +11,7 @@ colorama==0.4.6
 dnspython==2.4.2
 flasgger==0.9.7.1
 Flask==2.1.3
+Flask-Cors==4.0.0
 Flask-JWT==0.3.2
 Flask-JWT-Extended==4.0.2
 Flask-Mail==0.9.1
@@ -26,6 +27,7 @@ h5py==3.10.0
 idna==3.4
 itsdangerous==2.1.2
 Jinja2==3.1.2
+joblib==1.3.2
 jsonschema==4.19.2
 jsonschema-specifications==2023.7.1
 keras==2.14.0
@@ -34,16 +36,20 @@ Markdown==3.5.1
 MarkupSafe==2.1.3
 mistune==3.0.2
 ml-dtypes==0.2.0
+mysql==0.0.3
+mysql-connector-python==8.2.0
+mysqlclient==2.2.0
 numpy==1.26.1
 oauthlib==3.2.2
 opt-einsum==3.3.0
 packaging==23.2
 Pillow==10.1.0
-protobuf==4.25.0
+protobuf==4.21.12
 pyasn1==0.5.0
 pyasn1-modules==0.3.0
 PyJWT==2.2.0
 pymongo==4.6.0
+pytesseract==0.3.10
 pytz==2023.3.post1
 PyYAML==6.0.1
 referencing==0.30.2
@@ -51,7 +57,10 @@ requests==2.31.0
 requests-oauthlib==1.3.1
 rpds-py==0.12.0
 rsa==4.9
+scikit-learn==1.3.2
+scipy==1.11.3
 six==1.16.0
+sklearn==0.0.post11
 tensorboard==2.14.1
 tensorboard-data-server==0.7.2
 tensorflow==2.14.0
@@ -59,6 +68,7 @@ tensorflow-estimator==2.14.0
 tensorflow-intel==2.14.0
 tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.3.0
+threadpoolctl==3.2.0
 typing_extensions==4.8.0
 urllib3==2.0.7
 Werkzeug==2.0.2

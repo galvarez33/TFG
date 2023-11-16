@@ -26,9 +26,12 @@ def publicar_duda():
         curso = request.form['curso']
         asignatura = request.form['asignatura']
         dificultad = int(request.form['dificultad'])
+        
 
 
         usuario_correo = session['logged_user']['correo']
+        imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
+        
 
         # Crear el objeto de datos para la nueva duda
         form_data = {

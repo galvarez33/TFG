@@ -26,32 +26,32 @@ from ia.clasificador_texto import TextClassifier
 
 class ExplorarResource(Resource):
 
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('consulta', type=str, required=True)
-        parser.add_argument('carrera', type=str)
-        parser.add_argument('curso', type=str)
-        parser.add_argument('imagen', type=str)
-        parser.add_argument('page', type=int, default=1)  # Agregamos los argumentos de paginación
-        parser.add_argument('per_page', type=int, default=9)
-        args = parser.parse_args()
+        def post(self):
+            parser = reqparse.RequestParser()
+            parser.add_argument('consulta', type=str, required=True)
+            parser.add_argument('carrera', type=str)
+            parser.add_argument('curso', type=str)
+            parser.add_argument('imagen', type=str)
+            parser.add_argument('page', type=int, default=1)  # Agregamos los argumentos de paginación
+            parser.add_argument('per_page', type=int, default=9)
+            args = parser.parse_args()
 
-        consulta = args['consulta']
-        carrera = args['carrera']
-        curso = args['curso']
-        imagen = args['imagen']
-        page = args['page']  # Obtenemos el valor de 'page' del argumento
-        per_page = args['per_page']
+            consulta = args['consulta']
+            carrera = args['carrera']
+            curso = args['curso']
+            imagen = args['imagen']
+            page = args['page']  # Obtenemos el valor de 'page' del argumento
+            per_page = args['per_page']
 
-        # Llamamos a la función para obtener las dudas filtradas
-        dudas_filtradas = obtener_dudas(consulta, carrera, curso, imagen,page,per_page)
-        
-        # Devolvemos las dudas filtradas en formato JSON
-        return jsonify({'dudas': dudas_filtradas})
-   
-    def get(self):
-        parametros_dudas = obtener_parametros_dudas()
-        return jsonify({'dudas': parametros_dudas})
+            # Llamamos a la función para obtener las dudas filtradas
+            dudas_filtradas = obtener_dudas(consulta, carrera, curso,page,per_page)
+            
+            # Devolvemos las dudas filtradas en formato JSON
+            return jsonify({'dudas': dudas_filtradas})
+    
+        def get(self):
+            parametros_dudas = obtener_parametros_dudas()
+            return jsonify({'dudas': parametros_dudas})
 
 
 class PerfilResource(Resource):
