@@ -12,6 +12,7 @@ from . import publicar_duda_bp
 def publicar_duda():
     logged_user = session.get('logged_user')
     imagen_base64 = None  # Inicializar con un valor predeterminado
+    error_message = request.args.get('error', None)
 
     if not logged_user:
         return redirect(url_for('auth.login'))
@@ -26,26 +27,6 @@ def publicar_duda():
         asignatura = request.form['asignatura']
         dificultad = int(request.form['dificultad'])
 
-        if imagen:
-            try:
-                imagen_bytes = base64.b64decode(imagen.read())
-                img = Image.open(io.BytesIO(imagen_bytes))
-                print("Imagen abierta con éxito.")
-
-                # Verificar si la imagen contiene texto
-                if not detectar_texto_en_imagen(base64.b64encode(imagen_bytes).decode('utf-8')):
-                    # La imagen no tiene texto, mostrar mensaje de error
-                    error = "La imagen no contiene texto. Por favor, sube una imagen con texto."
-                    return render_template('publicar_duda.html', logged_user=logged_user, error=error)
-
-                
-                
-                # Actualizar imagen_base64 si es necesario
-                imagen_base64 = base64.b64encode(imagen_bytes).decode('utf-8')
-            except Exception as e:
-                print(f"Error al procesar la imagen: {e}")
-        else:
-            imagen_base64 = None
 
         usuario_correo = session['logged_user']['correo']
 
@@ -67,4 +48,13 @@ def publicar_duda():
 
         
 
-    return render_template('publicar_duda.html', logged_user=logged_user)
+    return render_template('publicar_duda.html', logged_user=logged_user,error=error_message)
+
+
+# Ruta para la página con error
+@publicar_duda_bp.route('/error-texto')
+def pagina_con_error():
+    logged_user = session.get('logged_user')
+    error_message = request.args.get('error', 'Error desconocido')
+    print(error_message)
+    return render_template('publicar_duda.html', logged_user=logged_user, error=error_message)

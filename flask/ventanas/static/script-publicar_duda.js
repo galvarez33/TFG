@@ -10,10 +10,6 @@ function limitarPalabras(elemento, maxPalabras) {
   
 
 
-
-
-
-
 function mostrarVistaPrevia(asignatura) {
     const fileInput = document.getElementById('imagen');
     const previewContainer = document.getElementById('vista-previa');
@@ -60,25 +56,29 @@ function mostrarVistaPrevia(asignatura) {
                     },
                     body: byteArray,
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Rellenar el campo de asignatura en el formulario con los resultados obtenidos
-                        document.getElementById('asignatura').value = data.asignatura;
-
-                        // Llamar a la función para actualizar curso y carrera
-                        updateAsignaturas(data.asignatura);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            };
+                .then(response => response.json())
+                .then(data => {
+                    // Rellenar el campo de asignatura en el formulario con los resultados obtenidos
+                    document.getElementById('asignatura').value = data.asignatura;
+                
+                    // Llamar a la función para actualizar curso y carrera
+                    updateAsignaturas(data.asignatura);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                
+                    const errorMessage = "Esta imagen no contiene texto, por favor, seleccione otra.";  
+                    
+                    window.location.href = `/error-texto?error=${encodeURIComponent(errorMessage)}`;
+                    
+                });}
 
             // Leer el contenido del archivo como URL
             reader.readAsDataURL(file);
         } else {
             // Mostrar un mensaje de error si el archivo no es una imagen
             const errorMessage = document.createElement('p');
-            errorMessage.textContent = 'El archivo seleccionado no es una imagen válida.';
+            errorMessage.textContent = 'El archivo seleccionado no tiene formato de imagen png, jpg etc.';
             previewContainer.appendChild(errorMessage);
         }
     } else {

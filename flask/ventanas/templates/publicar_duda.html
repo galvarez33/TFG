@@ -8,7 +8,7 @@
         <div class="form-group">
             <label for="imagen" style="color: white;">Imagen:</label>
             {% if error %}
-            <p class="alert alert-danger" role="alert">{{ error }}</p>
+            <p id="error-message" class="alert alert-danger" role="alert">{{ error }}</p>
             {% endif %}
             <input type="file" class="form-control-file" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>
             <div id="vista-previa"></div>
@@ -63,5 +63,16 @@
     </form>
 </div>
 
-<script src="{{ url_for('static', filename='script-publicar_duda.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    // Esperar 10 segundos y ocultar el mensaje de error
+    $(document).ready(function() {
+        setTimeout(function() {
+            $("#error-message").fadeOut(500, function() {
+                $(this).remove();
+            });
+        }, 10000);
+    });
+</script>
 
+<script src="{{ url_for('static', filename='script-publicar_duda.js') }}"></script>

@@ -1,5 +1,5 @@
 from flask_restful import Resource,reqparse
-from flask import jsonify,session, Response, request,render_template,session
+from flask import jsonify,session, Response, request,render_template,session,redirect,url_for
 from datetime import datetime
 import json
 import io 
@@ -283,13 +283,10 @@ class PrediccionResource(Resource):
                 # Devuelve un diccionario serializable a JSON con la asignatura predicha
                 return {'asignatura': clase_predicha[0]}, 200
             else:
-                # No hay texto, mostrar un mensaje o tomar otra acción según sea necesario
-                print('hola')
-                error_message = 'No se detectó texto en la imagen'
-                logged_user = session.get('logged_user')
-                return render_template('publicar_duda.html', logged_user=logged_user, error=error_message)
+                # No hay texto, redirigir a la página con el mensaje de error
                 
-
+                error_message = 'No se detectó texto en la imagen'
+                return redirect(url_for('publicar_duda.pagina_con_error', error=error_message))
         except Exception as e:
             print('hola')
             print(f"Error al procesar la imagen: {e}")
