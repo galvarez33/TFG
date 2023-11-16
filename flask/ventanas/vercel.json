@@ -1,0 +1,20 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "flask/ventanas",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "flask/ventanas/main.py"
+      }
+    ],
+    "install": {
+      "include": ["flask/ventanas/**"],
+      "dest": "./"
+    }
+  }
+  
