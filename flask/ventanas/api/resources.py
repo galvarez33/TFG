@@ -1,12 +1,19 @@
 from flask_restful import Resource,reqparse
-from flask import jsonify,session, Response, request
+from flask import jsonify,session, Response, request,render_template,session
 from datetime import datetime
 import json
 import io 
 from PIL import Image
 from bson import ObjectId
+import base64
 import joblib
 import pytesseract
+from io import BytesIO
+from keras.models import load_model
+from keras.preprocessing import image
+import numpy as np
+from keras.layers import Reshape
+
 
 from funciones.explorar_funciones import obtener_parametros_dudas, obtener_dudas
 from funciones.perfil_funciones import obtener_dudas_usuario,borrar_duda_por_id, obtener_total_votos
@@ -250,6 +257,13 @@ class NotificacionesResource(Resource):
 
 
 class PrediccionResource(Resource):
+    def __init__(self):
+        # Inicializa los modelos en el constructor
+        self.modelo_texto_path = 'modelo.h5'  # Ajusta la ruta según la ubicación de tu modelo de texto
+        self.modelo_texto = load_model(self.modelo_texto_path)
+
+        self.modelo_asignatura_path = 'text_classifier_model.joblib'  # Ajusta la ruta según la ubicación de tu modelo de asignatura
+        self.modelo_asignatura = joblib.load(self.modelo_asignatura_path)
     def post(self):
         try:
             imagen_bytes = request.data
@@ -257,21 +271,51 @@ class PrediccionResource(Resource):
 
             imagen_pil = Image.open(imagen_io)
 
-            modelo_path = 'text_classifier_model.joblib'  # Ajusta la ruta según la ubicación de tu modelo
-            model = joblib.load(modelo_path)
+            # 1. Realiza la detección de texto con el primer modelo
+            tiene_texto = self.detectar_texto_en_imagen(imagen_bytes)
+            print(tiene_texto)
+            if tiene_texto:
+                # 2. Si hay texto, realiza la predicción de asignatura con el segundo modelo
+                texto_extraido = pytesseract.image_to_string(imagen_pil)
+                clase_predicha = self.modelo_asignatura.predict([texto_extraido])
+                print(clase_predicha)
 
-            texto_extraido = pytesseract.image_to_string(imagen_pil)
-            
-
-            clase_predicha = model.predict([texto_extraido])
-            print(clase_predicha)
-
-            # Devuelve un diccionario serializable a JSON con la asignatura predicha
-            return {'asignatura': clase_predicha[0]}, 200
+                # Devuelve un diccionario serializable a JSON con la asignatura predicha
+                return {'asignatura': clase_predicha[0]}, 200
+            else:
+                # No hay texto, mostrar un mensaje o tomar otra acción según sea necesario
+                print('hola')
+                error_message = 'No se detectó texto en la imagen'
+                logged_user = session.get('logged_user')
+                return render_template('publicar_duda.html', logged_user=logged_user, error=error_message)
+                
 
         except Exception as e:
+            print('hola')
             print(f"Error al procesar la imagen: {e}")
             # Devuelve un diccionario con el error y un código de estado 500
             return {'error': 'Error en la predicción'}, 500
 
-        
+    def detectar_texto_en_imagen(self, imagen_bytes):
+            try:
+                # Decodificar la imagen desde Base64
+                imagen = Image.open(io.BytesIO(imagen_bytes))
+                imagen = imagen.convert('RGB')
+
+                # Preprocesar la imagen
+                img = imagen.resize((150, 150))
+                x = image.img_to_array(img)
+                x = np.expand_dims(x, axis=0)
+                x /= 255
+
+                # Realizar predicción con el modelo de texto
+                prediccion = self.modelo_texto.predict(x)
+
+                if prediccion.shape[1] == 1:
+                    return prediccion[0][0] > 0.5
+                else:
+                    return prediccion[0][1] > prediccion[0][0]
+
+            except Exception as e:
+                print(f"Error al detectar texto en la imagen: {e}")
+                return False

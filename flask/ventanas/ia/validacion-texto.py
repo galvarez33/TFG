@@ -40,6 +40,11 @@ class ValidadorTextoImagen:
     def predecir_texto_en_imagen(self, ruta_imagen):
         # Leer la imagen
         texto_extraido = pytesseract.image_to_string(Image.open(ruta_imagen))
+        print(f"Texto extraído de la imagen: {texto_extraido}")
+        
+        if not texto_extraido:
+            print("No se ha extraído texto de la imagen.")
+            return None
         
         # Preprocesar el texto (si es necesario)
         texto_procesado = self.preprocesar_texto(texto_extraido)
