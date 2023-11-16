@@ -7,6 +7,7 @@ from funciones.detalle_duda_funciones import conectar_db, obtener_detalle_duda, 
 from . import detalle_duda_bp
 from datetime import datetime
 import base64
+from  ia.validacion import detectar_texto_en_imagen
 
 
 
@@ -34,10 +35,17 @@ def detalle_duda_view(duda_id):
 
         if imagen:
             imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
+            
+            # Llamar a la función para detectar texto en la imagen
+            tiene_texto = detectar_texto_en_imagen(imagen_base64)
+            print(tiene_texto)
+            if tiene_texto == False:
+                # La imagen contiene texto, muestra el error
+                return render_template('detalle_duda.html', duda=duda, logged_user=logged_user, nombre_usuario=session.get('nombre_usuario'), error="Debe seleccionar una imagen que contenga texto")
         else:
             imagen_base64 = None
 
-        # Crear la tupla de comentario e imagen
+        # Resto del código para agregar el comentario
         comentario_con_imagen = {
             'nombre': nombre_usuario,
             'correo': correo_usuario,

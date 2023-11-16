@@ -1,5 +1,7 @@
     {% include 'header.html' %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-detalle_duda.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
     {% block content %}
     {% if duda %}
@@ -45,10 +47,23 @@
                         placeholder="Escribe tu comentario aquí" rows="4"></textarea>
                 </div>
                 <div class="form-group">
-                    <input type="file" class="form-control-file" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>
+                    <input type="file" class="form-control-file" id="imagen" name="imagen">
                 </div>
                 <button type="submit" class="btn btn-primary">Enviar comentario</button>
             </form>
+            {% if error %}
+                <br><p id="errors-message" class="alert alert-danger" role="alert">{{ error }}</p>
+                <script>
+                    // Esperar 10 segundos y ocultar el mensaje de error
+                    $(document).ready(function() {
+                        setTimeout(function() {
+                            $("#errors-message").fadeOut(500, function() {
+                                $(this).remove();
+                            });
+                        }, 10000);
+                    });
+                </script>
+            {% endif %}
             {% endif %}
             <br>
             <div class="titulo-comentario2">
@@ -139,15 +154,6 @@
             }
         }
     </script>
-    <script>
-        // Esperar 10 segundos y ocultar el mensaje de error
-        $(document).ready(function() {
-            setTimeout(function() {
-                $("#error-message").fadeOut(500, function() {
-                    $(this).remove();
-                });
-            }, 10000);
-        });
-    </script>
+    
     
     <script src="{{ url_for('static', filename='script-detalle_duda.js') }}"></script>

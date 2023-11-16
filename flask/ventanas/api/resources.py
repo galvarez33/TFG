@@ -256,6 +256,9 @@ class NotificacionesResource(Resource):
             return {'mensaje': 'No se encontró la notificación o no tienes permisos para eliminarla'}, 404
 
 
+
+
+
 class PrediccionResource(Resource):
     def __init__(self):
         # Inicializa los modelos en el constructor
