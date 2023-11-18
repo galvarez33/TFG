@@ -64,10 +64,9 @@ sklearn==0.0.post11
 SQLAlchemy==2.0.23
 tensorboard==2.14.1
 tensorboard-data-server==0.7.2
-tensorflow==2.14.0
+tensorflow>=2.0.0,<3.0.0
 tensorflow-estimator==2.14.0
 tensorflow-intel==2.14.0
-keras
 tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.3.0
 threadpoolctl==3.2.0
