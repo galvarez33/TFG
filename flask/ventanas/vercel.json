@@ -1,20 +1,35 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "flask/ventanas",
-        "use": "@vercel/python"
-      }
+  "builds": [
+    {
+      "src": "main.py",
+      "use": "@now/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "main.py"
+    }
+  ],
+  "env": {
+    "PYTHONUNBUFFERED": "true"
+  },
+  "install": {
+    "include": [
+      "requirements.txt"
     ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "flask/ventanas/main.py"
-      }
-    ],
-    "install": {
-      "include": ["flask/ventanas/**"],
-      "dest": "./"
+    "dest": "/tmp"
+  },
+  "functions": {
+    "main": {
+      "runtime": "python3.8",
+      "includeFiles": [
+        "main.py"
+      ],
+      "environment": {
+        "PYTHONUNBUFFERED": "true"
+      },
+      "buildCommand": "/bin/sh -c 'pip install -r /tmp/requirements.txt && cp -r $NOW_BUILD_DIR/* $NOW_DIST_DIR'"
     }
   }
-  
+}

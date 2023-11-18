@@ -8,7 +8,7 @@ from itsdangerous import URLSafeTimedSerializer
 import base64
 from datetime import datetime
 from . import auth_bp
-from flask_jwt import jwt
+from flask_jwt_extended import JWTManager
 
 
 from funciones.auth_funciones import iniciar_sesion, usuario_ya_autenticado, cerrar_sesion
