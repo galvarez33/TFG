@@ -32,12 +32,15 @@ Jinja2==3.1.2
 joblib==1.3.2
 jsonschema==4.19.2
 jsonschema-specifications==2023.7.1
-keras==2.14.0
+keras==2.15.0
 libclang==16.0.6
 Markdown==3.5.1
 MarkupSafe==2.1.3
 mistune==3.0.2
 ml-dtypes==0.2.0
+mysql==0.0.3
+mysql-connector-python==8.2.0
+mysqlclient==2.2.0
 numpy==1.26.1
 oauthlib==3.2.2
 opt-einsum==3.3.0
@@ -62,11 +65,11 @@ scipy==1.11.3
 six==1.16.0
 sklearn==0.0.post11
 SQLAlchemy==2.0.23
-tensorboard==2.14.1
+tensorboard==2.15.1
 tensorboard-data-server==0.7.2
-tensorflow
-tensorflow-estimator==2.14.0
-tensorflow-intel==2.14.0
+tensorflow==2.15.0
+tensorflow-estimator==2.15.0
+tensorflow-intel==2.15.0
 tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.3.0
 threadpoolctl==3.2.0
@@ -74,4 +77,3 @@ typing_extensions==4.8.0
 urllib3==2.0.7
 Werkzeug==3.0.1
 wrapt==1.14.1
-
