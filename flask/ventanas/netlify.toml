@@ -1,9 +1,6 @@
-# netlify.toml
-
 [build]
-  command = "docker build -t contenedorfinal ."
-  publish = "n/a"
+  command = "docker build -t tu_imagen_docker:etiqueta ."
+  functions = "./flask/ventanas/netlify/functions"
 
-[dev]
-  command = "docker run -p 3000:3000 -e PORT=3000 contenedorfinal"
-  publish = "n/a"
+[context.production]
+  command = "docker run -p 8080:8080 tu_imagen_docker:etiqueta"
