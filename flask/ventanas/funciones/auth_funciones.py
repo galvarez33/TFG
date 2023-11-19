@@ -1,7 +1,7 @@
 from flask import render_template, session, redirect, url_for, Blueprint, flash, jsonify, request
 from flask_mail import Mail, Message
 from pymongo import MongoClient
-from flask_jwt import jwt
+import jwt
 from itsdangerous import URLSafeTimedSerializer
 import re
 
