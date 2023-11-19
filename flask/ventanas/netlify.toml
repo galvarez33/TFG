@@ -1,6 +1,7 @@
 [build]
-  command = "docker build -t tu_imagen_docker:etiqueta ."
-  functions = "./flask/ventanas/netlify/functions"
+  base = "./flask/ventanas"  # Especifica la base del directorio de tu proyecto
+  command = "python main.py"  # Comando para construir tu aplicación
+  functions = "./flask/ventanas/netlify/functions"  # Directorio de funciones
 
 [context.production]
-  command = "docker run -p 8080:8080 tu_imagen_docker:etiqueta"
+  # Puedes mantener esta sección vacía si no necesitas configuraciones específicas para producción
