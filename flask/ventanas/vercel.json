@@ -1,35 +1,19 @@
 {
+  "version": 2,
   "builds": [
     {
-      "src": "main.py",
+      "src": "./flask/ventanas/main.py",
       "use": "@now/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "main.py"
+      "dest": "./flask/ventanas/main.py"
     }
   ],
   "env": {
-    "PYTHONUNBUFFERED": "true"
-  },
-  "install": {
-    "include": [
-      "requirements.txt"
-    ],
-    "dest": "/tmp"
-  },
-  "functions": {
-    "main": {
-      "runtime": "python3.8",
-      "includeFiles": [
-        "main.py"
-      ],
-      "environment": {
-        "PYTHONUNBUFFERED": "true"
-      },
-      "buildCommand": "/bin/sh -c 'pip install -r /tmp/requirements.txt && cp -r $NOW_BUILD_DIR/* $NOW_DIST_DIR'"
-    }
+    "FLASK_ENV": "production",
+    "FLASK_APP": "./flask/ventanas/main.py"
   }
 }
