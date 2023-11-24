@@ -13,7 +13,8 @@ def detectar_texto_en_imagen(imagen_base64):
     imagen = imagen.convert('RGB')
 
     # Ruta del modelo entrenado
-    ruta_modelo = 'modelo.h5'
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    ruta_modelo = os.path.join(script_dir, '..', 'modelo.h5')
 
     # Cargar el modelo
     modelo = load_model(ruta_modelo)

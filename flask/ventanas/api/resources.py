@@ -2,6 +2,7 @@ from flask_restful import Resource,reqparse
 from flask import jsonify,session, Response, request,render_template,session,redirect,url_for
 from datetime import datetime
 import json
+import os
 import io 
 from PIL import Image
 from bson import ObjectId
@@ -262,10 +263,13 @@ class NotificacionesResource(Resource):
 class PrediccionResource(Resource):
     def __init__(self):
         # Inicializa los modelos en el constructor
-        self.modelo_texto_path = 'modelo.h5'  # Ajusta la ruta según la ubicación de tu modelo de texto
+        script_dir = os.path.dirname(__file__)
+
+        # Construye la ruta completa al modelo de texto
+        self.modelo_texto_path = os.path.join(script_dir, '..', 'modelo.h5')
         self.modelo_texto = load_model(self.modelo_texto_path)
 
-        self.modelo_asignatura_path = 'text_classifier_model.joblib'  # Ajusta la ruta según la ubicación de tu modelo de asignatura
+        self.modelo_asignatura_path = os.path.join(script_dir, '..', 'text_classifier_model.joblib') # Ajusta la ruta según la ubicación de tu modelo de asignatura
         self.modelo_asignatura = joblib.load(self.modelo_asignatura_path)
     def post(self):
         try:
@@ -280,6 +284,7 @@ class PrediccionResource(Resource):
             if tiene_texto:
                 # 2. Si hay texto, realiza la predicción de asignatura con el segundo modelo
                 texto_extraido = pytesseract.image_to_string(imagen_pil)
+                print(texto_extraido)
                 clase_predicha = self.modelo_asignatura.predict([texto_extraido])
                 print(clase_predicha)
 

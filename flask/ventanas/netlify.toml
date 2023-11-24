@@ -1,7 +1,0 @@
-[build]
-  base = "./flask/ventanas"  # Especifica la base del directorio de tu proyecto
-  command = "python main.py"  # Comando para construir tu aplicación
-  functions = "./flask/ventanas/netlify/functions"  # Directorio de funciones
-
-[context.production]
-  # Puedes mantener esta sección vacía si no necesitas configuraciones específicas para producción
