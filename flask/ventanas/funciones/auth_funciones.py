@@ -4,7 +4,11 @@ from pymongo import MongoClient
 import jwt
 from itsdangerous import URLSafeTimedSerializer
 import re
+import base64
+import hashlib
+from urllib.parse import unquote,quote_plus,quote
 
+# -*- coding: utf-8 -*-
 
 
 
@@ -26,25 +30,20 @@ def verificar_credenciales(username, password):
             'access_token': jwt.encode({'identity': user['correo']}, secret_key),
             'user_data': {
                 'correo': user['correo'],
-                'nombre': user['nombre'],
-                'nia': user['nia'], 
-                'contraseña': user['contraseña'] 
+                'nombre': user['nombre']
             }
         }
     else:
         return None
 
 def iniciar_sesion(username, password):
-    credenciales = verificar_credenciales(username, password)
+    hashed_password = hash_password(password)
+    credenciales = verificar_credenciales(username, hashed_password)
+    
     if credenciales:
         session['access_token'] = credenciales['access_token']
         session['logged_user'] = credenciales['user_data']
         session['nombre_usuario'] = credenciales['user_data']['nombre']
-        session['correo_usuario'] = credenciales['user_data']['correo']
-        session['nia_usuario'] = credenciales['user_data']['nia'] 
-        session['contraseña_usuario'] = credenciales['user_data']['contraseña']
-
-
         return True
     return False
 
@@ -57,7 +56,14 @@ def cerrar_sesion():
 
 #--------------------------------Registro-------------------------------------------------------------#
 
+def hash_password(password):
+    # Usar SHA-256 para hashear la contraseña
+    hashed_password = hashlib.sha256(password.encode()).digest()
 
+    # Codificar el hash resultante con base64 y manejar el padding adecuadamente
+    encoded_password = base64.urlsafe_b64encode(hashed_password + b'\x00').decode('utf-8', errors='replace').rstrip("=")
+
+    return encoded_password
 
 def generar_token(correo):
     serializer = URLSafeTimedSerializer(secret_key)
@@ -73,19 +79,29 @@ def obtener_correo_desde_token(token):
     except:
         return None
 
-def enviar_correo_verificacion(correo, contraseña, nia, nombre):
-    token = generar_token(correo)
-    url_verificacion = url_for('auth.confirmar_correo', token=token, contraseña=contraseña, nia=nia, nombre=nombre, _external=True)
+def enviar_correo_verificacion(correo, contrasena, nia, nombre,token):
+    mail = Mail()  
+   
+    contrasena_hashed = hash_password(contrasena)
+    url_restablecer = url_for('auth.confirmar_correo', contrasena=contrasena_hashed, nia=nia, nombre=nombre, correo=correo, token=token, _external=True)
 
-    mensaje = Message('Verificación de correo electrónico', sender='ceupractica@gmail.com', recipients=[correo])
-    mensaje.body = f'Haz clic en el siguiente enlace para verificar tu correo electrónico: {url_verificacion}'
+    
+    mensaje = Message('Confirmar correo', sender='tu_correo@gmail.com', recipients=[correo])
+    mensaje.body = f'Haz clic en el siguiente enlace para restablecer tu contraseña: {url_restablecer}'
 
-    mail.send(mensaje)
+    try:
+        mail.send(mensaje)  
+        return True
+    except Exception as e:
+        print(f"Error al enviar el correo de restablecimiento de contraseña: {str(e)}")
+        return False
+    
 
-def confirmar_correo_en_bd(correo, contraseña, nia, nombre):
+def confirmar_correo_en_bd(correo, contrasena, nia, nombre):
+    
     datos_usuario = {
         'correo': correo,
-        'contraseña': contraseña,
+        'contraseña': contrasena,
         'nia': nia,
         'nombre': nombre
     }
@@ -115,22 +131,22 @@ def verificar_usuario_por_correo(correo):
 def actualizar_contrasena_en_bd(correo, nueva_contrasena):
     db = conectar_bd()
     collection = db['usuarios']
-    
+    print(correo)
+    correo=correo.replace('*40', '@')
     # Actualizar la contraseña en la base de datos
-    resultado = collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
+    resultado = collection.update_one({'correo': correo}, {'$set': {'contraseña': hash_password(nueva_contrasena)}})
     
     # Verificar si la actualización fue exitosa
     return resultado.modified_count > 0
 
 
 def enviar_correo_restablecer_contrasena(correo, token):
-    mail = Mail()
-
+    mail = Mail()  # Asegúrate de haber configurado la extensión Mail en tu aplicación Flask
     # Genera la URL para restablecer la contraseña
     url_restablecer = url_for('auth.restablecer_contrasena', correo=correo, token=token, _external=True)
-
     mensaje = Message('Restablecer contraseña', sender='tu_correo@gmail.com', recipients=[correo])
     mensaje.body = f'Haz clic en el siguiente enlace para restablecer tu contraseña: {url_restablecer}'
+   
 
     try:
         mail.send(mensaje)  # Envía el correo
@@ -138,16 +154,3 @@ def enviar_correo_restablecer_contrasena(correo, token):
     except Exception as e:
         print(f"Error al enviar el correo de restablecimiento de contraseña: {str(e)}")
         return False
-    
-
-    #----------------------------------Funciones para cambiar contraseña cuando estas logeado---------------
-
-
-def obtener_usuario_por_correo(db, correo):
-    usuario = db.collection.find_one({'correo': correo})
-    return usuario
-
-def actualizar_contrasena(db, correo, nueva_contrasena):
-    db.collection.update_one({'correo': correo}, {'$set': {'contraseña': nueva_contrasena}})
-
-    

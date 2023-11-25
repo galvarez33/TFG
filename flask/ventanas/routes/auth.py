@@ -11,12 +11,9 @@ from . import auth_bp
 import jwt
 
 
-
 from funciones.auth_funciones import iniciar_sesion, usuario_ya_autenticado, cerrar_sesion
 from funciones.auth_funciones import conectar_bd, generar_token, obtener_correo_desde_token, enviar_correo_verificacion, confirmar_correo_en_bd, verificar_credenciales_en_bd
-from funciones.auth_funciones import verificar_usuario_por_correo, actualizar_contrasena_en_bd, enviar_correo_restablecer_contrasena
-from funciones.auth_funciones import conectar_bd, obtener_usuario_por_correo, actualizar_contrasena
-
+from funciones.auth_funciones import verificar_usuario_por_correo, actualizar_contrasena_en_bd, enviar_correo_restablecer_contrasena, hash_password
 
 
 
@@ -62,7 +59,8 @@ def registro():
 
     if request.method == 'POST':
         correo = request.form['correo']
-        contraseña = request.form['contraseña']
+        contrasena = request.form['contraseña']
+        print(contrasena)
         nia = request.form['nia']
         nombre = request.form['nombre']
 
@@ -75,19 +73,18 @@ def registro():
             error = 'El NIA debe ser un número de 6 dígitos.'
             return render_template('registro.html', error=error)
 
-        usuario_existente = verificar_credenciales_en_bd(correo, contraseña)
+        usuario_existente = verificar_credenciales_en_bd(correo, contrasena)
         if usuario_existente:
             error = "El correo electrónico ya está registrado."
             return render_template('registro.html', error=error)
 
-        if not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', contraseña):
+        if not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', contrasena):
             error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
             return render_template('registro.html', error=error)
-
-        enviar_correo_verificacion(correo, contraseña, nia, nombre)
-        confirmar_correo_en_bd(correo, contraseña, nia, nombre)
+        token = generar_token(correo)
+        envio= enviar_correo_verificacion(correo, contrasena, nia, nombre,token)
+        print(envio)
         session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico.'
-        session['correo_usuario'] = correo
 
         return redirect(url_for('auth.login'))
 
@@ -96,12 +93,14 @@ def registro():
 @auth_bp.route('/confirmar-correo/<token>')
 def confirmar_correo(token):
     correo = obtener_correo_desde_token(token)
+    
     if correo:
-        contraseña = request.args.get('contraseña')
+        contrasena = request.args.get('contrasena')
+        print(contrasena)
         nia = request.args.get('nia')
         nombre = request.args.get('nombre')
 
-        confirmar_correo_en_bd(correo, contraseña, nia, nombre)
+        confirmar_correo_en_bd(correo, contrasena, nia, nombre)
         return render_template('login.html', correo=correo)
     else:
         return render_template('login.html', error='Token inválido o expirado')
@@ -163,9 +162,11 @@ def contrasena_olvidada():
 
     return render_template('contrasena_olvidada.html')
 
-@auth_bp.route('/restablecer_contrasena/<correo>/<token>', methods=['GET', 'POST'])
-def restablecer_contrasena(correo, token):
+@auth_bp.route('/restablecer_contrasena/<token>', methods=['GET', 'POST'])
+def restablecer_contrasena(token):
+    correo=obtener_correo_desde_token(token)
     if request.method == 'POST':
+        
         nueva_contrasena = request.form['nueva_contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
         token = request.form['token']
@@ -178,7 +179,8 @@ def restablecer_contrasena(correo, token):
             error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
             return render_template('restablecer_contrasena.html', error=error, correo=correo, token=token)
 
-        # Actualizar la contraseña en la base de datos
+        
+        print(correo)
         resultado_actualizacion = actualizar_contrasena_en_bd(correo, nueva_contrasena)
         
         if resultado_actualizacion:
@@ -204,12 +206,16 @@ def cambiar_contrasena():
     mensaje_confirmacion = None  # Inicializa la variable de confirmación
 
     if request.method == 'POST':
-        data = session['logged_user']
-        print(data)
         correo = session['logged_user']['correo']
         contrasena_actual = request.form['contrasena_actual']
         nueva_contrasena = request.form['nueva_contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
+
+
+
+        contrasena_actual = hash_password(contrasena_actual)
+        nueva_contrasena = hash_password(nueva_contrasena)
+        confirmar_contrasena = hash_password(confirmar_contrasena)
         
 
         # Obtener el usuario actual desde MongoDB
