@@ -12,6 +12,9 @@ def conectar_db():
 def guardar_nueva_duda(data):
     form_collection = conectar_db()
     form_collection.insert_one(data)
+    nueva_duda = form_collection.find_one({'titulo': data['titulo']})
+    duda_id = nueva_duda['_id']
+    return duda_id
 
 # Otras funciones relacionadas con la base de datos (obtener, borrar, actualizar, etc.) pueden ir aquí.
 def obtener_ultima_duda():

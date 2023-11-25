@@ -47,7 +47,8 @@ def publicar_duda():
         }
 
         # Guardar la nueva duda en la base de datos usando la función
-        guardar_nueva_duda(form_data)
+        duda_id =guardar_nueva_duda(form_data)
+        return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda_id))
 
         
 
