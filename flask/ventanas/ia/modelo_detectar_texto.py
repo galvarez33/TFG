@@ -6,29 +6,38 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.metrics import BinaryAccuracy, AUC, Precision, Recall
 from sklearn.metrics import roc_auc_score, precision_recall_fscore_support
 
-
-
 # Rutas de las carpetas de imágenes
-carpeta= "C:/Users/gonza/Documents/IA/archive/dataset"
+carpeta = r"C:\\Users\\gonza\\Documents\\IA\\archive\\dataset"
 # Parámetros para preprocesamiento y entrenamiento
 altura, ancho = 150, 150  # Dimensiones de las imágenes
 batch_size = 32
 
 # Preprocesamiento de datos con ImageDataGenerator
 datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
+
+# Crear generadores de datos
 train_generator = datagen.flow_from_directory(
-    carpeta,  
+    carpeta,
     target_size=(altura, ancho),
     batch_size=batch_size,
     class_mode='binary',
     subset='training'
 )
+
 validation_generator = datagen.flow_from_directory(
     carpeta,
     target_size=(altura, ancho),
     batch_size=batch_size,
     class_mode='binary',
     subset='validation'
+)
+
+# Generador de datos para la carpeta de prueba
+test_generator = datagen.flow_from_directory(
+    os.path.join(carpeta, "test"),
+    target_size=(altura, ancho),
+    batch_size=batch_size,
+    class_mode='binary'
 )
 
 # Construcción del modelo CNN
@@ -44,7 +53,7 @@ model = Sequential([
     Flatten(),
     Dense(512, activation='relu'),
     Dense(256, activation='relu'),
-    Dense(1, activation='sigmoid')  # 1 unidad de salida con función de activación sigmoide para clasificación binaria
+    Dense(1, activation='sigmoid')
 ])
 
 # Compilación del modelo
@@ -60,11 +69,23 @@ model.fit(
     validation_steps=validation_generator.samples // batch_size
 )
 
-# Calcular las predicciones en el conjunto de validación
-y_pred = model.predict(validation_generator)
-y_true = validation_generator.classes  # Las etiquetas verdaderas del conjunto de validación
+# Evaluación del conjunto de prueba
+test_metrics = model.evaluate(test_generator)
+print("Métricas del conjunto de prueba:")
+print("Loss:", test_metrics[0])
+print("Binary Accuracy:", test_metrics[1])
+print("Recall:", test_metrics[2])
+print("Precision:", test_metrics[3])
+print("AUC:", test_metrics[4])
 
-
+# Evaluación del conjunto de validación
+validation_metrics = model.evaluate(validation_generator)
+print("\nMétricas del conjunto de validación:")
+print("Loss:", validation_metrics[0])
+print("Binary Accuracy:", validation_metrics[1])
+print("Recall:", validation_metrics[2])
+print("Precision:", validation_metrics[3])
+print("AUC:", validation_metrics[4])
 
 # Guardar el modelo
 model.save('modelo.h5')
