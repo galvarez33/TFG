@@ -3,7 +3,7 @@ from flask_mail import Mail
 from flask_cors import CORS
 from flask_restful import Api
 from routes import auth_bp, home_bp, publicar_duda_bp, explorar_bp, perfil_bp, detalle_duda_bp
-from api.resources import ExplorarResource, PerfilResource, DetalleDudaResource, PublicarDudaResource, SesionResource, ComentariosResource, NotificacionesResource,PrediccionResource
+from api.resources import ExplorarResource, PerfilResource, DetalleDudaResource, PublicarDudaResource, SesionResource, ComentariosResource, NotificacionesResource,PrediccionResource,RankingResource
 
 app = Flask(__name__)
 api = Api(app)
@@ -17,6 +17,9 @@ app.config['MAIL_PASSWORD'] = 'lkytkgkbhirfyxlv'
 mail = Mail(app)
 
 app.secret_key = '12345'
+ranking_dict = {}
+ranking_resource_instance = RankingResource("ranking.json")
+
 
 # Agrega tus recursos de API a la ruta correspondiente
 api.add_resource(ExplorarResource, '/api/explorar')
@@ -27,6 +30,7 @@ api.add_resource(SesionResource, '/api/sesion')
 api.add_resource(ComentariosResource, '/api/comentarios')
 api.add_resource(NotificacionesResource, '/api/notificaciones/<string:notificacion_id>')
 api.add_resource(PrediccionResource, '/api/predecir_texto')
+api.add_resource(RankingResource, '/api/ranking/<string:correo_usuario>', resource_class_kwargs={'ranking_file_path': ranking_resource_instance.ranking_file_path})
 
 
 

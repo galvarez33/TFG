@@ -4,11 +4,39 @@
 
 <div class="container">
     {% if logged_user %}
-    <h2 style="color: white;"><strong>Perfil de {{logged_user.nombre}}</strong></h2>
+    <h2 style="color: white;"><strong>Área personal de {{logged_user.nombre}}</strong></h2>
     {% endif %}
-    <h3 style="color: rgb(81, 255, 0);">Recuento de Votos Positivos: {{ total_votos_positivos }}</h3>
-    <h3 style="color: rgb(255, 0, 0);">Recuento de Votos Negativos: {{ total_votos_negativos }}</h3>
-    <h3 style="color: rgb(176, 192, 33);">Ranking Usuario...:</h3>
+
+    <div class="table-responsive">
+        <br>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="color: rgb(255, 255, 255);">Concepto</th>
+                    <th style="color: rgb(255, 255, 255);">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="color: rgb(25, 226, 25);">Recuento de Votos Positivos</td>
+                    <td style="color: rgb(25, 226, 25);">{{ total_votos_positivos }}</td>
+                </tr>
+                <tr>
+                    <td style="color: rgb(214, 23, 23);">Recuento de Votos Negativos</td>
+                    <td style="color: rgb(214, 23, 23);">{{ total_votos_negativos }}</td>
+                </tr>
+                <tr>
+                    <td style="color: rgb(223, 223, 23);">Puntos Usuario</td>
+                    <td style="color: rgb(223, 223, 23);">{{ puntos_ranking}}</td>
+                </tr>
+                <tr>
+                    <td style="color: rgb(243, 243, 9);">Posicion Ranking CEU</td>
+                    <td style="color: rgb(245, 245, 13);">{{ posicion_ranking}}</td>
+                </tr>
+                <!-- Agrega más filas según tus estadísticas -->
+            </tbody>
+        </table>
+    </div>
 
     <br><br><br><h2 style="color: white;"><strong>MIS DUDAS</strong></h2>
 
