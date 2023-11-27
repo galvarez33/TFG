@@ -21,7 +21,6 @@ def perfil():
         curso = request.form.get('curso', '')
         imagen = request.form.get('imagen', '')  
         api_url = f'http://localhost:5001/api/perfil/{correo_usuario}' 
-        print(curso)
         response = requests.post(api_url, json={'consulta': consulta, 'carrera': carrera, 'curso': curso, 'imagen': imagen})
         
         if response.status_code == 200:
@@ -53,15 +52,35 @@ def perfil():
     response = requests.get(api_url)
 
     if response.status_code == 200:
-        data = response.json()  # Los datos del perfil del usuario se encuentran en el formato JSON de la respuesta
+        data = response.json() 
+        # Los datos del perfil del usuario se encuentran en el formato JSON de la respuesta
         dudas_usuario = data.get('dudas', [])
         total_votos_positivos = data.get('total_votos_positivos', 0)
+        
         total_votos_negativos = data.get('total_votos_negativos', 0)
     else:
         # Manejar el caso cuando la solicitud a la API no es exitosa
         dudas_usuario = []
         total_votos_positivos = 0
         total_votos_negativos = 0
+
+
+    api_url_ranking = f'http://localhost:5001/api/ranking/{correo_usuario}'
+    response_ranking = requests.get(api_url_ranking)
+
+    if response_ranking.status_code == 200:
+        posicion_ranking = response_ranking.json().get('posicion', None)
+        puntos_ranking = response_ranking.json().get('puntos', 0)
+    else:
+        # Manejar el caso cuando la solicitud a la API de ranking no es exitosa
+        posicion_ranking = None
+        puntos_ranking = 0
+
+    # Ahora puedes usar 'posicion_ranking' y 'puntos_ranking' en tu código según sea necesario
+    print(f'Posición en el ranking: {posicion_ranking}')
+    print(f'Puntos en el ranking: {puntos_ranking}')
+
+
 
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     per_page = 9
@@ -72,7 +91,7 @@ def perfil():
 
     pagination = Pagination(page=page, per_page=per_page, total=total_dudas_usuario, css_framework='bootstrap4')
 
-    return render_template('perfil.html', dudas=dudas_usuario, pagination=pagination, logged_user=logged_user, total_votos_positivos=total_votos_positivos, total_votos_negativos=total_votos_negativos)
+    return render_template('perfil.html', dudas=dudas_usuario, pagination=pagination,posicion_ranking=posicion_ranking,puntos_ranking=puntos_ranking, logged_user=logged_user, total_votos_positivos=total_votos_positivos, total_votos_negativos=total_votos_negativos)
 
 
 @perfil_bp.route('/borrar_duda', methods=['POST'])
