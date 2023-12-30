@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2023-01-01" view-index="0" gantt-divider-location="351" resource-divider-location="300" version="3.2.3230" locale="es_ES">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2023-06-01" view-index="0" gantt-divider-location="512" resource-divider-location="300" version="3.2.3230" locale="es_ES">
     <description/>
-    <view zooming-state="default:9" id="gantt-chart">
-        <field id="tpd3" name="Nombre" width="200" order="0"/>
-        <field id="tpd4" name="Fecha de inicio" width="75" order="1"/>
-        <field id="tpd5" name="Fecha de fin" width="75" order="2"/>
+    <view zooming-state="default:8" id="gantt-chart">
+        <field id="tpd3" name="Nombre" width="292" order="0"/>
+        <field id="tpd4" name="Fecha de inicio" width="109" order="1"/>
+        <field id="tpd5" name="Fecha de fin" width="110" order="2"/>
         <option id="filter.completedTasks" value="false"/>
         <option id="color.recent">
-            <![CDATA[#6666ff #3333ff]]>
+            <![CDATA[#003399 #000066 #003366 #6666ff #3333ff]]>
         </option>
     </view>
     <view id="resource-table">
@@ -18,7 +18,7 @@
         <day-types>
             <day-type id="0"/>
             <day-type id="1"/>
-            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <default-week id="1" name="default" sun="0" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0"/>
             <only-show-weekends value="false"/>
             <overriden-day-types/>
             <days/>
@@ -37,13 +37,24 @@
             <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
-        <task id="0" name="Investigación preliminar" color="#3333ff" meeting="false" start="2023-06-01" duration="11" complete="0" thirdDate="2023-06-01" thirdDate-constraint="1" expand="true"/>
-        <task id="1" name="definir objetivo" color="#6666ff" meeting="false" start="2023-06-16" duration="11" complete="0" thirdDate="2023-05-22" thirdDate-constraint="0" expand="true"/>
-        <task id="2" name="analisis de contenido" color="#6666ff" meeting="false" start="2023-07-03" duration="6" complete="0" thirdDate="2023-05-22" thirdDate-constraint="0" expand="true"/>
-        <task id="3" name="desarrollo" color="#8cb6ce" meeting="false" start="2023-07-14" duration="56" complete="0" thirdDate="2023-05-22" thirdDate-constraint="0" expand="true"/>
-        <task id="4" name="pruebas" color="#8cb6ce" meeting="false" start="2023-10-02" duration="10" complete="0" thirdDate="2023-05-15" thirdDate-constraint="0" expand="true"/>
-        <task id="5" name="implementacion y despliegue" color="#8cb6ce" meeting="false" start="2023-10-16" duration="20" complete="0" thirdDate="2023-07-10" thirdDate-constraint="0" expand="true"/>
-        <task id="6" name="documentacion y memoria" color="#8cb6ce" meeting="false" start="2023-11-13" duration="20" complete="0" thirdDate="2023-10-02" thirdDate-constraint="0" expand="true"/>
+        <task id="0" name="ANALISIS" color="#003399" meeting="false" start="2023-06-01" duration="15" complete="0" thirdDate="2023-06-01" thirdDate-constraint="1" expand="true">
+            <depend id="1" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="1" name="DISEÑO ARQUITECTURA BACK END Y FRONT END" color="#003399" meeting="false" start="2023-06-16" duration="15" complete="0" thirdDate="2023-05-22" thirdDate-constraint="0" expand="true">
+            <depend id="2" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="2" name="IMPLEMENTACIÓN BACKEND" color="#003399" meeting="false" start="2023-07-01" duration="122" complete="0" thirdDate="2023-05-22" thirdDate-constraint="0" expand="true">
+            <depend id="3" type="1" difference="0" hardness="Rubber"/>
+            <depend id="4" type="1" difference="0" hardness="Rubber"/>
+            <depend id="5" type="1" difference="0" hardness="Rubber"/>
+        </task>
+        <task id="4" name="TEST BACKEND" color="#003399" meeting="false" start="2023-07-15" duration="108" complete="0" thirdDate="2023-05-15" thirdDate-constraint="0" expand="true"/>
+        <task id="3" name="IMPLEMENTACIÓN FRONTEND" color="#003399" meeting="false" start="2023-07-10" duration="113" complete="0" thirdDate="2023-05-22" thirdDate-constraint="0" expand="true"/>
+        <task id="5" name="INTELIGENCIA ARTIFICIAL" color="#003399" meeting="false" start="2023-10-01" duration="30" complete="0" thirdDate="2023-07-10" thirdDate-constraint="0" expand="true">
+            <depend id="7" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="7" name="DESPLIEGUE" color="#003399" meeting="false" start="2023-10-31" duration="15" complete="0" thirdDate="2023-05-01" thirdDate-constraint="0" expand="true"/>
+        <task id="6" name="DOCUMENTACION" color="#8cb6ce" meeting="false" start="2023-06-01" duration="200" complete="0" thirdDate="2023-10-02" thirdDate-constraint="0" expand="true"/>
     </tasks>
     <resources/>
     <allocations/>

@@ -64,7 +64,7 @@ def registro():
         nia = request.form['nia']
         nombre = request.form['nombre']
 
-        correo_valido = re.match(r'^[a-zA-Z0-9.]+@usp\.ceu\.es$', correo)
+        correo_valido = re.match(r'^.+@.+\..+$', correo)
         if not correo_valido:
             error = 'El correo electrónico no tiene el formato válido.'
             return render_template('registro.html', error=error)
@@ -74,6 +74,7 @@ def registro():
             return render_template('registro.html', error=error)
 
         usuario_existente = verificar_credenciales_en_bd(correo, contrasena)
+        
         if usuario_existente:
             error = "El correo electrónico ya está registrado."
             return render_template('registro.html', error=error)

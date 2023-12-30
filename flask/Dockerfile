@@ -6,14 +6,21 @@ WORKDIR /flask
 
 # Copia el código necesario al contenedor
 COPY ventanas/ /flask/ventanas/
+
+# Instala las dependencias necesarias para Tesseract OCR
+RUN apt-get update \
+    && apt-get install -y tesseract-ocr libtesseract-dev libleptonica-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copia el resto de los archivos
 COPY ventanas/main.py /flask/ventanas/
 COPY ventanas/requirements.txt /flask/ventanas/
 
-# Instala las dependencias
+# Instala las dependencias de Python
 RUN pip install --no-cache-dir -r /flask/ventanas/requirements.txt
 
-# Expone el puerto 5000 para que Flask pueda ser accedido desde fuera del contenedor
+# Expone el puerto 3000 para que Flask pueda ser accedido desde fuera del contenedor
 EXPOSE 5001
 
 # Comando para ejecutar la aplicación cuando se inicie el contenedor
-CMD ["python", "ventanas/main.py"]
+CMD python /flask/ventanas/main.py

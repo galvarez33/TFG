@@ -111,9 +111,11 @@ def confirmar_correo_en_bd(correo, contrasena, nia, nombre):
     collection.insert_one(datos_usuario)
 
 def verificar_credenciales_en_bd(username, password):
+    
     db = conectar_bd()
     collection = db['usuarios']
-    user = collection.find_one({'correo': username, 'contraseña': password})
+    user = collection.find_one({'correo': username})
+    
     return user
 
 
