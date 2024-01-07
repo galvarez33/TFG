@@ -4,7 +4,7 @@ FROM python:3.8
 WORKDIR /flask
 
 # Copia el código necesario al contenedor
-COPY ventanas/ /flask/ventanas/
+COPY app/ /flask/app/
 
 # Instala las dependencias necesarias para Tesseract OCR
 RUN apt-get update \
@@ -12,15 +12,15 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Copia el resto de los archivos
-COPY ventanas/main.py /flask/ventanas/
-COPY ventanas/requirements.txt /flask/ventanas/
+COPY app/main.py /flask/app/
+COPY app/requirements.txt /flask/app/
 
 # Instala las dependencias de Python
-RUN pip install --no-cache-dir -r /flask/ventanas/requirements.txt
+RUN pip install --no-cache-dir -r /flask/app/requirements.txt
 
 # Expone el puerto 443 para que Flask pueda ser accedido desde fuera del contenedor
 EXPOSE 443
 
 # Comando para ejecutar la aplicación cuando se inicie el contenedor
-CMD python /flask/ventanas/main.py
+CMD python /flask/app/main.py
 
