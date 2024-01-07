@@ -37,7 +37,7 @@ def test_borrar_duda_por_id(form_collection_mock):
     borrar_duda_por_id(str(duda_id_prueba),"usuario@example.com")  # Convierte el ID en una cadena para asegurar la coincidencia
 
     duda_eliminada = form_collection_mock.find_one({"_id": duda_id_prueba})
-    assert duda_eliminada is None  # 
+    assert duda_eliminada is None  
 
 def test_obtener_total_dudas_usuario(form_collection_mock):
     correos_prueba = ["usuario1@example.com", "usuario2@example.com"]

@@ -16,9 +16,9 @@ from  ia.validacion import detectar_texto_en_imagen
 @detalle_duda_bp.route('/detalle_duda/<string:duda_id>', methods=['GET', 'POST'])
 def detalle_duda_view(duda_id):
     logged_user = session.get('logged_user')
-    
     if not logged_user:
         return redirect(url_for('auth.login'))
+    
     orden = request.args.get('orden')
     api_url = f'https://practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
     api_response = requests.get(api_url)

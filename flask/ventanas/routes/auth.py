@@ -82,7 +82,7 @@ def registro():
         token = generar_token(correo)
         envio= enviar_correo_verificacion(correo, contrasena, nia, nombre,token)
         print(envio)
-        session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico. Puede tardar 5-10 minutos en llegar'
+        session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico. Puede tardar 5-10 minutos en llegar (la primera vez)'
 
         return redirect(url_for('auth.login'))
 
@@ -116,7 +116,6 @@ def confirmar_correo(token):
 @auth_bp.route('/restricted')
 def restricted():
     logged_user = session.get('logged_user')
-
     if 'logged_user' in session:
         return render_template('restricted.html', logged_user=logged_user, restricted_endpoint=url_for('auth.restricted'))
     else:
