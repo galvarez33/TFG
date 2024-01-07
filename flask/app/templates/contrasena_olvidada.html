@@ -1,0 +1,36 @@
+{% include 'header.html' %}
+
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-login.css') }}">
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+    <h2 class="active"> Correo de Recuperación</h2>
+    <!-- Login Form -->
+    <form action="/contrasena_olvidada" method="post">
+      <input type="text" id="login" class="fadeIn second" name="correo" placeholder="correo CEU">
+      
+      <input type="submit" class="fadeIn fourth" value="Enviar">
+    </form>
+
+    {% if error %}
+    <p class="alert alert-danger" role="alert">{{ error }}</p>
+    {% elif mensaje_confirmacion %}
+    <p class="alert alert-success" role="alert">{{mensaje_confirmacion}}</p>
+    {% endif %}
+
+
+    <!-- Remind Passowrd -->
+    <div id="formFooter">
+      <a class="underlineHover" href="/login">Volver</a>
+    </div>
+
+
+  </div>
+</div>
+
+
+
+</body>
+
+</html>

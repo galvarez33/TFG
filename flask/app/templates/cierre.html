@@ -1,0 +1,45 @@
+{% include 'header.html' %}
+
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-cierre.css') }}">
+<div class="wrapper fadeInDown">
+  <div id="formContent">   
+
+
+  
+    <h2>¿Deseas cerrar sesión?</h2>
+    <form action="/cierre" method="POST">
+        <input type="submit" class="fadeIn fourth" name="confirm" value="yes"></input>
+        <input type="submit" class="fadeIn fourth" name="confirm" value="no"></input>
+    </form>
+    {% if error %}
+    <p class="alert alert-danger" role="alert">{{ error }}</p>
+    {% elif correo %}
+    
+    {% endif %}
+
+    
+    <div id="formFooter">
+      <a class="underlineHover" href="/restricted">Volver</a>
+    </div>
+
+  </div>
+</div>
+
+
+
+<script>
+  // Obtén el fondo y la caja por sus ID
+  const overlay = document.getElementById('overlay');
+  const formWrapper = document.getElementById('formWrapper');
+
+  // Agrega un evento de clic al fondo para redirigir al usuario
+  overlay.addEventListener('click', () => {
+      window.location.href = '/restrcited'; // Cambia a la URL deseada
+  });
+</script>
+
+
+</body>
+
+</html>
