@@ -16,10 +16,11 @@ from  ia.validacion import detectar_texto_en_imagen
 @detalle_duda_bp.route('/detalle_duda/<string:duda_id>', methods=['GET', 'POST'])
 def detalle_duda_view(duda_id):
     logged_user = session.get('logged_user')
+    
     if not logged_user:
         return redirect(url_for('auth.login'))
     orden = request.args.get('orden')
-    api_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
+    api_url = f'https://practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
     api_response = requests.get(api_url)
     nombre_usuario = session.get('nombre_usuario')
 
@@ -29,7 +30,9 @@ def detalle_duda_view(duda_id):
         for comentario in duda['comentarios']:
             comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
 
-        correo_usuario = session.get('correo_usuario')
+        correo_usuario = logged_user['correo']
+        
+        
         nuevo_comentario = request.form.get('comentario')
         imagen = request.files.get('imagen')
 
@@ -38,7 +41,7 @@ def detalle_duda_view(duda_id):
             
             # Llamar a la función para detectar texto en la imagen
             tiene_texto = detectar_texto_en_imagen(imagen_base64)
-            print(tiene_texto)
+            
             if tiene_texto == False:
                 # La imagen contiene texto, muestra el error
                 return render_template('detalle_duda.html', duda=duda, logged_user=logged_user, nombre_usuario=session.get('nombre_usuario'), error="Debe seleccionar una imagen que contenga texto")
@@ -46,6 +49,7 @@ def detalle_duda_view(duda_id):
             imagen_base64 = None
 
         # Resto del código para agregar el comentario
+        
         comentario_con_imagen = {
             'nombre': nombre_usuario,
             'correo': correo_usuario,
@@ -57,7 +61,7 @@ def detalle_duda_view(duda_id):
         }
 
         # Hacer la solicitud a la API para agregar el comentario
-        api_agregar_comentario_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
+        api_agregar_comentario_url = f'https://practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
         api_agregar_comentario_response = requests.post(api_agregar_comentario_url, json=comentario_con_imagen)
 
         if api_agregar_comentario_response.status_code == 201:
@@ -96,8 +100,8 @@ def votar_positivo_view(duda_id, comentario_index):
         return 'Acceso no autorizado'
 
     nombre_usuario = session.get('nombre_usuario')
-
-    votar_positivo_comentario(duda_id, comentario_index, nombre_usuario)
+    ranking_file_path='ranking.json'
+    votar_positivo_comentario(ranking_file_path, duda_id, comentario_index, nombre_usuario)
 
     return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda_id))
 
@@ -108,8 +112,8 @@ def votar_negativo_view(duda_id, comentario_index):
         return 'Acceso no autorizado'
 
     nombre_usuario = session.get('nombre_usuario')
-
-    votar_negativo_comentario(duda_id, comentario_index, nombre_usuario)
+    ranking_file_path='ranking.json'
+    votar_negativo_comentario(ranking_file_path,duda_id, comentario_index, nombre_usuario)
 
     return redirect(url_for('detalle_duda.detalle_duda_view', duda_id=duda_id))
 
@@ -120,7 +124,7 @@ def borrar_comentario_view(duda_id, comentario_index):
     if not logged_user:
         return 'Acceso no autorizado'
 
-    api_url = f'http://localhost:5001/api/detalle_duda/{duda_id}'
+    api_url = f'https://practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
 
     data = {
     'comentario_index': comentario_index

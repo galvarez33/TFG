@@ -1,4 +1,6 @@
+
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
@@ -6,8 +8,8 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.metrics import BinaryAccuracy, AUC, Precision, Recall
 from sklearn.metrics import roc_auc_score, precision_recall_fscore_support
 
-# Rutas de las carpetas de imágenes
-carpeta = r"C:\\Users\\gonza\\Documents\\IA\\archive\\dataset"
+# Ruta de la carpeta raíz del conjunto de datos
+carpeta_raiz = r"C:\\Users\\gonza\\Documents\\IA\\archive\\dataset"
 # Parámetros para preprocesamiento y entrenamiento
 altura, ancho = 150, 150  # Dimensiones de las imágenes
 batch_size = 32
@@ -17,7 +19,7 @@ datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
 
 # Crear generadores de datos
 train_generator = datagen.flow_from_directory(
-    carpeta,
+    os.path.join(carpeta_raiz, "train"),
     target_size=(altura, ancho),
     batch_size=batch_size,
     class_mode='binary',
@@ -25,7 +27,7 @@ train_generator = datagen.flow_from_directory(
 )
 
 validation_generator = datagen.flow_from_directory(
-    carpeta,
+    os.path.join(carpeta_raiz, "train"),
     target_size=(altura, ancho),
     batch_size=batch_size,
     class_mode='binary',
@@ -34,7 +36,7 @@ validation_generator = datagen.flow_from_directory(
 
 # Generador de datos para la carpeta de prueba
 test_generator = datagen.flow_from_directory(
-    os.path.join(carpeta, "test"),
+    os.path.join(carpeta_raiz, "test"),
     target_size=(altura, ancho),
     batch_size=batch_size,
     class_mode='binary'

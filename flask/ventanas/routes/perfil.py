@@ -1,8 +1,9 @@
-from flask import render_template, request, redirect, session, url_for, Blueprint
+from flask import render_template, request, redirect, session, url_for, Blueprint,jsonify
 from flask_paginate import Pagination, get_page_args
 from . import perfil_bp
 from funciones.perfil_funciones import obtener_dudas_usuario, obtener_total_dudas_usuario, borrar_duda_por_id, obtener_total_votos
 import requests
+import json
 
 from . import perfil_bp
 
@@ -20,7 +21,7 @@ def perfil():
         carrera = request.form.get('carrera', '')
         curso = request.form.get('curso', '')
         imagen = request.form.get('imagen', '')  
-        api_url = f'http://localhost:5001/api/perfil/{correo_usuario}' 
+        api_url = f'https://practica-con-estudiantes-ceu.online/api/perfil/{correo_usuario}' 
         response = requests.post(api_url, json={'consulta': consulta, 'carrera': carrera, 'curso': curso, 'imagen': imagen})
         
         if response.status_code == 200:
@@ -48,7 +49,7 @@ def perfil():
         return render_template('perfil.html', dudas=dudas_paginadas, pagination=pagination, logged_user=logged_user)
 
     # Hacer una solicitud HTTP a la API para obtener los datos del perfil del usuario
-    api_url = f'http://localhost:5001/api/perfil/{correo_usuario}'
+    api_url = f'https://practica-con-estudiantes-ceu.online/api/perfil/{correo_usuario}'
     response = requests.get(api_url)
 
     if response.status_code == 200:
@@ -65,7 +66,7 @@ def perfil():
         total_votos_negativos = 0
 
 
-    api_url_ranking = f'http://localhost:5001/api/ranking/{correo_usuario}'
+    api_url_ranking = f'https://practica-con-estudiantes-ceu.online/api/ranking/{correo_usuario}'
     response_ranking = requests.get(api_url_ranking)
 
     if response_ranking.status_code == 200:
@@ -77,8 +78,6 @@ def perfil():
         puntos_ranking = 0
 
     # Ahora puedes usar 'posicion_ranking' y 'puntos_ranking' en tu código según sea necesario
-    print(f'Posición en el ranking: {posicion_ranking}')
-    print(f'Puntos en el ranking: {puntos_ranking}')
 
 
 
@@ -105,7 +104,7 @@ def borrar_duda():
 
 
     if duda_id:
-        api_url = f'http://localhost:5001/api/perfil/{correo_usuario}'
+        api_url = f'https://practica-con-estudiantes-ceu.online/api/perfil/{correo_usuario}'
         response = requests.delete(api_url, json={'duda_id': duda_id})  
 
         if response.status_code == 200:
@@ -114,3 +113,13 @@ def borrar_duda():
             return 'Error al borrar la duda', 500
     else:
         return 'ID de duda inválido', 400
+
+
+@perfil_bp.route('/obtener_ranking', methods=['GET'])
+def obtener_ranking():
+    try:
+        with open('ranking.json', 'r') as file:
+            ranking_data = json.load(file)
+        return jsonify(ranking_data)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return jsonify(error='Error al cargar los datos del ranking')

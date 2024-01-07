@@ -22,11 +22,10 @@
 body {
   font-family: "Poppins", sans-serif;
   height: 100vh;
-  background-image: url('/static/image.jpg');
-  overflow-x: hidden;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-image: url('/static/imagen2.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
   nav {
     color: #ff0000;
   }

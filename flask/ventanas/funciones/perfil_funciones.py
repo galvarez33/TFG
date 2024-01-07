@@ -60,16 +60,19 @@ def obtener_total_dudas_usuario(correo_usuario):
 def obtener_total_votos(correo_usuario):
     total_votos_positivos = 0
     total_votos_negativos = 0
-
+    
     dudas = form_collection.find({'comentario.correo': correo_usuario})
+    
 
     for duda in dudas:
+        
         comentarios = duda.get('comentario', [])
         for comentario in comentarios:
             comentario_votos_positivos = comentario.get('votos_positivos', 0)
             comentario_votos_negativos = comentario.get('votos_negativos', 0)
             total_votos_positivos += comentario_votos_positivos
             total_votos_negativos += comentario_votos_negativos
+    
 
     return total_votos_positivos, total_votos_negativos
 

@@ -218,10 +218,13 @@ class SesionResource(Resource):
 
 class ComentariosResource(Resource):
     def get(self):
+        logged_user = session.get('logged_user')
+        correo_usuario = logged_user['correo']
         
-        correo_usuario = session.get('correo_usuario')
+        print(correo_usuario)
         _, notificaciones_collection = conectar_db()
         comentarios = list(notificaciones_collection.find({'correo_usuario_duda': correo_usuario}))
+        print(comentarios)
 
        
         comentarios_formateados = []
@@ -244,8 +247,9 @@ class ComentariosResource(Resource):
 
 class NotificacionesResource(Resource):
     def delete(self, notificacion_id):
-        
-        correo_usuario = session.get('correo_usuario')
+        logged_user = session.get('logged_user')
+        correo_usuario = logged_user['correo']
+        print(f'not{correo_usuario}')
         _, notificaciones_collection = conectar_db()
         notificacion_id_obj = ObjectId(notificacion_id)
         
@@ -255,7 +259,6 @@ class NotificacionesResource(Resource):
             return {'mensaje': 'Notificación eliminada correctamente'}, 200
         else:
             return {'mensaje': 'No se encontró la notificación o no tienes permisos para eliminarla'}, 404
-
 
 
 
@@ -330,68 +333,38 @@ class PrediccionResource(Resource):
 
 
 class RankingResource(Resource):
-    
-    
     def __init__(self, ranking_file_path):
-        # Establecer la ruta del archivo de ranking
         self.ranking_file_path = ranking_file_path
-
-        # Cargar el ranking desde el archivo
         self.ranking_dict = self.load_ranking_from_file()
-        print(self.ranking_dict)
 
     def post(self, correo_usuario):
         try:
-            # Comprueba si el correo del usuario ya está en el ranking
             if correo_usuario not in self.ranking_dict:
-                self.ranking_dict[correo_usuario] = {'puntos': 0, 'posicion': None}  # Inicializa los puntos y posición si es un nuevo usuario
+                self.ranking_dict[correo_usuario] = {'puntos': 0, 'posicion': None}
 
-            # Suma o resta puntos según los likes y dislikes
-            puntos = 0  # Ajusta la lógica según tu implementación
-            # Ejemplo: si se le dio like, suma 1; si se le dio dislike, resta 1
+            resultado = {
+                'correo': correo_usuario,
+                'puntos': self.ranking_dict[correo_usuario]['puntos'],
+                'posicion': self.ranking_dict[correo_usuario]['posicion']
+            }
 
-            # Actualiza el puntaje en el ranking
-            self.ranking_dict[correo_usuario]['puntos'] += puntos
-
-            self.guardar_ranking_en_archivo()
-
-            # Actualiza la posición antes de devolver la información
-
-            # Crea un diccionario con el correo, los puntos y la posición en el ranking y lo devuelve como JSON
-            resultado = {'correo': correo_usuario, 
-                         'puntos': self.ranking_dict[correo_usuario]['puntos'],
-                        'posicion': self.ranking_dict[correo_usuario]['posicion']}
-            
-
-            # Devuelve el resultado actualizado
-            return self.ranking_dict, 200
+            return resultado, 200
 
         except Exception as e:
-            # Maneja las excepciones según tu lógica
             return {'error': 'Error en la actualización del ranking'}, 500
 
     def get(self, correo_usuario):
         try:
             if correo_usuario in self.ranking_dict:
-                # Obtiene el total de votos positivos y negativos antes de actualizar la posición
-                total_votos_positivos, total_votos_negativos = obtener_total_votos(correo_usuario)
-
-                # Recalcula la posición en el ranking considerando el total de votos
-                self.calcular_puntaje(correo_usuario, total_votos_positivos, total_votos_negativos)
-
-                # Ordena el ranking basado en el puntaje
                 ranking_ordenado = sorted(self.ranking_dict.items(), key=lambda x: x[1]['puntos'], reverse=True)
-                print(ranking_ordenado)
 
-                # Actualiza las posiciones en el ranking
                 for i, (correo, info_usuario) in enumerate(ranking_ordenado):
                     info_usuario['posicion'] = i + 1
 
-                # Guarda el ranking actualizado en el archivo JSON
                 with open(self.ranking_file_path, 'w') as file:
                     json.dump(self.ranking_dict, file, indent=4)
 
-                return {'correo': correo_usuario, 'posicion': self.ranking_dict[correo_usuario]['posicion'],'puntos': self.ranking_dict[correo_usuario]['puntos']}, 200
+                return {'correo': correo_usuario, 'posicion': self.ranking_dict[correo_usuario]['posicion'], 'puntos': self.ranking_dict[correo_usuario]['puntos']}, 200
 
             else:
                 return {'error': 'Usuario no encontrado en el ranking'}, 404
@@ -399,29 +372,16 @@ class RankingResource(Resource):
         except Exception as e:
             return {'error': 'Error al obtener información del ranking'}, 500
 
-    def calcular_puntaje(self, correo_usuario, total_votos_positivos, total_votos_negativos):
-        print(total_votos_positivos)
-        # Implementa la lógica para calcular el puntaje considerando votos positivos y negativos
-        # Puedes ajustar esta lógica según tus necesidades específicas
-        self.ranking_dict[correo_usuario]['puntos'] += total_votos_positivos - total_votos_negativos
-        
-    
-
-
     def load_ranking_from_file(self):
         try:
             with open(self.ranking_file_path, 'r') as file:
-                # Carga el contenido del archivo JSON y devuelve el diccionario
                 ranking_data = json.load(file)
                 return ranking_data
         except FileNotFoundError:
-            # Si el archivo no existe, devuelve un diccionario vacío
             return {}
 
     def guardar_ranking_en_archivo(self):
         with open(self.ranking_file_path, 'w') as file:
-            # Guarda el contenido del ranking en el archivo JSON
             json.dump(self.ranking_dict, file, indent=4)
-
      
 

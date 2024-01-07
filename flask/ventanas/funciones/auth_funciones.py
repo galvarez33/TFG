@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect, url_for, Blueprint, flash, jsonify, request
+from flask import render_template, session, redirect, url_for, Blueprint, flash, jsonify, request, render_template_string
 from flask_mail import Mail, Message
 from pymongo import MongoClient
 import jwt
@@ -6,6 +6,7 @@ from itsdangerous import URLSafeTimedSerializer
 import re
 import base64
 import hashlib
+import json
 from urllib.parse import unquote,quote_plus,quote
 
 # -*- coding: utf-8 -*-
@@ -79,41 +80,105 @@ def obtener_correo_desde_token(token):
     except:
         return None
 
-def enviar_correo_verificacion(correo, contrasena, nia, nombre,token):
+def enviar_correo_verificacion(correo, contrasena, nia, nombre, token):
     mail = Mail()  
-   
+    
     contrasena_hashed = hash_password(contrasena)
     url_restablecer = url_for('auth.confirmar_correo', contrasena=contrasena_hashed, nia=nia, nombre=nombre, correo=correo, token=token, _external=True)
-
     
-    mensaje = Message('Confirmar correo', sender='tu_correo@gmail.com', recipients=[correo])
-    mensaje.body = f'Haz clic en el siguiente enlace para restablecer tu contraseña: {url_restablecer}'
+    
+    # HTML del correo con un enlace directo y estilos
+    html = f"""
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Verificacion de cuenta</title>
+            <style>
+                body {{
+                    font-family: 'Arial', sans-serif;
+                    text-align: center;
+                    background-color: #f5f5f5;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #fff;
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }}
+                h1 {{
+                    color: #007bff;
+                }}
+                p {{
+                    font-size: 16px;
+                    color: #333;
+                }}
+                button {{
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #007bff;
+                    color: #fff;
+                    text-decoration: none;
+                    border-radius: 5px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Verificar Correo</h1>
+                <p>Hola {nombre},</p>
+                <p>Haz clic en el siguiente botón para verificar tu direccion de correo:</p>
+                <a href="{url_restablecer}"><button type="button">Verificar</button></a>
+            </div>
+        </body>
+        </html>
+    """
+
+    mensaje = Message('Verificacion de correo', sender='tu_correo@gmail.com', recipients=[correo])
+    mensaje.html = render_template_string(html)
 
     try:
         mail.send(mensaje)  
         return True
     except Exception as e:
-        print(f"Error al enviar el correo de restablecimiento de contraseña: {str(e)}")
+        print(f"Error al enviar el correo de verificacion de contraseña: {str(e)}")
         return False
     
 
 def confirmar_correo_en_bd(correo, contrasena, nia, nombre):
-    
     datos_usuario = {
         'correo': correo,
         'contraseña': contrasena,
         'nia': nia,
-        'nombre': nombre
+        'nombre': nombre,
     }
 
+    # Conéctate a la base de datos y añade el usuario
     db = conectar_bd()
     collection = db['usuarios']
     collection.insert_one(datos_usuario)
+    ranking_file_path = 'ranking.json'
+    try:
+        with open(ranking_file_path, 'r') as file:
+            ranking_dict = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        ranking_dict = {}
 
-def verificar_credenciales_en_bd(username, password):
+    # Añade al usuario al ranking con puntos iniciales
+    ranking_dict[correo] = {'puntos': 0,'nombre':nombre}
+
+    # Guarda el ranking actualizado en el archivo
+    with open(ranking_file_path, 'w') as file:
+        json.dump(ranking_dict, file, indent=4)
+
+
+def verificar_credenciales_en_bd(username):
     db = conectar_bd()
     collection = db['usuarios']
-    user = collection.find_one({'correo': username, 'contraseña': password})
+    user = collection.find_one({'correo': username})
     return user
 
 
@@ -144,13 +209,63 @@ def enviar_correo_restablecer_contrasena(correo, token):
     mail = Mail()  # Asegúrate de haber configurado la extensión Mail en tu aplicación Flask
     # Genera la URL para restablecer la contraseña
     url_restablecer = url_for('auth.restablecer_contrasena', correo=correo, token=token, _external=True)
-    mensaje = Message('Restablecer contraseña', sender='tu_correo@gmail.com', recipients=[correo])
-    mensaje.body = f'Haz clic en el siguiente enlace para restablecer tu contraseña: {url_restablecer}'
-   
+    html = f"""
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Restablecimiento de Contraseña</title>
+            <style>
+                body {{
+                    font-family: 'Arial', sans-serif;
+                    text-align: center;
+                    background-color: #f5f5f5;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #fff;
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }}
+                h1 {{
+                    color: #007bff;
+                }}
+                p {{
+                    font-size: 16px;
+                    color: #333;
+                }}
+                button {{
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #007bff;
+                    color: #fff;
+                    text-decoration: none;
+                    border-radius: 5px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Restablecer Contraseña</h1>
+                <p>Haz clic en el siguiente botón para restablecer tu contraseña :</p>
+                <a href="{url_restablecer}"><button type="button">Restablecer</button></a>
+            </div>
+        </body>
+        </html>
+    """
+
+    mensaje = Message('Restablecer Contraseña', sender='tu_correo@gmail.com', recipients=[correo])
+    mensaje.html = render_template_string(html)
 
     try:
-        mail.send(mensaje)  # Envía el correo
+        
+        mail.send(mensaje)  
+        print('ping')
         return True
     except Exception as e:
-        print(f"Error al enviar el correo de restablecimiento de contraseña: {str(e)}")
+        print(f"Error al enviar el correo de verificacion de contraseña: {str(e)}")
         return False
+    

@@ -17,7 +17,7 @@ def explorar():
         carrera = request.form.get('carrera', '')
         curso = request.form.get('curso', '')
         imagen = request.form.get('imagen', '')  
-        api_url = 'http://localhost:5001/api/explorar' 
+        api_url = 'https://practica-con-estudiantes-ceu.online/api/explorar' 
 
         response = requests.post(api_url, json={'consulta': consulta, 'carrera': carrera, 'curso': curso, 'imagen': imagen})
         data = response.json()
@@ -41,7 +41,7 @@ def explorar():
 
 
 
-    api_url = 'http://localhost:5001/api/explorar' 
+    api_url = 'https://practica-con-estudiantes-ceu.online/api/explorar' 
     response = requests.get(api_url)
     data = response.json().get('dudas', [])
 

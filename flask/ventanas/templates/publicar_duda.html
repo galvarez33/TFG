@@ -10,7 +10,7 @@
             {% if error %}
             <p id="error-message" class="alert alert-danger" role="alert">{{ error }}</p>
             {% endif %}
-            <input type="file" class="form-control-file" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>
+            <input type="file" class="form-control-file" style="color: aliceblue;" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>
             <div id="vista-previa"></div>
             <button type="button" class="btn btn-danger" onclick="borrarImagen()">Borrar imagen</button>
         </div>

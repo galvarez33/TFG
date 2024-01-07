@@ -56,15 +56,13 @@ def login():
 def registro():
     if 'logged_user' in session:
         return redirect(url_for('auth.restricted'))
-
     if request.method == 'POST':
         correo = request.form['correo']
         contrasena = request.form['contraseña']
         print(contrasena)
         nia = request.form['nia']
         nombre = request.form['nombre']
-
-        correo_valido = re.match(r'^[a-zA-Z0-9.]+@usp\.ceu\.es$', correo)
+        correo_valido = re.match(r'^.+@.+\..+$', correo)
         if not correo_valido:
             error = 'El correo electrónico no tiene el formato válido.'
             return render_template('registro.html', error=error)
@@ -73,7 +71,7 @@ def registro():
             error = 'El NIA debe ser un número de 6 dígitos.'
             return render_template('registro.html', error=error)
 
-        usuario_existente = verificar_credenciales_en_bd(correo, contrasena)
+        usuario_existente = verificar_credenciales_en_bd(correo)
         if usuario_existente:
             error = "El correo electrónico ya está registrado."
             return render_template('registro.html', error=error)
@@ -84,7 +82,7 @@ def registro():
         token = generar_token(correo)
         envio= enviar_correo_verificacion(correo, contrasena, nia, nombre,token)
         print(envio)
-        session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico.'
+        session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico. Puede tardar 5-10 minutos en llegar'
 
         return redirect(url_for('auth.login'))
 
@@ -93,15 +91,18 @@ def registro():
 @auth_bp.route('/confirmar-correo/<token>')
 def confirmar_correo(token):
     correo = obtener_correo_desde_token(token)
-    
-    if correo:
-        contrasena = request.args.get('contrasena')
-        print(contrasena)
-        nia = request.args.get('nia')
-        nombre = request.args.get('nombre')
-
-        confirmar_correo_en_bd(correo, contrasena, nia, nombre)
+    print(request) 
+    if correo: 
+        if (request.headers.get('Sec-Ch-Ua-Mobile') == '?0' and request.headers.get('Sec-Fetch-Site')== 'cross-site') or '@gmail' in correo:
+            contrasena = request.args.get('contrasena')
+            print(contrasena)
+            nia = request.args.get('nia')
+            nombre = request.args.get('nombre')
+            usuario_existente = verificar_credenciales_en_bd(correo)
+            if not  usuario_existente:
+                confirmar_correo_en_bd(correo, contrasena, nia, nombre)
         return render_template('login.html', correo=correo)
+    
     else:
         return render_template('login.html', error='Token inválido o expirado')
 
