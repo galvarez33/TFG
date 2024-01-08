@@ -1,13 +1,13 @@
 {% include 'header.html' %}
 
 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-cierre.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-registro.css') }}">
 <div class="wrapper fadeInDown">
   <div id="formContent">   
 
 
   
-    <h2>Cambiar Contraseña</h2>
+    <h2 style="color: black;">Cambiar Contraseña</h2>
     <form action="{{ url_for('auth.cambiar_contrasena') }}" method="post">
       <input type="text" name="contrasena_actual" placeholder="Contraseña Actual" required><br>
       <input type="text" name="nueva_contrasena" placeholder="Nueva Contraseña" required><br>

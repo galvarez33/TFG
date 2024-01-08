@@ -59,7 +59,7 @@ def registro():
     if request.method == 'POST':
         correo = request.form['correo']
         contrasena = request.form['contraseña']
-        print(contrasena)
+        
         nia = request.form['nia']
         nombre = request.form['nombre']
         correo_valido = re.match(r'^.+@.+\..+$', correo)
@@ -81,7 +81,7 @@ def registro():
             return render_template('registro.html', error=error)
         token = generar_token(correo)
         envio= enviar_correo_verificacion(correo, contrasena, nia, nombre,token)
-        print(envio)
+        
         session['mensaje_confirmacion'] = 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico. Puede tardar 5-10 minutos en llegar (la primera vez)'
 
         return redirect(url_for('auth.login'))
@@ -91,11 +91,9 @@ def registro():
 @auth_bp.route('/confirmar-correo/<token>')
 def confirmar_correo(token):
     correo = obtener_correo_desde_token(token)
-    print(request) 
     if correo: 
         if (request.headers.get('Sec-Ch-Ua-Mobile') == '?0' and request.headers.get('Sec-Fetch-Site')== 'cross-site') or '@gmail' in correo:
             contrasena = request.args.get('contrasena')
-            print(contrasena)
             nia = request.args.get('nia')
             nombre = request.args.get('nombre')
             usuario_existente = verificar_credenciales_en_bd(correo)
@@ -178,9 +176,6 @@ def restablecer_contrasena(token):
         if not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', nueva_contrasena):
             error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
             return render_template('restablecer_contrasena.html', error=error, correo=correo, token=token)
-
-        
-        print(correo)
         resultado_actualizacion = actualizar_contrasena_en_bd(correo, nueva_contrasena)
         
         if resultado_actualizacion:

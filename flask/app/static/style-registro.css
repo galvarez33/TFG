@@ -7,7 +7,7 @@ html {
 }
 
 body {
-    font-family: "Poppins", sans-serif;
+    font-family: "Poppins";
     height: 100vh;
     background-image: url('/static/image.jpg');
     background-size: 100% 100%;
@@ -88,9 +88,6 @@ a.active {
 }
 
 
-
-/* FORM TYPOGRAPHY*/
-
 input[type=button],
 input[type=submit],
 input[type=reset] {
@@ -131,7 +128,8 @@ input[type=reset]:active {
     transform: scale(0.95);
 }
 
-input[type=text] {
+input[type=text],
+input[type=password] {
     background-color: #f6f6f6;
     border: none;
     color: #0d0d0d;
@@ -271,17 +269,6 @@ input[type=text]:placeholder {
     -webkit-animation-delay: 1s;
     -moz-animation-delay: 1s;
     animation-delay: 1s;
-}
-.fadeIn.fifth {
-    -webkit-animation-delay: 1.2s;
-    -moz-animation-delay: 1.2s;
-    animation-delay: 1.2s;
-}
-
-.fadeIn.sixth {
-    -webkit-animation-delay: 1.4s;
-    -moz-animation-delay: 1.4s;
-    animation-delay: 1.4s;
 }
 
 /* Simple CSS3 Fade-in Animation */

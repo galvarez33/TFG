@@ -1,25 +1,19 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-registro.css') }}">
-    
-</head>
+
+
 {% include 'header.html' %}
 
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-registro.css') }}">
 <div class="wrapper fadeInDown">
     <div id="formContent">
         <!-- Tabs Titles -->
         <a class="inactive" href="/login"> INICIAR SESION</a>
-        <a class="active underlineHover" href="/registro">REGISTRARSE</a>
+        <a class="active underlineHover" href="/registro"><strong>REGISTRARSE</strong></a>
 
         <!-- Login Form -->
         <form action="/registro" method="post">
             <input type="text" id="correo" class="fadeIn second" name="correo" placeholder="correo CEU" required>
-            <input type="text" id="contraseña" class="fadeIn third" name="contraseña" placeholder="contraseña" required>
-            <input type="text" id="contraseña" class="fadeIn fourth" name="nia" placeholder="NIA Alumn@" required>
+            <input type="password" id="contraseña" class="fadeIn third" name="contraseña" placeholder="contraseña" required>
+            <input type="text" id="nia" class="fadeIn fourth" name="nia" placeholder="NIA Alumn@" required>
             <input type="text" id="nombre" class="fadeIn fifth" name="nombre" placeholder="Nombre" required>
             <input type="submit" class="fadeIn sixth" value="Entrar">
             <div id="formFooter">

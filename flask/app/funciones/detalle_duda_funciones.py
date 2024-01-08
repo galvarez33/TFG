@@ -49,7 +49,6 @@ def agregar_comentario(duda_id, comentario):
             'asignatura': duda.get('asignatura', ''),  
             'fecha': datetime.now()
         }
-        print(notificacion)
         notificaciones_collection.insert_one(notificacion)
         return True
     else:
@@ -75,9 +74,9 @@ def votar_positivo_comentario(ranking_file_path, duda_id, comentario_index, usua
                     {'$set': {'comentario': comentarios}}
                 )
                 correo_comentario = comentario.get('correo')
-                print(correo_comentario)
+                
                 ranking_dict = load_ranking_from_file(ranking_file_path)
-                print(ranking_dict)
+                
                 if correo_comentario in ranking_dict:
                     ranking_dict[correo_comentario]['puntos'] = max(0, ranking_dict[correo_comentario]['puntos'] + 10)
                     guardar_ranking_en_archivo(ranking_file_path, ranking_dict)

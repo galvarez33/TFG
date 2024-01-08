@@ -196,7 +196,6 @@ def verificar_usuario_por_correo(correo):
 def actualizar_contrasena_en_bd(correo, nueva_contrasena):
     db = conectar_bd()
     collection = db['usuarios']
-    print(correo)
     correo=correo.replace('*40', '@')
     # Actualizar la contraseña en la base de datos
     resultado = collection.update_one({'correo': correo}, {'$set': {'contraseña': hash_password(nueva_contrasena)}})
@@ -263,7 +262,7 @@ def enviar_correo_restablecer_contrasena(correo, token):
     try:
         
         mail.send(mensaje)  
-        print('ping')
+        
         return True
     except Exception as e:
         print(f"Error al enviar el correo de verificacion de contraseña: {str(e)}")

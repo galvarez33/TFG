@@ -60,5 +60,4 @@ def publicar_duda():
 def pagina_con_error():
     logged_user = session.get('logged_user')
     error_message = request.args.get('error', 'Error desconocido')
-    print(error_message)
     return render_template('publicar_duda.html', logged_user=logged_user, error=error_message)

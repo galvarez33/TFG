@@ -77,9 +77,12 @@ function mostrarVistaPrevia(asignatura) {
             reader.readAsDataURL(file);
         } else {
             // Mostrar un mensaje de error si el archivo no es una imagen
-            const errorMessage = document.createElement('p');
-            errorMessage.textContent = 'El archivo seleccionado no tiene formato de imagen png, jpg etc.';
-            previewContainer.appendChild(errorMessage);
+            const errorMessage = 'El archivo seleccionado no tiene formato de imagen png, jpg, etc.';
+            previewContainer.appendChild(document.createTextNode(errorMessage));
+
+            // Recargar la página con un mensaje de error
+            const errorQueryParam = encodeURIComponent(errorMessage);
+            window.location.href = `/error-texto?error=${errorQueryParam}`;
         }
     } else {
         // Mostrar un mensaje de error si no se seleccionó ningún archivo

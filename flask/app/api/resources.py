@@ -67,9 +67,7 @@ class PerfilResource(Resource):
 
         consulta = args['consulta']
         carrera = args['carrera']
-        curso = args['curso']
-        print(curso)
-    
+        curso = args['curso']   
 
         dudas_filtradas = obtener_dudas_usuario(correo_usuario,consulta, carrera, curso)
         
@@ -221,10 +219,10 @@ class ComentariosResource(Resource):
         logged_user = session.get('logged_user')
         correo_usuario = logged_user['correo']
         
-        print(correo_usuario)
+        
         _, notificaciones_collection = conectar_db()
         comentarios = list(notificaciones_collection.find({'correo_usuario_duda': correo_usuario}))
-        print(comentarios)
+        
 
        
         comentarios_formateados = []
@@ -249,7 +247,7 @@ class NotificacionesResource(Resource):
     def delete(self, notificacion_id):
         logged_user = session.get('logged_user')
         correo_usuario = logged_user['correo']
-        print(f'not{correo_usuario}')
+        
         _, notificaciones_collection = conectar_db()
         notificacion_id_obj = ObjectId(notificacion_id)
         
@@ -283,11 +281,11 @@ class PrediccionResource(Resource):
 
             # 1. Realiza la detección de texto con el primer modelo
             tiene_texto = self.detectar_texto_en_imagen(imagen_bytes)
-            print(tiene_texto)
+            
             if tiene_texto:
                 # 2. Si hay texto, realiza la predicción de asignatura con el segundo modelo
                 texto_extraido = pytesseract.image_to_string(imagen_pil)
-                print(texto_extraido)
+                
                 clase_predicha = self.modelo_asignatura.predict([texto_extraido])
                 print(clase_predicha)
 
@@ -299,7 +297,7 @@ class PrediccionResource(Resource):
                 error_message = 'No se detectó texto en la imagen'
                 return redirect(url_for('publicar_duda.pagina_con_error', error=error_message))
         except Exception as e:
-            print('hola')
+            
             print(f"Error al procesar la imagen: {e}")
             # Devuelve un diccionario con el error y un código de estado 500
             return {'error': 'Error en la predicción'}, 500

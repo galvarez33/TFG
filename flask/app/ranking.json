@@ -1,12 +1,22 @@
 {
     "g.alvarez33@usp.ceu.es": {
-        "puntos": 10,
-        "nombre": "Pablo",
-        "posicion": 2
+        "puntos": 0,
+        "nombre": "Gon",
+        "posicion": 4
     },
-    "g.alvarez32@usp.ceu.es": {
-        "puntos": 15,
-        "nombre": "Gonzalo",
+    "g.alvarez33@usp.ce.es": {
+        "puntos": 10,
+        "nombre": "Gon",
         "posicion": 1
+    },
+    "g.alvarez33@usp.eu.es": {
+        "puntos": 3,
+        "nombre": "Gon",
+        "posicion": 3
+    },
+    "g.alvrez33@usp.ceu.es": {
+        "puntos": 5,
+        "nombre": "Gon",
+        "posicion": 2
     }
 }

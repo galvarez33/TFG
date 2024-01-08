@@ -12,67 +12,65 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th style="color: rgb(255, 255, 255);">Concepto</th>
-                    <th style="color: rgb(255, 255, 255);">Valor</th>
+                    <th style="color: rgb(255, 255, 255);"class="text-center">Concepto</th>
+                    <th style="color: rgb(255, 255, 255);"class="text-center">Valor</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td style="color: rgb(25, 226, 25);">Recuento de Votos Positivos</td>
-                    <td style="color: rgb(25, 226, 25);">{{ total_votos_positivos }}</td>
+                    <td style="color: rgb(25, 226, 25);" class="text-center">Recuento de Votos Positivos</td>
+                    <td style="color: rgb(25, 226, 25);"class="text-center" >{{ total_votos_positivos }}</td>
                 </tr>
                 <tr>
-                    <td style="color: rgb(214, 23, 23);">Recuento de Votos Negativos</td>
-                    <td style="color: rgb(214, 23, 23);">{{ total_votos_negativos }}</td>
+                    <td style="color: rgb(214, 23, 23);"class="text-center">Recuento de Votos Negativos</td>
+                    <td style="color: rgb(214, 23, 23);"class="text-center">{{ total_votos_negativos }}</td>
                 </tr>
                 <tr>
-                    <td style="color: rgb(223, 223, 23);">Puntos Usuario</td>
-                    <td style="color: rgb(223, 223, 23);">{{ puntos_ranking}}</td>
+                    <td style="color: rgb(223, 223, 23);"class="text-center">Puntos Usuario (+10 comentario con like, -5 comentario con dislike)</td>
+                    <td style="color: rgb(223, 223, 23);"class="text-center">{{ puntos_ranking}}</td>
                 </tr>
                 <tr>
-                    <td style="color: rgb(243, 243, 9);">Posicion Ranking CEU</td>
-                    <td style="color: rgb(245, 245, 13);">{{ posicion_ranking }}</td>
+                    <td style="color: aqua; "class="text-center">Posicion Ranking CEU</td>
+                    <td style="color: rgb(9, 243, 231); "class="text-center">#{{ posicion_ranking }}</td>
+                    
                     <!-- Agregamos un botón para mostrar la tabla -->
                     
                 </tr>
+                
                 <!-- Agrega más filas según tus estadísticas -->
             </tbody>
         </table>
-        <button id="mostrarRankingBtn">Mostrar Ranking</button>
+        <button id="mostrarRankingBtn" class="btn btn-primary mx-auto d-block">VER RANKING</button>
+
         <script src="{{ url_for('static', filename='script-ranking.js') }}"></script>
 
 
-    <div class="modal" id="tablaModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tabla de Ranking</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <!-- Encabezados de la tabla -->
-                            <thead>
-                                <tr>
-                                    <th style="color: rgb(255, 255, 255);">Nombre</th>
-                                    <th style="color: rgb(255, 255, 255);">Puntos</th>
-                                    <th style="color: rgb(255, 255, 255);">Posición</th>
-                                </tr>
-                            </thead>
-                            <!-- Cuerpo de la tabla (rellenado dinámicamente con JavaScript) -->
-                            <tbody id="tabla-body"></tbody>
-                        </table>
+        <div class="modal" id="tablaModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white"> <!-- Cambié el color del encabezado a azul -->
+                        <h5 class="modal-title">Tabla de Ranking</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <!-- Encabezados de la tabla -->
+        
+                                <!-- Cuerpo de la tabla (rellenado dinámicamente con JavaScript) -->
+                                <tbody id="tabla-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> <!-- Cambié el color del botón de cerrar a rojo -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        
 
     <!-- Agrega aquí tus enlaces a jQuery y otros scripts necesarios -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
