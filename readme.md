@@ -61,7 +61,7 @@ El proyecto utiliza diversas tecnologías para su correcto funcionamiento. A con
     ```
 5. activamos el contenedor a partid de la imagen creada, ejemplo: 
     ```bash
-        sudo docker run -d -p 443:443 ec2-flask:v1.https .
+        sudo docker run -d -p 443:443 ec2-flask:v1.https 
     ```
 6. Abre tu navegador y visita [https://ip_publica_de_instancia:443](https://ips:443) para acceder a la aplicación. o al nombre de dominio asociado
    
