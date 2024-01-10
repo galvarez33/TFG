@@ -8,6 +8,7 @@ from . import detalle_duda_bp
 from datetime import datetime
 import base64
 from  ia.validacion import detectar_texto_en_imagen
+from werkzeug.utils import secure_filename
 
 
 
@@ -20,7 +21,7 @@ def detalle_duda_view(duda_id):
         return redirect(url_for('auth.login'))
     
     orden = request.args.get('orden')
-    api_url = f'https://practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
+    api_url = f'https://www.practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
     api_response = requests.get(api_url)
     nombre_usuario = session.get('nombre_usuario')
 
@@ -37,11 +38,20 @@ def detalle_duda_view(duda_id):
         imagen = request.files.get('imagen')
 
         if imagen:
+    # Verificar la extensión del archivo
+            allowed_extensions = {'png', 'jpg', 'jpeg'}
+            filename = secure_filename(imagen.filename)
+            extension = filename.rsplit('.', 1)[1].lower() if '.' in filename else None
+
+            if extension not in allowed_extensions:
+                # La extensión del archivo no es válida, muestra el error
+                return render_template('detalle_duda.html', duda=duda, logged_user=logged_user, nombre_usuario=session.get('nombre_usuario'), error="La imagen debe tener una extensión válida (png, jpg, jpeg)")
+
             imagen_base64 = base64.b64encode(imagen.read()).decode('utf-8')
-            
+
             # Llamar a la función para detectar texto en la imagen
             tiene_texto = detectar_texto_en_imagen(imagen_base64)
-            
+
             if tiene_texto == False:
                 # La imagen contiene texto, muestra el error
                 return render_template('detalle_duda.html', duda=duda, logged_user=logged_user, nombre_usuario=session.get('nombre_usuario'), error="Debe seleccionar una imagen que contenga texto")
@@ -61,7 +71,7 @@ def detalle_duda_view(duda_id):
         }
 
         # Hacer la solicitud a la API para agregar el comentario
-        api_agregar_comentario_url = f'https://practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
+        api_agregar_comentario_url = f'https://www.practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
         api_agregar_comentario_response = requests.post(api_agregar_comentario_url, json=comentario_con_imagen)
 
         if api_agregar_comentario_response.status_code == 201:
@@ -124,7 +134,7 @@ def borrar_comentario_view(duda_id, comentario_index):
     if not logged_user:
         return 'Acceso no autorizado'
 
-    api_url = f'https://practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
+    api_url = f'https://www.practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
 
     data = {
     'comentario_index': comentario_index

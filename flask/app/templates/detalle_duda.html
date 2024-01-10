@@ -1,92 +1,127 @@
-    {% include 'header.html' %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-detalle_duda.css') }}">
+{% include 'header.html' %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-detalle_duda.css') }}">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+{% block content %}
+{% if duda %}
+<div class="duda-card">
+
+    <div class="modal fade" id="modalImagenDuda" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="" alt="Imagen de la duda en tamaño completo" class="comentario-img-modal">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Importar jQuery al final del cuerpo -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+    <!-- Tu código JavaScript para manejar el modal -->
+    <script>
+        $(document).ready(function () {
+            // Agregar efecto de clic a la imagen de la duda
+            $('[data-toggle="modal"][data-target="#modalImagenDuda"]').on('click', function (event) {
+                event.preventDefault();
+                var imageUrl = $(this).attr('href');
 
-    {% block content %}
-    {% if duda %}
-    <div class="duda-card">
-        <div class="card-img-zoom">
-            <a style="color: white;" href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda" data-title="{{ duda.titulo }}">
-                <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
-            </a>
+                // Asignar la URL de la imagen al atributo src en el modal
+                $('#modalImagenDuda').find('.modal-body img').attr('src', imageUrl);
+
+                // Mostrar el modal
+                $('#modalImagenDuda').modal('show');
+            });
+        });
+    </script>
+
+    <!-- Imagen de la duda con atributos para activar el modal -->
+    <a style="color: white;" href="data:image/jpeg;base64,{{ duda.imagen }}" data-lightbox="detalle-duda"
+        data-title="{{ duda.titulo }}" data-toggle="modal" data-target="#modalImagenDuda">
+        <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
+    </a>
+    <div class="duda-card-content">
+        <h3 style="color: white;" class="card-title">{{ duda.titulo }}</h3>
+        <h5 style="color: white;" class="card-text">{{ duda.texto }}</h5>
+        <div class="additional-info">
+            <br>
+            <p class="info" style="color: rgb(211, 208, 208);"><span class="label">Carrera:</span> {{ duda.carrera }}
+            </p>
+            <p class="info" style="color: rgb(214, 212, 212);"><span class="label">Curso:</span> {{ duda.curso }}</p>
+            <p class="info" style="color: rgb(204, 199, 199);"><span class="label">Asignatura:</span> {{ duda.asignatura
+                }}</p>
         </div>
-        <div class="duda-card-content">
-            <h3 style="color: white;" class="card-title">{{ duda.titulo }}</h3>
-            <h5 style="color: white;" class="card-text">{{ duda.texto }}</h5>
-            <div class="additional-info">
-                <br>
-                <p class="info" style="color: rgb(211, 208, 208);"><span class="label">Carrera:</span> {{ duda.carrera }}</p>
-                <p class="info" style="color: rgb(214, 212, 212);"><span class="label">Curso:</span> {{ duda.curso }}</p>
-                <p class="info" style="color: rgb(204, 199, 199);"><span class="label">Asignatura:</span> {{ duda.asignatura }}</p>
-            </div>
-            <div class="stars">
-                <p class="dificultad" style="color: white;"><span class="label">Dificultad:</span></p>
-                {% for i in range(5) %}
-                {% if i < duda.dificultad %} <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas">
-                    </label>
-                    {% else %}
-                    <label class="star-empty" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
-                    {% endif %}
-                    {% endfor %}
-            </div>
+        <div class="stars">
+            <p class="dificultad" style="color: white;"><span class="label">Dificultad:</span></p>
+            {% for i in range(5) %}
+            {% if i < duda.dificultad %} <label class="star-filled" for="star{{ i }}" title="{{ i + 1 }} estrellas">
+                </label>
+                {% else %}
+                <label class="star-empty" for="star{{ i }}" title="{{ i + 1 }} estrellas"></label>
+                {% endif %}
+                {% endfor %}
         </div>
     </div>
+</div>
 
-    <br><br>
-    <div class="titulo-comentario">
-        <h2 style="color: white;"><strong>AYUDA CON TUS COMENTARIOS</strong></h2>
-    </div>
-    <div class="comentarios-container">
-        <div class="nuevo-comentario-container">
-            {% if logged_user %}
-            <form action="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda._id) }}" method="post" enctype="multipart/form-data">
-                <br>
-                <div class="form-group">
-                    <textarea class="form-control" name="comentario" id="nuevo-comentario"
-                        placeholder="Escribe tu comentario aquí" rows="4"></textarea>
-                </div>
-                <div class="form-group">
-                    <input type="file" class="form-control-file" id="imagen" name="imagen" style="color: aliceblue;">
-                </div>
-                <button type="submit" class="btn btn-primary">Enviar comentario</button>
-            </form>
-            {% if error %}
-                <br><p id="errors-message" class="alert alert-danger" role="alert">{{ error }}</p>
-                <script>
-                    // Esperar 10 segundos y ocultar el mensaje de error
-                    $(document).ready(function() {
-                        setTimeout(function() {
-                            $("#errors-message").fadeOut(500, function() {
-                                $(this).remove();
-                            });
-                        }, 10000);
+<br><br>
+<div class="titulo-comentario">
+    <h2 style="color: white;"><strong>AYUDA CON TUS COMENTARIOS</strong></h2>
+</div>
+<div class="comentarios-container">
+    <div class="nuevo-comentario-container">
+        {% if logged_user %}
+        <form action="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda._id) }}" method="post"
+            enctype="multipart/form-data">
+            <br>
+            <div class="form-group">
+                <textarea class="form-control" name="comentario" id="nuevo-comentario"
+                    placeholder="Escribe tu comentario aquí" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="file" class="form-control-file" id="imagen" name="imagen" style="color: aliceblue;">
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar comentario</button>
+        </form>
+        {% if error %}
+        <br>
+        <p id="errors-message" class="alert alert-danger" role="alert">{{ error }}</p>
+        <script>
+            // Esperar 10 segundos y ocultar el mensaje de error
+            $(document).ready(function () {
+                setTimeout(function () {
+                    $("#errors-message").fadeOut(500, function () {
+                        $(this).remove();
                     });
-                </script>
-            {% endif %}
-            {% endif %}
-            <br>
-            <div class="titulo-comentario2">
-                <h2 style="color: white;"><strong>VER RESPUESTAS DE COMPAÑEROS</strong></h2>
-            </div>
-            <br>
-            <div class="filtrar-comentarios">
-                <label for="filtro" style="color: white;">Filtrar comentarios:</label>
-                <select id="filtro"  name="filtro" onchange="filtrarComentarios(this.value) ">
-                    <option value="default" selected>Seleccione una opción</option>
-                    <option value="mejor_votados">Mejor Votados</option>
-                    <option value="recientes">Añadidos Recientemente</option>
-                </select>
-            </div>
-            
+                }, 10000);
+            });
+        </script>
+        {% endif %}
+        {% endif %}
+        <br>
+        <div class="titulo-comentario2">
+            <h2 style="color: white;"><strong>VER RESPUESTAS DE COMPAÑEROS</strong></h2>
+        </div>
+        <br>
+        <div class="filtrar-comentarios">
+            <label for="filtro" style="color: white;">Filtrar comentarios:</label>
+            <select id="filtro" name="filtro" onchange="filtrarComentarios(this.value) ">
+                <option value="default" selected>Seleccione una opción</option>
+                <option value="mejor_votados">Mejor Votados</option>
+                <option value="recientes">Añadidos Recientemente</option>
+            </select>
         </div>
 
-        <div>
-            {% if duda.comentarios %}
-            <br>
-            <ul>
-                {% for comentario in duda.comentarios %}
-                <li>
+    </div>
+
+    <div>
+        {% if duda.comentarios %}
+        <br>
+        <ul>
+            {% for comentario in duda.comentarios %}
+            <li>
                 <div class="comentario-content">
                     <div class="comentario-text">
                         <span style="color: black;" class="label"><strong>{{ comentario.nombre }}</strong></span>
@@ -97,20 +132,23 @@
                             data-target="#modalImagen{{ loop.index }}">
                         {% endif %}
                         {% if logged_user and nombre_usuario == comentario.nombre %}
-                        <form action="{{ url_for('detalle_duda.borrar_comentario_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                        <form
+                            action="{{ url_for('detalle_duda.borrar_comentario_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">Borrar</button>
                         </form>
                         {% endif %}
                     </div>
                     <div class="util-buttons">
-                        <form action="{{ url_for('detalle_duda.votar_positivo_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                        <form
+                            action="{{ url_for('detalle_duda.votar_positivo_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
                             <button type="submit" class="btn btn-success">Me ha sido útil</button>
                             <span class="like-icon">👍</span>
                             <span class="like-count">{{ comentario.votos_positivos }}</span>
                         </form>
-                        <form action="{{ url_for('detalle_duda.votar_negativo_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
+                        <form
+                            action="{{ url_for('detalle_duda.votar_negativo_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">No me ha sido útil</button>
                             <span class="dislike-icon">👎</span>
@@ -119,41 +157,41 @@
                     </div>
                 </div>
             </li>
-                <!-- Modal para mostrar la imagen en tamaño completo -->
-                <div class="modal fade" id="modalImagen{{ loop.index }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <img src="data:image/jpeg;base64,{{ comentario.imagen }}" alt="Imagen del comentario"
-                                    class="comentario-img-modal">
-                            </div>
+            <!-- Modal para mostrar la imagen en tamaño completo -->
+            <div class="modal fade" id="modalImagen{{ loop.index }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <img src="data:image/jpeg;base64,{{ comentario.imagen }}" alt="Imagen del comentario"
+                                class="comentario-img-modal">
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <p>No hay comentarios aún.</p>
-            {% endif %}
-        </div>
+            </div>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No hay comentarios aún.</p>
+        {% endif %}
     </div>
+</div>
 
-    {% else %}
-    <!-- Si la duda no se encontró en la base de datos, muestra un mensaje de error -->
-    <h2>Error</h2>
-    <p>{{ mensaje }}</p>
-    {% endif %}
-    {% endblock %}
+{% else %}
+<!-- Si la duda no se encontró en la base de datos, muestra un mensaje de error -->
+<h2>Error</h2>
+<p>{{ mensaje }}</p>
+{% endif %}
+{% endblock %}
 
-    <script>
-        function filtrarComentarios(opcion) {
-            if (opcion === 'mejor_votados') {
-                window.location.href = '{{ url_for("detalle_duda.detalle_duda_view", duda_id=duda._id) }}?orden=mejor_votados';
-            } else if (opcion === 'recientes') {
-                window.location.href = '{{ url_for("detalle_duda.detalle_duda_view", duda_id=duda._id) }}?orden=recientes';
-            }
+<script>
+    function filtrarComentarios(opcion) {
+        if (opcion === 'mejor_votados') {
+            window.location.href = '{{ url_for("detalle_duda.detalle_duda_view", duda_id=duda._id) }}?orden=mejor_votados';
+        } else if (opcion === 'recientes') {
+            window.location.href = '{{ url_for("detalle_duda.detalle_duda_view", duda_id=duda._id) }}?orden=recientes';
         }
-    </script>
-    
-    
-    <script src="{{ url_for('static', filename='script-detalle_duda.js') }}"></script>
+    }
+</script>
+
+
+<script src="{{ url_for('static', filename='script-detalle_duda.js') }}"></script>
