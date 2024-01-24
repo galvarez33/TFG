@@ -21,7 +21,7 @@ def detalle_duda_view(duda_id):
         return redirect(url_for('auth.login'))
     
     orden = request.args.get('orden')
-    api_url = f'https://www.practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
+    api_url = f'http://localhost/api/detalle_duda/{duda_id}'
     api_response = requests.get(api_url)
     nombre_usuario = session.get('nombre_usuario')
 
@@ -71,7 +71,7 @@ def detalle_duda_view(duda_id):
         }
 
         # Hacer la solicitud a la API para agregar el comentario
-        api_agregar_comentario_url = f'https://www.practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
+        api_agregar_comentario_url = f'http://localhost/api/detalle_duda/{duda_id}'
         api_agregar_comentario_response = requests.post(api_agregar_comentario_url, json=comentario_con_imagen)
 
         if api_agregar_comentario_response.status_code == 201:
@@ -134,7 +134,7 @@ def borrar_comentario_view(duda_id, comentario_index):
     if not logged_user:
         return 'Acceso no autorizado'
 
-    api_url = f'https://www.practica-con-estudiantes-ceu.online/api/detalle_duda/{duda_id}'
+    api_url = f'http://localhost/api/detalle_duda/{duda_id}'
 
     data = {
     'comentario_index': comentario_index

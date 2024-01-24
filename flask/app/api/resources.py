@@ -17,7 +17,7 @@ from keras.layers import Reshape
 
 
 from funciones.explorar_funciones import obtener_parametros_dudas, obtener_dudas
-from funciones.perfil_funciones import obtener_dudas_usuario,borrar_duda_por_id, obtener_total_votos
+from funciones.perfil_funciones import obtener_dudas_usuario,borrar_duda_por_id, obtener_total_votos, obtener_imagen_perfil_desde_bd
 from funciones.detalle_duda_funciones import conectar_db, obtener_detalle_duda, votar_positivo_comentario, votar_negativo_comentario, borrar_comentario, agregar_comentario
 from funciones.publicar_duda_funciones import guardar_nueva_duda,obtener_ultima_duda
 from funciones.auth_funciones import usuario_ya_autenticado,iniciar_sesion
@@ -63,34 +63,48 @@ class PerfilResource(Resource):
         parser.add_argument('consulta', type=str, required=True)
         parser.add_argument('carrera', type=str)
         parser.add_argument('curso', type=str)
+        parser.add_argument('imagen_perfil', type=str) 
         args = parser.parse_args()
 
         consulta = args['consulta']
         carrera = args['carrera']
         curso = args['curso']   
+        imagen_perfil = args['imagen_perfil']
+        
+        
 
         dudas_filtradas = obtener_dudas_usuario(correo_usuario,consulta, carrera, curso)
         
         return {
             'dudas': dudas_filtradas,
             'total_votos_positivos': total_votos_positivos,
-            'total_votos_negativos': total_votos_negativos
+            'total_votos_negativos': total_votos_negativos,
+            'imagen_perfil': imagen_perfil  
         }
     
     def get(self, correo_usuario):
         dudas_usuario = obtener_dudas_usuario(correo_usuario)
         total_votos_positivos, total_votos_negativos = obtener_total_votos(correo_usuario)
+
+        # Obtener la imagen de perfil
+        imagen_perfil = obtener_imagen_perfil_desde_bd(correo_usuario)
+        print(imagen_perfil)
+
+        # Asume que hay una función para obtener la imagen de perfil
         dudas_en_json = [{
             '_id': str(duda['_id']),
-            'correo':duda.get('correo_usuario',''),
+            'correo': duda.get('correo_usuario', ''),
             'titulo': duda.get('titulo', ''),
             'descripcion': duda.get('texto', ''),
             'imagen': duda.get('imagen', '')
         } for duda in dudas_usuario]
+
+        # Agregar la imagen de perfil al JSON
         return {
             'dudas': dudas_en_json,
             'total_votos_positivos': total_votos_positivos,
-            'total_votos_negativos': total_votos_negativos
+            'total_votos_negativos': total_votos_negativos,
+            'imagen_perfil': imagen_perfil  # Añadir la imagen de perfil
         }
 
     def delete(self, correo_usuario):

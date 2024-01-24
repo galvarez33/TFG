@@ -65,4 +65,4 @@ if __name__ == '__main__':
     #context.load_verify_locations(intermediate_cert_file)
 
     # Iniciar la aplicación con SSL
-    app.run(host="0.0.0.0", port=443, debug=True, ssl_context=context)
+    app.run(host="0.0.0.0", port=80, debug=True)

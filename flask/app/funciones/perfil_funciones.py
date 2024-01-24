@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from bson import ObjectId
+import base64
 
 # Define una variable global para la conexión a la base de datos
 client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
@@ -76,4 +77,31 @@ def obtener_total_votos(correo_usuario):
 
     return total_votos_positivos, total_votos_negativos
 
+def conectar_db_usuarios():
+    client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
+    db = client['TFG']
+    usuarios_collection = db['usuarios']  # Cambiar a la colección de usuarios
+    return usuarios_collection
 
+def guardar_imagen_perfil_en_bd(correo, nueva_imagen):
+    usuarios_collection = conectar_db_usuarios()
+
+    # Convertir la imagen a base64
+    imagen_base64 = base64.b64encode(nueva_imagen.read()).decode('utf-8')
+
+    # Actualizar el documento del usuario en la base de datos con la nueva imagen en base64
+    usuarios_collection.update_one(
+        {'correo': correo},
+        {'$set': {'imagen_perfil': imagen_base64}}
+    )
+
+
+def obtener_imagen_perfil_desde_bd(correo_usuario):
+    # Realizar una consulta a la base de datos para obtener la imagen de perfil del usuario
+    collection = conectar_db_usuarios()
+    usuario = collection.find_one({'correo': correo_usuario})
+
+    if usuario and 'imagen_perfil' in usuario:
+        return usuario['imagen_perfil']
+    else:
+        return None

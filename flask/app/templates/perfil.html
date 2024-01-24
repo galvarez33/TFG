@@ -1,45 +1,85 @@
 {% include 'header.html' %}
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="dropdown"]').dropdown();
+    });
+</script>
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-explorar.css') }}">
 
 <div class="container">
+    <br>
+
     {% if logged_user %}
-    <h2 style="color: white;"><strong>Área personal de {{logged_user.nombre}}</strong></h2>
+    <h2 class="text-center" style="color: white;"><strong>Área personal de {{logged_user.nombre}}</strong></h2>
     {% endif %}
+    <br>
+
+
+    <div class="text-center">
+        <div class="mb-3">
+            <img src="data:image/jpeg;base64,{{ imagen_perfil }}" alt="Imagen de perfil" class="rounded-circle"
+                style="width: 150px; height: 150px;">
+        </div>
+        <div>
+            <label for="nuevaImagen" class="btn btn-primary">
+                Seleccionar Imagen
+            </label>
+
+            <form id="cambiarImagenForm" method="POST" action="{{ url_for('perfil.cambiar_imagen_perfil') }}"
+                enctype="multipart/form-data">
+                <input type="file" class="form-control" id="nuevaImagen" name="nuevaImagen" style="display: none;">
+
+                <button type="submit" class="btn btn-success">Realizar Cambios</button>
+
+            </form>
+        </div>
+    </div>
+    <br>
+    <br>
+
+
+
+
+
+
+
 
     <div class="table-responsive">
         <br>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th style="color: rgb(255, 255, 255);"class="text-center">Concepto</th>
-                    <th style="color: rgb(255, 255, 255);"class="text-center">Valor</th>
+                    <th style="color: rgb(255, 255, 255);" class="text-center">Concepto</th>
+                    <th style="color: rgb(255, 255, 255);" class="text-center">Valor</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td style="color: rgb(25, 226, 25);" class="text-center">Recuento de Votos Positivos</td>
-                    <td style="color: rgb(25, 226, 25);"class="text-center" >{{ total_votos_positivos }}</td>
+                    <td style="color: rgb(25, 226, 25);" class="text-center">{{ total_votos_positivos }}</td>
                 </tr>
                 <tr>
-                    <td style="color: rgb(214, 23, 23);"class="text-center">Recuento de Votos Negativos</td>
-                    <td style="color: rgb(214, 23, 23);"class="text-center">{{ total_votos_negativos }}</td>
+                    <td style="color: rgb(214, 23, 23);" class="text-center">Recuento de Votos Negativos</td>
+                    <td style="color: rgb(214, 23, 23);" class="text-center">{{ total_votos_negativos }}</td>
                 </tr>
                 <tr>
-                    <td style="color: rgb(223, 223, 23);"class="text-center">Puntos Usuario (+10 comentario con like, -5 comentario con dislike)</td>
-                    <td style="color: rgb(223, 223, 23);"class="text-center">{{ puntos_ranking}}</td>
+                    <td style="color: rgb(223, 223, 23);" class="text-center">Puntos Usuario (+10 comentario con like,
+                        -5 comentario con dislike)</td>
+                    <td style="color: rgb(223, 223, 23);" class="text-center">{{ puntos_ranking}}</td>
                 </tr>
                 <tr>
-                    <td style="color: aqua; "class="text-center">Posicion Ranking CEU</td>
-                    <td style="color: rgb(9, 243, 231); "class="text-center">#{{ posicion_ranking }}</td>
-                    
+                    <td style="color: aqua; " class="text-center">Posicion Ranking CEU</td>
+                    <td style="color: rgb(9, 243, 231); " class="text-center">#{{ posicion_ranking }}</td>
+
                     <!-- Agregamos un botón para mostrar la tabla -->
-                    
+
                 </tr>
-                
+
                 <!-- Agrega más filas según tus estadísticas -->
             </tbody>
         </table>
+        <br>
         <button id="mostrarRankingBtn" class="btn btn-primary mx-auto d-block">VER RANKING</button>
 
         <script src="{{ url_for('static', filename='script-ranking.js') }}"></script>
@@ -58,74 +98,76 @@
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <!-- Encabezados de la tabla -->
-        
+
                                 <!-- Cuerpo de la tabla (rellenado dinámicamente con JavaScript) -->
                                 <tbody id="tabla-body"></tbody>
                             </table>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> <!-- Cambié el color del botón de cerrar a rojo -->
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        <!-- Cambié el color del botón de cerrar a rojo -->
                     </div>
                 </div>
             </div>
         </div>
-        
 
-    <!-- Agrega aquí tus enlaces a jQuery y otros scripts necesarios -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script>
-         
-        // Definición de la función mostrarTabla
-        function mostrarTabla() {
-            $('.table-container').toggle();
-        }
-    
-        // Esta función se ejecutará cuando la página se cargue completamente
-        $(document).ready(function () {
-    // Evento clic del botón
-    $('#mostrarRankingBtn').click(function () {
-        // Mostrar la ventana modal
-        $('#tablaModal').modal('show');
 
-        // Cargar y mostrar los datos del ranking.json
-        cargarDatosRanking();
-    });
-});
+        <!-- Agrega aquí tus enlaces a jQuery y otros scripts necesarios -->
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script>
 
-function cargarDatosRanking() {
-    // Utilizar XMLHttpRequest para obtener los datos del ranking.json
-    var httpRequest = new XMLHttpRequest();
-    httpRequest.open("GET", "/obtener_ranking", true);
-    httpRequest.onreadystatechange = function () {
-        if (this.readyState == 4) {
-            if (this.status == 200) {
-                var data = window.JSON ? JSON.parse(this.responseText) : eval("(" + this.responseText + ")");
-                // Limpiar el cuerpo de la tabla antes de agregar nuevos datos
-                $('#tabla-body').empty();
-
-                // Agregar encabezados a la tabla
-                $('#tabla-body').append('<tr><th>Usuario</th><th>Ranking</th><th>Puntos</th></tr>');
-
-                // Ordenar los datos por el campo "posicion"
-                var sortedData = Object.entries(data).sort((a, b) => a[1].posicion - b[1].posicion);
-
-                // Iterar sobre los datos ordenados y agregar filas a la tabla
-                $.each(sortedData, function (index, [correo, info]) {
-                    $('#tabla-body').append('<tr><td>' + info.nombre + '</td><td>' + info.posicion + '</td><td>' + info.puntos + '</td></tr>');
-                });
-            } else {
-                console.error("HTTP error " + this.status + " " + this.statusText);
+            // Definición de la función mostrarTabla
+            function mostrarTabla() {
+                $('.table-container').toggle();
             }
-        }
-    };
-    httpRequest.send();
-}
-    </script>
+
+            // Esta función se ejecutará cuando la página se cargue completamente
+            $(document).ready(function () {
+                // Evento clic del botón
+                $('#mostrarRankingBtn').click(function () {
+                    // Mostrar la ventana modal
+                    $('#tablaModal').modal('show');
+
+                    // Cargar y mostrar los datos del ranking.json
+                    cargarDatosRanking();
+                });
+            });
+
+            function cargarDatosRanking() {
+                // Utilizar XMLHttpRequest para obtener los datos del ranking.json
+                var httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/obtener_ranking", true);
+                httpRequest.onreadystatechange = function () {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            var data = window.JSON ? JSON.parse(this.responseText) : eval("(" + this.responseText + ")");
+                            // Limpiar el cuerpo de la tabla antes de agregar nuevos datos
+                            $('#tabla-body').empty();
+
+                            // Agregar encabezados a la tabla
+                            $('#tabla-body').append('<tr><th>Usuario</th><th>Ranking</th><th>Puntos</th></tr>');
+
+                            // Ordenar los datos por el campo "posicion"
+                            var sortedData = Object.entries(data).sort((a, b) => a[1].posicion - b[1].posicion);
+
+                            // Iterar sobre los datos ordenados y agregar filas a la tabla
+                            $.each(sortedData, function (index, [correo, info]) {
+                                $('#tabla-body').append('<tr><td>' + info.nombre + '</td><td>' + info.posicion + '</td><td>' + info.puntos + '</td></tr>');
+                            });
+                        } else {
+                            console.error("HTTP error " + this.status + " " + this.statusText);
+                        }
+                    }
+                };
+                httpRequest.send();
+            }
+        </script>
     </div>
 
-    <br><br><br><h2 style="color: white;"><strong>MIS DUDAS</strong></h2>
+    <br><br><br>
+    <h2 style="color: white;"><strong>MIS DUDAS</strong></h2>
 
     <form method="POST" action="{{ url_for('perfil.perfil') }}" class="mb-4">
         <div class="form-group">
@@ -153,69 +195,73 @@ function cargarDatosRanking() {
         <button type="submit" class="btn btn-primary">Buscar</button>
         <a href="{{ url_for('perfil.perfil') }}" class="btn btn-secondary">Deshacer filtros</a>
     </form>
-    
+
     <div class="row">
         {% for duda in dudas %}
-            <div class="col-md-4 mb-4">
-                <a href="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda._id) }}" class="duda-link">
-                    <div class="card duda-card">
-                        <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top fixed-size-image">
-                        <div class="card-body duda-card-body">
-                            <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
-                            <!-- Agregar el botón de Borrar -->
-                            <form method="POST" action="{{ url_for('perfil.borrar_duda', duda_id=duda._id) }}">
-                                <input type="hidden" name="duda_id" value="{{ duda._id }}">
-                                <button type="submit" class="btn btn-danger">Borrar</button>
-                            </form>
-                        </div>
+        <div class="col-md-4 mb-4">
+            <a href="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda._id) }}" class="duda-link">
+                <div class="card duda-card">
+                    <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda"
+                        class="card-img-top fixed-size-image">
+                    <div class="card-body duda-card-body">
+                        <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
+                        <!-- Agregar el botón de Borrar -->
+                        <form method="POST" action="{{ url_for('perfil.borrar_duda', duda_id=duda._id) }}">
+                            <input type="hidden" name="duda_id" value="{{ duda._id }}">
+                            <button type="submit" class="btn btn-danger">Borrar</button>
+                        </form>
                     </div>
-                </a>
-            </div>
+                </div>
+            </a>
+        </div>
         {% endfor %}
     </div>
-    
+
 
     {% if pagination.pages|length > 1 %}
-        <nav aria-label="Paginación">
-            <ul class="pagination justify-content-center mt-4">
-                {% if pagination.has_prev %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar.explorar', page=1) }}" aria-label="First">
-                            <span aria-hidden="true">&laquo;&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.prev_num) }}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                {% endif %}
+    <nav aria-label="Paginación">
+        <ul class="pagination justify-content-center mt-4">
+            {% if pagination.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('explorar.explorar', page=1) }}" aria-label="First">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.prev_num) }}"
+                    aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
 
-                {% for page_num in pagination.pages %}
-                    {% if pagination.page == page_num %}
-                        <li class="page-item active">
-                            <span class="page-link">{{ page_num }}</span>
-                        </li>
-                    {% else %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('explorar.explorar', page=page_num) }}">{{ page_num }}</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
+            {% for page_num in pagination.pages %}
+            {% if pagination.page == page_num %}
+            <li class="page-item active">
+                <span class="page-link">{{ page_num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('explorar.explorar', page=page_num) }}">{{ page_num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
 
-                {% if pagination.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.next_num) }}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.pages[-1]) }}" aria-label="Last">
-                            <span aria-hidden="true">&raquo;&raquo;</span>
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
+            {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.next_num) }}"
+                    aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.pages[-1]) }}"
+                    aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
     {% endif %}
 </div>

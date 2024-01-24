@@ -6,6 +6,7 @@ from itsdangerous import URLSafeTimedSerializer
 import re
 import base64
 import hashlib
+import os
 import json
 from urllib.parse import unquote,quote_plus,quote
 
@@ -142,6 +143,7 @@ def enviar_correo_verificacion(correo, contrasena, nia, nombre, token):
 
     try:
         mail.send(mensaje)  
+        mail.send(mensaje)
         return True
     except Exception as e:
         print(f"Error al enviar el correo de verificacion de contraseña: {str(e)}")
@@ -149,11 +151,21 @@ def enviar_correo_verificacion(correo, contrasena, nia, nombre, token):
     
 
 def confirmar_correo_en_bd(correo, contrasena, nia, nombre):
+    ruta_imagen_perfil = os.path.join(os.path.dirname(__file__), '..\\static\\perfil.png')
+
+    # Leer la imagen como binario
+    with open(ruta_imagen_perfil, 'rb') as imagen_file:
+        imagen_binario = imagen_file.read()
+
+    # Convertir la imagen binaria a base64
+    imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+
     datos_usuario = {
         'correo': correo,
         'contraseña': contrasena,
         'nia': nia,
         'nombre': nombre,
+        'imagen_perfil': imagen_base64
     }
 
     # Conéctate a la base de datos y añade el usuario
