@@ -17,7 +17,7 @@ from keras.layers import Reshape
 
 
 from funciones.explorar_funciones import obtener_parametros_dudas, obtener_dudas
-from funciones.perfil_funciones import obtener_dudas_usuario,borrar_duda_por_id, obtener_total_votos, obtener_imagen_perfil_desde_bd
+from funciones.perfil_funciones import obtener_dudas_usuario,borrar_duda_por_id, obtener_total_votos, obtener_imagen_perfil_desde_bd, borrar_imagen_de_perfil
 from funciones.detalle_duda_funciones import conectar_db, obtener_detalle_duda, votar_positivo_comentario, votar_negativo_comentario, borrar_comentario, agregar_comentario
 from funciones.publicar_duda_funciones import guardar_nueva_duda,obtener_ultima_duda
 from funciones.auth_funciones import usuario_ya_autenticado,iniciar_sesion
@@ -88,7 +88,6 @@ class PerfilResource(Resource):
 
         # Obtener la imagen de perfil
         imagen_perfil = obtener_imagen_perfil_desde_bd(correo_usuario)
-        print(imagen_perfil)
 
         # Asume que hay una función para obtener la imagen de perfil
         dudas_en_json = [{
@@ -109,29 +108,46 @@ class PerfilResource(Resource):
 
     def delete(self, correo_usuario):
         parser = reqparse.RequestParser()
-        parser.add_argument('duda_id', type=str, required=True)  # Espera el ID de la duda en el cuerpo JSON
+        parser.add_argument('duda_id', type=str)  # Espera el ID de la duda en el cuerpo JSON
+        parser.add_argument('borrar_imagen_perfil', type=bool)  # Nuevo campo para indicar si se debe borrar la imagen de perfil
         args = parser.parse_args()
-        duda_id = args['duda_id']
 
-        if borrar_duda_por_id(duda_id, correo_usuario):
-            # Lógica para obtener las dudas actualizadas después de la eliminación
-            dudas_actualizadas = obtener_dudas_usuario(correo_usuario)
+        duda_id = args.get('duda_id')
+        borrar_imagen_perfil = args.get('borrar_imagen_perfil', False)
 
-            # Convierte las dudas a formato JSON y devuelve un mensaje de éxito
-            dudas_en_json = [
-                {
-                    '_id': str(duda['_id']),
-                    'titulo': duda.get('titulo', ''),
-                    'descripcion': duda.get('texto', ''),
-                    'imagen': duda.get('imagen', '')
-                } for duda in dudas_actualizadas
-            ]
+        if borrar_imagen_perfil:
+            # Lógica para borrar la imagen de perfil
+            if borrar_imagen_de_perfil(correo_usuario):
+                # Devuelve un mensaje de éxito
+                return {'message': 'Imagen de perfil eliminada correctamente'}, 200
+            else:
+                # Devuelve un mensaje de error si hay problemas al borrar la imagen
+                return {'message': 'Error al borrar la imagen de perfil'}, 500
 
-            return {'message': 'Duda eliminada correctamente', 'dudas': dudas_en_json}, 200
+        elif duda_id:
+            # Lógica para borrar una duda por ID
+            if borrar_duda_por_id(duda_id, correo_usuario):
+                # Lógica para obtener las dudas actualizadas después de la eliminación
+                dudas_actualizadas = obtener_dudas_usuario(correo_usuario)
+
+                # Convierte las dudas a formato JSON y devuelve un mensaje de éxito
+                dudas_en_json = [
+                    {
+                        '_id': str(duda['_id']),
+                        'titulo': duda.get('titulo', ''),
+                        'descripcion': duda.get('texto', ''),
+                        'imagen': duda.get('imagen', '')
+                    } for duda in dudas_actualizadas
+                ]
+
+                return {'message': 'Duda eliminada correctamente', 'dudas': dudas_en_json}, 200
+            else:
+                # Si hay un problema al borrar la duda, devuelve un mensaje de error
+                return {'message': 'Duda no encontrada o no tienes permisos para borrarla'}, 404
+
         else:
-            # Si hay un problema al borrar la duda, devuelve un mensaje de error
-            return {'message': 'Duda no encontrada o no tienes permisos para borrarla'}, 404
-
+            # Si no se proporciona ni 'duda_id' ni 'borrar_imagen_perfil', devuelve un mensaje de error
+            return {'message': 'Se requiere el ID de la duda o la indicación para borrar la imagen de perfil'}, 400
 
 class DetalleDudaResource(Resource):
 

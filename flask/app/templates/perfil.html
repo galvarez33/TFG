@@ -16,25 +16,27 @@
     <br>
 
 
-    <div class="text-center">
+    <div class="text-center d-flex flex-column align-items-center">
         <div class="mb-3">
-            <img src="data:image/jpeg;base64,{{ imagen_perfil }}" alt="Imagen de perfil" class="rounded-circle"
-                style="width: 150px; height: 150px;">
+            <img src="data:image/jpeg;base64,{{ imagen_perfil }}" alt="Imagen de perfil" class="rounded-circle" style="width: 150px; height: 150px;">
         </div>
-        <div>
-            <label for="nuevaImagen" class="btn btn-primary">
+        <div class="d-flex justify-content-center">
+            <label for="nuevaImagen" class="btn btn-primary mr-2">
                 Seleccionar Imagen
             </label>
-
-            <form id="cambiarImagenForm" method="POST" action="{{ url_for('perfil.cambiar_imagen_perfil') }}"
-                enctype="multipart/form-data">
+        
+            <form id="cambiarImagenForm" method="POST" action="{{ url_for('perfil.cambiar_imagen_perfil') }}" enctype="multipart/form-data">
                 <input type="file" class="form-control" id="nuevaImagen" name="nuevaImagen" style="display: none;">
-
-                <button type="submit" class="btn btn-success">Realizar Cambios</button>
-
+                <button type="submit" class="btn btn-success">Aplicar Cambios</button>
             </form>
         </div>
+        
+        <!-- Nuevo formulario para borrar imagen de perfil -->
+        <form id="borrarImagenForm" method="POST" action="{{ url_for('perfil.borrar_imagen_perfil') }}">
+            <button type="submit" class="btn btn-danger mt-2">Borrar Imagen de Perfil</button>
+        </form>
     </div>
+    
     <br>
     <br>
 

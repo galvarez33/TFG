@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from bson import ObjectId
 import base64
+import os
 
 # Define una variable global para la conexión a la base de datos
 client = MongoClient('mongodb+srv://gonzaloalv:5OrWE1buHSE3AjAP@tfg.acxkjkk.mongodb.net/')
@@ -105,3 +106,31 @@ def obtener_imagen_perfil_desde_bd(correo_usuario):
         return usuario['imagen_perfil']
     else:
         return None
+    
+
+
+def borrar_imagen_de_perfil(correo_usuario):
+    collection = conectar_db_usuarios()
+
+    ruta_imagen_perfil = os.path.join(os.path.dirname(__file__), '..', 'static', 'perfil.png')
+
+    # Leer la imagen como binario
+    with open(ruta_imagen_perfil, 'rb') as imagen_file:
+        imagen_binario = imagen_file.read()
+
+    # Convertir la imagen binaria a base64
+    imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+
+    # Obtener la imagen de perfil actual
+    usuario = collection.find_one({'correo': correo_usuario})
+    if usuario:
+        # Actualizar el campo 'imagen_perfil' en la base de datos con la imagen 'perfil.png'
+        collection.update_one(
+            {'correo': correo_usuario},
+            {'$set': {'imagen_perfil': imagen_base64}}
+        )
+        return True
+    else:
+        return False
+
+    

@@ -97,6 +97,10 @@ def perfil():
 
 
 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @perfil_bp.route('/cambiar_imagen_perfil', methods=['POST'])
 def cambiar_imagen_perfil():
@@ -108,9 +112,11 @@ def cambiar_imagen_perfil():
 
     # Obtén el archivo de la solicitud del formulario
     nueva_imagen = request.files['nuevaImagen']
-    
-    
-   
+
+    # Verifica si el archivo tiene una extensión permitida
+    if not allowed_file(nueva_imagen.filename):
+        return 'Error: formato de archivo no permitido. Por favor, elige una imagen válida.', 400
+
     # Llama a la función para guardar la imagen de perfil en la base de datos
     guardar_imagen_perfil_en_bd(correo_usuario, nueva_imagen)
 
@@ -122,7 +128,7 @@ def cambiar_imagen_perfil():
 
     imagen_base64 = base64.b64encode(nueva_imagen.read()).decode('utf-8')
 
-    response = requests.post(api_url, json={'consulta': consulta, 'carrera': carrera, 'curso': curso, 'imagen_perfil':imagen_base64})
+    response = requests.post(api_url, json={'consulta': consulta, 'carrera': carrera, 'curso': curso, 'imagen_perfil': imagen_base64})
 
     if response.status_code == 200:
         # Redirige a la página del perfil después de cambiar la imagen
@@ -162,3 +168,24 @@ def obtener_ranking():
         return jsonify(ranking_data)
     except (FileNotFoundError, json.JSONDecodeError):
         return jsonify(error='Error al cargar los datos del ranking')
+
+@perfil_bp.route('/borrar_imagen_perfil', methods=['POST'])
+def borrar_imagen_perfil():
+    logged_user = session.get('logged_user')
+    if not logged_user:
+        return 'Acceso no autorizado'
+
+    correo_usuario = logged_user['correo']
+
+    api_url = f'http://localhost/api/perfil/{correo_usuario}'
+    
+    # Incluye el parámetro 'borrar_imagen_perfil' en el cuerpo de la solicitud DELETE
+    payload = {'borrar_imagen_perfil': True}
+    
+    response = requests.delete(api_url, json=payload)
+
+    if response.status_code == 200:
+        # Redirige a la página del perfil después de borrar la imagen
+        return redirect(url_for('perfil.perfil'))
+    else:
+        return 'Error al borrar la imagen de perfil', 500
