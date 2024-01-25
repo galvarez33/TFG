@@ -18,6 +18,18 @@ body {
   background-attachment: fixed; 
   
 }
+.centered-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh; /* Ajusta la altura como desees */
+}
+
+.centered-image-container img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 
 .duda-card {
   width: 200px;

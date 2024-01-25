@@ -17,26 +17,69 @@
 
 
     <div class="text-center d-flex flex-column align-items-center">
-        <div class="mb-3">
-            <img src="data:image/jpeg;base64,{{ imagen_perfil }}" alt="Imagen de perfil" class="rounded-circle" style="width: 150px; height: 150px;">
+        <div class="modal fade" id="modalImagenDuda" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                
+                    <div class="modal-body">
+                        <img src="" alt="Imagen de la duda en tamaño completo" class="comentario-img-modal">
+                    </div>
+                
+            </div>
         </div>
+        
+        <script>
+            $(document).ready(function () {
+                // Agregar efecto de clic a la imagen de la duda
+                $('[data-toggle="modal"][data-target="#modalImagenDuda"]').on('click', function (event) {
+                    event.preventDefault();
+                    var imageUrl = $(this).attr('href');
+        
+                    // Asignar la URL de la imagen al atributo src en el modal
+                    $('#modalImagenDuda').find('.modal-body img').attr('src', imageUrl);
+        
+                    // Mostrar el modal
+                    $('#modalImagenDuda').modal('show');
+        
+                    // Calcular el tamaño deseado y aplicar estilos
+                    var imageSize = 600; // Tamaño deseado en píxeles
+                    $('#modalImagenDuda').find('.modal-body img').css({
+                        'max-width': imageSize + 'px',
+                        'max-height': imageSize + 'px',
+                    });
+                });
+            });
+        </script>
+        
+        
+
+        <!-- Imagen de la duda con atributos para activar el modal -->
+        <a style="color: white;" href="data:image/jpeg;base64,{{ imagen_perfil }}" data-lightbox="detalle-duda"
+            data-title="{{ imagen_perfil }}" data-toggle="modal" data-target="#modalImagenDuda"
+            class="rounded-circle profile-image">
+            <img src="data:image/jpeg;base64,{{ imagen_perfil }}" alt="Imagen de la duda"
+                class="card-img-top rounded-circle profile-image" style="height: 100px; width: 100px;">
+                <br>
+        </a>
+        <br>
+        
         <div class="d-flex justify-content-center">
             <label for="nuevaImagen" class="btn btn-primary mr-2">
                 Seleccionar Imagen
             </label>
-        
-            <form id="cambiarImagenForm" method="POST" action="{{ url_for('perfil.cambiar_imagen_perfil') }}" enctype="multipart/form-data">
+
+            <form id="cambiarImagenForm" method="POST" action="{{ url_for('perfil.cambiar_imagen_perfil') }}"
+                enctype="multipart/form-data">
                 <input type="file" class="form-control" id="nuevaImagen" name="nuevaImagen" style="display: none;">
                 <button type="submit" class="btn btn-success">Aplicar Cambios</button>
             </form>
         </div>
-        
+
         <!-- Nuevo formulario para borrar imagen de perfil -->
         <form id="borrarImagenForm" method="POST" action="{{ url_for('perfil.borrar_imagen_perfil') }}">
             <button type="submit" class="btn btn-danger mt-2">Borrar Imagen de Perfil</button>
         </form>
     </div>
-    
+
     <br>
     <br>
 

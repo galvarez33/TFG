@@ -5,6 +5,7 @@
 <div class="container">
     <h2 class="mt-4" style="color: white;">Formulario</h2>
     <form id="formulario" method="POST" action="{{ url_for('publicar_duda.publicar_duda') }}" enctype="multipart/form-data">
+        <input type="hidden" name="correo_usuario" value="{{ correo_usuario }}">
         <div class="form-group">
             <label for="imagen" style="color: white;">Imagen:</label>
             {% if error %}

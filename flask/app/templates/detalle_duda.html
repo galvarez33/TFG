@@ -42,7 +42,10 @@
         data-title="{{ duda.titulo }}" data-toggle="modal" data-target="#modalImagenDuda">
         <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top">
     </a>
+
+
     <div class="duda-card-content">
+
         <h3 style="color: white;" class="card-title">{{ duda.titulo }}</h3>
         <h5 style="color: white;" class="card-text">{{ duda.texto }}</h5>
         <div class="additional-info">
@@ -63,7 +66,20 @@
                 {% endif %}
                 {% endfor %}
         </div>
+        <br>
+        <br>
+        <!-- Modal para mostrar la imagen de perfil en tamaño completo -->
+
+        <a style="color: white;" href="data:image/jpeg;base64,{{ duda.imagen_perfil }}" data-lightbox="detalle-duda"
+            data-title="{{ duda.titulo }}" data-toggle="modal" data-target="#modalImagenDuda"
+            class="rounded-circle profile-image">
+            <img src="data:image/jpeg;base64,{{ duda.imagen_perfil }}" alt="Imagen de la duda"
+                class="card-img-top rounded-circle profile-image" style="height: 100px; width: 100px;">
+        </a>
     </div>
+
+
+</div>
 </div>
 
 <br><br>
@@ -136,6 +152,7 @@
                             action="{{ url_for('detalle_duda.borrar_comentario_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">Borrar</button>
+
                         </form>
                         {% endif %}
                     </div>

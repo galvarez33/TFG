@@ -24,6 +24,8 @@ def detalle_duda_view(duda_id):
     api_url = f'http://localhost/api/detalle_duda/{duda_id}'
     api_response = requests.get(api_url)
     nombre_usuario = session.get('nombre_usuario')
+    correo_usuario = logged_user['correo']
+    
 
     if request.method == 'POST':
         duda = api_response.json().get('duda')
@@ -31,8 +33,6 @@ def detalle_duda_view(duda_id):
         for comentario in duda['comentarios']:
             comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
 
-        correo_usuario = logged_user['correo']
-        
         
         nuevo_comentario = request.form.get('comentario')
         imagen = request.files.get('imagen')
@@ -59,6 +59,7 @@ def detalle_duda_view(duda_id):
             imagen_base64 = None
 
         # Resto del código para agregar el comentario
+        correo_usuario = logged_user['correo']
         
         comentario_con_imagen = {
             'nombre': nombre_usuario,
@@ -83,20 +84,30 @@ def detalle_duda_view(duda_id):
 
     
 
-
     if api_response.status_code == 200:
         duda = api_response.json().get('duda')
         comentarios = duda.get('comentarios', [])
         if orden == 'recientes':
             comentarios.sort(key=itemgetter('fecha_agregado'), reverse=True)
-        
         elif orden == 'mejor_votados':
             comentarios.sort(key=itemgetter('votos_positivos'), reverse=True)
+
+        # Obtener la imagen de perfil desde la API de perfil
+        correo_usuario = logged_user['correo']
+        
+        perfil_api_url = f'http://localhost/api/perfil/{correo_usuario}'
+        perfil_api_response = requests.get(perfil_api_url)
+
+        if perfil_api_response.status_code == 200:
+            imagen_perfil = perfil_api_response.json().get('imagen_perfil')
+            
+        else:
+            imagen_perfil = None
 
         for comentario in duda['comentarios']:
             comentario['votos_positivos_count'] = comentario.get('votos_positivos', 0)
 
-        return render_template('detalle_duda.html', duda=duda, comentarios=comentarios, logged_user=logged_user, nombre_usuario=session.get('nombre_usuario'))
+        return render_template('detalle_duda.html', duda=duda, comentarios=comentarios, imagen_perfil=imagen_perfil, logged_user=logged_user, nombre_usuario=session.get('nombre_usuario'))
     else:
         return render_template('error.html', mensaje='Duda no encontrada')
 

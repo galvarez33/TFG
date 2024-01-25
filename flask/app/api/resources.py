@@ -163,6 +163,7 @@ class DetalleDudaResource(Resource):
                 'correo': duda.get('correo', ''),
                 'asignatura': duda.get('asignatura', ''),
                 'imagen': duda.get('imagen', ''),
+                'imagen_perfil': duda.get('imagen_perfil', ''),
                 'carrera': duda.get('carrera', ''),
                 'dificultad': duda.get('dificultad', ''),
                 'descripcion': duda.get('texto', ''),
