@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, session, url_for, Blueprint,jsonify
 from flask_paginate import Pagination, get_page_args
 from . import perfil_bp
-from funciones.perfil_funciones import obtener_dudas_usuario, obtener_total_dudas_usuario, borrar_duda_por_id, obtener_total_votos, guardar_imagen_perfil_en_bd
+from funciones.perfil_funciones import obtener_dudas_usuario, obtener_total_dudas_usuario, borrar_duda_por_id, obtener_total_votos, guardar_imagen_perfil_en_bd,borrar_todo_de_usuario
 import requests
 import base64
 import json
@@ -189,3 +189,28 @@ def borrar_imagen_perfil():
         return redirect(url_for('perfil.perfil'))
     else:
         return 'Error al borrar la imagen de perfil', 500
+
+
+@perfil_bp.route('/borrar_cuenta', methods=['POST'])
+def borrar_cuenta():
+        return render_template('borrar_cuenta.html')
+
+
+@perfil_bp.route('/confirmacion_borrar_cuenta', methods=['POST'])
+def confirmacion_borrar_cuenta():
+    logged_user = session.get('logged_user')
+    if request.method == 'POST':
+        confirm = request.form.get('confirm')
+        if confirm == 'yes':
+            # Obtener el correo del usuario actual
+            correo_usuario = logged_user['correo']
+            
+            # Llamar a la función para borrar todo del usuario
+            borrar_todo_de_usuario(correo_usuario)
+            
+            # Limpiar la sesión y redirigir a la página de inicio
+            session.clear()
+            return redirect(url_for('home.home'))
+        elif confirm == 'no':
+            return redirect(url_for('auth.restricted'))
+    return render_template('perfil.html', logged_user=logged_user)

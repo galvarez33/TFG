@@ -109,8 +109,8 @@
                     <td style="color: rgb(214, 23, 23);" class="text-center">{{ total_votos_negativos }}</td>
                 </tr>
                 <tr>
-                    <td style="color: rgb(223, 223, 23);" class="text-center">Puntos Usuario (+10 comentario con like,
-                        -5 comentario con dislike)</td>
+                    <td style="color: rgb(223, 223, 23);" class="text-center">Puntos Usuario (+10 pts comentario con like,
+                        -5 pts comentario con dislike)</td>
                     <td style="color: rgb(223, 223, 23);" class="text-center">{{ puntos_ranking}}</td>
                 </tr>
                 <tr>
@@ -309,4 +309,13 @@
         </ul>
     </nav>
     {% endif %}
+    <div class="text-center">
+        <form id="borrar_cuenta" method="POST" action="{{ url_for('perfil.borrar_cuenta') }}">
+            <!-- Resto de los campos del formulario aquí -->
+    
+            <button type="submit" class="btn btn-danger">Borrar Cuenta</button>
+        </form>
+    </div>
+    
+    <br>
 </div>

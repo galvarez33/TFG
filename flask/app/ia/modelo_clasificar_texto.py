@@ -4,6 +4,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import joblib
+import os
 
 class TextClassifier:
     def __init__(self, alpha=1.0, max_features=None):
@@ -56,10 +57,17 @@ class TextClassifier:
 
 
 if __name__ == "__main__":
+    directorio_actual = os.path.dirname(os.path.abspath(__file__))
+
     # Supongamos que tienes datos de tres asignaturas (matematicas, programacion, fisica)
-    mates_data = open('C:/Users/gonza/Documents/IA/textos/mates_es.txt', encoding='utf-8').readlines()
-    progra_data = open('C:/Users/gonza/Documents/IA/textos/progra_I.txt', encoding='utf-8').readlines()
-    fisica_data = open('C:/Users/gonza/Documents/IA/textos/fisica_I.txt', encoding='utf-8').readlines()
+    ruta_mates_data = os.path.join(directorio_actual, 'datos_clasificador', 'mates_es.txt')
+    ruta_progra_data = os.path.join(directorio_actual, 'datos_clasificador', 'progra_I.txt')
+    ruta_fisica_data = os.path.join(directorio_actual, 'datos_clasificador', 'fisica_I.txt')
+
+    # Ahora puedes usar las rutas
+    mates_data = open(ruta_mates_data, encoding='utf-8').readlines()
+    progra_data = open(ruta_progra_data, encoding='utf-8').readlines()
+    fisica_data = open(ruta_fisica_data, encoding='utf-8').readlines()
 
     # Concatenar los datos y etiquetas
     data = mates_data + progra_data + fisica_data

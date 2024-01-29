@@ -133,4 +133,10 @@ def borrar_imagen_de_perfil(correo_usuario):
     else:
         return False
 
-    
+def borrar_todo_de_usuario(correo_usuario):
+    # Borrar todas las dudas del usuario
+    form_collection.delete_many({'correo_usuario': correo_usuario})
+
+    # Borrar el usuario de la colección de usuarios
+    usuarios_collection = conectar_db_usuarios()
+    usuarios_collection.delete_one({'correo': correo_usuario})
