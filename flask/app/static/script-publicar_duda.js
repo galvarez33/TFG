@@ -112,22 +112,104 @@ function borrarImagen() {
 
 
 var asignaturasDefinidas = {
-        "Fundamentos de Organización de las TIC": { carrera: "ISI", curso: "1º" },
-        "Fundamentos Físicos de la Informática I": { carrera: "ISI", curso: "1º" },
-        "Fundamentos Matemáticos de la Informática I": { carrera: "ISI", curso: "1º" },
-        "Fundamentos Matemáticos de la Informática II": { carrera: "ISI", curso: "1º" },
-        "Introducción a la Ingeniería Informática": { carrera: "ISI", curso: "1º" },
-        "Modelos de Computación": { carrera: "ISI", curso: "1º" },
-        "Programación I": { carrera: "ISI", curso: "1º" },
-        "Programación II": { carrera: "ISI", curso: "1º" },
-        "Claves de Historia Contemporánea": { carrera: "ISI", curso: "1º" },
-        // Agrega más asignaturas según sea necesario
-        // ...
+        // Asignaturas de primer año de ISI
+    "Claves de Historia y Literatura": { carrera: "ISI", curso: "1º" },
+    "Fundamentos de Organización de las TIC": { carrera: "ISI", curso: "1º" },
+    "Fundamentos Físicos de la Informática I": { carrera: "ISI", curso: "1º" },
+    "Fundamentos Físicos de la Informática II": { carrera: "ISI", curso: "1º" },
+    "Fundamentos Matemáticos de la Informática I": { carrera: "ISI", curso: "1º" },
+    "Fundamentos Matemáticos de la Informática II": { carrera: "ISI", curso: "1º" },
+    "Introducción a la Ingeniería Informática": { carrera: "ISI", curso: "1º" },
+    "Modelos de Computación": { carrera: "ISI", curso: "1º" },
+    "Programación I": { carrera: "ISI", curso: "1º" },
+    "Programación II": { carrera: "ISI", curso: "1º" },
+    
+    // Asignaturas de segundo año de ISI
+    "Estadística": { carrera: "ISI", curso: "2º" },
+    "Análisis de los Estados Financieros": { carrera: "ISI", curso: "2º" },
+    "Arquitectura de Ordenadores": { carrera: "ISI", curso: "2º" },
+    "Bases de Datos I": { carrera: "ISI", curso: "2º" },
+    "Bases de Datos II": { carrera: "ISI", curso: "2º" },
+    "Gestión Financiera": { carrera: "ISI", curso: "2º" },
+    "Metodología y Tecnología de la Programación": { carrera: "ISI", curso: "2º" },
+    "Redes de Ordenadores I": { carrera: "ISI", curso: "2º" },
+    "Redes de Ordenadores II": { carrera: "ISI", curso: "2º" },
+    "Sistemas Operativos": { carrera: "ISI", curso: "2º" },
+    
+    // Asignaturas de tercer año de ISI
+    "Administración de Sistemas de Información": { carrera: "ISI", curso: "3º" },
+    "Gestión Operativa de la Empresa TIC": { carrera: "ISI", curso: "3º" },
+    "Infraestructuras de Sistemas de Información": { carrera: "ISI", curso: "3º" },
+    "Ingeniería del Software": { carrera: "ISI", curso: "3º" },
+    "Inteligencia Artificial e Ingeniería del Conocimiento": { carrera: "ISI", curso: "3º" },
+    "Programación en Entornos Distribuidos": { carrera: "ISI", curso: "3º" },
+    "Proyectos de Sistemas de Información": { carrera: "ISI", curso: "3º" },
+    "Sistemas de Información en la Empresa I": { carrera: "ISI", curso: "3º" },
+    "Sistemas de Información en la Empresa II": { carrera: "ISI", curso: "3º" },
+    "Sistemas de Información para la Dirección Estratégica": { carrera: "ISI", curso: "3º" },
+    
+    // Asignaturas de cuarto año de ISI
+    "Doctrina Social de la Iglesia": { carrera: "ISI", curso: "4º" },
+    "Estrategia y Política Empresarial en las Empresas TIC": { carrera: "ISI", curso: "4º" },
+    "Ética y Deontología": { carrera: "ISI", curso: "4º" },
+    "Recursos Humanos en las Empresas TIC": { carrera: "ISI", curso: "4º" },
+    "Seguridad Informática y Protección de Datos": { carrera: "ISI", curso: "4º" },
+    "Sistemas Web I": { carrera: "ISI", curso: "4º" },
+    "Sistemas Web II": { carrera: "ISI", curso: "4º" },
+    "Prácticas Externas": { carrera: "ISI", curso: "4º" },
+    "Trabajo de Fin de Grado": { carrera: "ISI", curso: "4º" },
 
-        // Agregar asignaturas para ADE
-        "Politica": { carrera: "ADE", curso: "1º" },
-        // Resto de las asignaturas para ADE...
-        // ...
+    "Derecho de la empresa": { carrera: "ADE", curso: "1º" },
+    "Fundamentos de gestión empresarial": { carrera: "ADE", curso: "1º" },
+    "Matemáticas I": { carrera: "ADE", curso: "1º" },
+    "Microeconomía": { carrera: "ADE", curso: "1º" },
+    "Estadística I": { carrera: "ADE", curso: "1º" },
+    "Pensamiento creativo": { carrera: "ADE", curso: "1º" },
+    "Claves de historia contemporánea": { carrera: "ADE", curso: "1º" },
+    "Fundamentos de contabilidad financiera": { carrera: "ADE", curso: "1º" },
+    "Fundamentos de Marketing": { carrera: "ADE", curso: "1º" },
+    "Ética": { carrera: "ADE", curso: "1º" },
+    "Herramientas para el análisis de datos": { carrera: "ADE", curso: "1º" },
+    "Matemáticas II": { carrera: "ADE", curso: "2º" },
+    
+    // Asignaturas de segundo año de ADE
+    "Doctrina social de la Iglesia": { carrera: "ADE", curso: "2º" },
+    "Macroeconomía": { carrera: "ADE", curso: "2º" },
+    "Estadística II": { carrera: "ADE", curso: "2º" },
+    "Financiación empresarial": { carrera: "ADE", curso: "2º" },
+    "Fiscalidad empresarial para la toma de decisiones": { carrera: "ADE", curso: "2º" },
+    "Historia económica y de la empresa": { carrera: "ADE", curso: "2º" },
+    "Contabilidad y fiscalidad en la empresa": { carrera: "ADE", curso: "2º" },
+    "Dirección financiera": { carrera: "ADE", curso: "2º" },
+    "Gestión de marketing": { carrera: "ADE", curso: "2º" },
+    "Herramientas de análisis estadístico para la empresa": { carrera: "ADE", curso: "2º" },
+    "Organización y diseño empresarial": { carrera: "ADE", curso: "2º" },
+    
+    // Asignaturas de tercer año de ADE
+    "Análisis de estados financieros": { carrera: "ADE", curso: "3º" },
+    "Contabilidad para la toma de decisiones": { carrera: "ADE", curso: "3º" },
+    "Dirección de operaciones": { carrera: "ADE", curso: "3º" },
+    "Política económica": { carrera: "ADE", curso: "3º" },
+    "Finanzas tecnológicas": { carrera: "ADE", curso: "3º" },
+    "Gestión de patrimonios y carteras": { carrera: "ADE", curso: "3º" },
+    "Econometría": { carrera: "ADE", curso: "3º" },
+    "Empresa y emprendimiento I": { carrera: "ADE", curso: "3º" },
+    "Empresa y emprendimiento II": { carrera: "ADE", curso: "3º" },
+    "Macroeconomía aplicada": { carrera: "ADE", curso: "3º" },
+    "Valoración de activos financieros": { carrera: "ADE", curso: "3º" },
+    "Casos de realidad empresarial": { carrera: "ADE", curso: "3º" },
+    "Transformación digital de la empresa": { carrera: "ADE", curso: "3º" },
+    
+    // Asignaturas de cuarto año de ADE
+    "Gestión de la cadena de suministro": { carrera: "ADE", curso: "4º" },
+    "Deontología": { carrera: "ADE", curso: "4º" },
+    "Business English": { carrera: "ADE", curso: "4º" },
+    "Análisis estratégico de la empresa": { carrera: "ADE", curso: "4º" },
+    "Estrategias corporativas de la empresa": { carrera: "ADE", curso: "4º" },
+    "Economía para el siglo XXI": { carrera: "ADE", curso: "4º" },
+    "Dirección de personas": { carrera: "ADE", curso: "4º" },
+    "Trabajo Fin de Grado (ADE)": { carrera: "ADE", curso: "4º" },
+    "Prácticas académicas externas": { carrera: "ADE", curso: "4º" },
 };
 function updateAsignaturas(asignatura) {
     var carreraSelect = document.getElementById("carrera");
@@ -157,19 +239,21 @@ function updateAsignaturas(asignatura) {
         console.warn("No se encontró información para la asignatura: " + asignatura);
     }
 
-    // Cargar todas las asignaturas disponibles en el desplegable
-    for (var asignaturaKey in asignaturasDefinidas) {
-        if (asignaturasDefinidas.hasOwnProperty(asignaturaKey)) {
-            var option = document.createElement("option");
-            option.text = asignaturaKey;
-            option.value = asignaturaKey;
-            asignaturaSelect.add(option);
-        }
-    }
-}
+    // Filtrar las asignaturas por carrera y curso
+    var asignaturasFiltradas = Object.keys(asignaturasDefinidas)
+        .filter(function(asignaturaKey) {
+            return asignaturasDefinidas[asignaturaKey].carrera === carreraSelect.value &&
+                   asignaturasDefinidas[asignaturaKey].curso === cursoSelect.value;
+        });
 
-// Llama a la función al cargar la página para mostrar todas las asignaturas
-updateAsignaturas();
+    // Cargar las asignaturas filtradas en el desplegable
+    asignaturasFiltradas.forEach(function(asignaturaKey) {
+        var option = document.createElement("option");
+        option.text = asignaturaKey;
+        option.value = asignaturaKey;
+        asignaturaSelect.add(option);
+    });
+}
 
 // Llama a la función al cargar la página para mostrar todas las asignaturas
 updateAsignaturas();
