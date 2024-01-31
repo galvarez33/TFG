@@ -30,7 +30,7 @@ def obtener_dudas_usuario(correo_usuario, consulta=None, carrera=None, curso=Non
         query['curso'] = curso
     
     offset = (page - 1) * per_page
-    dudas_cursor = form_collection.find(query).skip(offset).limit(per_page)
+    dudas_cursor = form_collection.find(query).skip(offset)
     
     # Convertir ObjectId a cadena y crear la lista de dudas
     dudas = [

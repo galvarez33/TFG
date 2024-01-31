@@ -19,27 +19,27 @@
     <div class="text-center d-flex flex-column align-items-center">
         <div class="modal fade" id="modalImagenDuda" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-sm">
-                
-                    <div class="modal-body">
-                        <img src="" alt="Imagen de la duda en tamaño completo" class="comentario-img-modal">
-                    </div>
-                
+
+                <div class="modal-body">
+                    <img src="" alt="Imagen de la duda en tamaño completo" class="comentario-img-modal">
+                </div>
+
             </div>
         </div>
-        
+
         <script>
             $(document).ready(function () {
                 // Agregar efecto de clic a la imagen de la duda
                 $('[data-toggle="modal"][data-target="#modalImagenDuda"]').on('click', function (event) {
                     event.preventDefault();
                     var imageUrl = $(this).attr('href');
-        
+
                     // Asignar la URL de la imagen al atributo src en el modal
                     $('#modalImagenDuda').find('.modal-body img').attr('src', imageUrl);
-        
+
                     // Mostrar el modal
                     $('#modalImagenDuda').modal('show');
-        
+
                     // Calcular el tamaño deseado y aplicar estilos
                     var imageSize = 600; // Tamaño deseado en píxeles
                     $('#modalImagenDuda').find('.modal-body img').css({
@@ -49,8 +49,8 @@
                 });
             });
         </script>
-        
-        
+
+
 
         <!-- Imagen de la duda con atributos para activar el modal -->
         <a style="color: white;" href="data:image/jpeg;base64,{{ imagen_perfil }}" data-lightbox="detalle-duda"
@@ -58,10 +58,10 @@
             class="rounded-circle profile-image">
             <img src="data:image/jpeg;base64,{{ imagen_perfil }}" alt="Imagen de la duda"
                 class="card-img-top rounded-circle profile-image" style="height: 100px; width: 100px;">
-                <br>
+            <br>
         </a>
         <br>
-        
+
         <div class="d-flex justify-content-center">
             <label for="nuevaImagen" class="btn btn-primary mr-2">
                 Seleccionar Imagen
@@ -109,7 +109,8 @@
                     <td style="color: rgb(214, 23, 23);" class="text-center">{{ total_votos_negativos }}</td>
                 </tr>
                 <tr>
-                    <td style="color: rgb(223, 223, 23);" class="text-center">Puntos Usuario (+10 pts comentario con like,
+                    <td style="color: rgb(223, 223, 23);" class="text-center">Puntos Usuario (+10 pts comentario con
+                        like,
                         -5 pts comentario con dislike)</td>
                     <td style="color: rgb(223, 223, 23);" class="text-center">{{ puntos_ranking}}</td>
                 </tr>
@@ -212,9 +213,10 @@
     </div>
 
     <br><br><br>
-    <h2 style="color: white;"><strong>MIS DUDAS</strong></h2>
+    <h2 class="text-center" style="color: white;"><strong>MIS DUDAS</strong></h2>
+    <br><br><br>
 
-    <form method="POST" action="{{ url_for('perfil.perfil') }}" class="mb-4">
+    <form style="display: none;" method="POST" action="{{ url_for('perfil.perfil') }}" class="mb-4">
         <div class="form-group">
             <input type="text" class="form-control" id="consulta" name="consulta" placeholder="Buscar por título">
         </div>
@@ -245,7 +247,8 @@
         {% for duda in dudas %}
         <div class="col-md-4 mb-4">
             <a href="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda._id) }}" class="duda-link">
-                <div class="card duda-card">
+                <div class="card duda-card d-flex align-items-center">
+                    <!-- Añadir clases d-flex y align-items-center -->
                     <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda"
                         class="card-img-top fixed-size-image">
                     <div class="card-body duda-card-body">
@@ -260,6 +263,7 @@
             </a>
         </div>
         {% endfor %}
+
     </div>
 
 
@@ -312,10 +316,10 @@
     <div class="text-center">
         <form id="borrar_cuenta" method="POST" action="{{ url_for('perfil.borrar_cuenta') }}">
             <!-- Resto de los campos del formulario aquí -->
-    
+
             <button type="submit" class="btn btn-danger">Borrar Cuenta</button>
         </form>
     </div>
-    
+
     <br>
 </div>

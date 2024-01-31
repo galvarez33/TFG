@@ -85,7 +85,7 @@ def perfil():
 
 
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-    per_page = 9
+    per_page = len(dudas_usuario)
 
     offset = (page - 1) * per_page
     dudas_usuario = dudas_usuario[offset: offset + per_page]
