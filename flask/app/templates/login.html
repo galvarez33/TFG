@@ -9,13 +9,26 @@
     <a class="inactive underlineHover" href="/registro">REGISTRARSE</a>
 
 
-    
-
     <!-- Login Form -->
     <form action="/login" method="post">
       <input type="text" id="login" class="fadeIn second" name="correo" placeholder="correo CEU">
       <input type="password" id="contraseña" class="fadeIn third" name="contrasena" placeholder="contraseña">
-      <input type="submit" class="fadeIn fourth" value="Entrar">
+      <input type="submit" class="fadeIn fourth" value="Entrar" onclick="showSpinner()">
+      <div id='loader' class="loader" style="display: none;"></div>
+      <script>
+        function showSpinner() {
+          document.getElementById('loader').style.display = 'block';
+
+          setTimeout(function () {
+            // Oculta el spinner
+            document.getElementById('loader').style.display = 'none';
+
+            setTimeout(function () {
+              window.location.href = event.target.href;
+            }, 5000); // 5000 milisegundos = 5 segundos
+          }, 5000);
+        }
+      </script>
     </form>
     {% if error %}
     <p class="alert alert-danger" role="alert">{{ error }}</p>

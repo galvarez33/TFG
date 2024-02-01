@@ -1,5 +1,3 @@
-
-
 {% include 'header.html' %}
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-registro.css') }}">
@@ -11,24 +9,35 @@
 
         <!-- Login Form -->
         <form action="/registro" method="post">
-            <input type="text" id="correo" class="fadeIn second" name="correo" placeholder="correo CEU" required>
-            <input type="password" id="contraseña" class="fadeIn third" name="contraseña" placeholder="contraseña" required>
-            <input type="text" id="nia" class="fadeIn fourth" name="nia" placeholder="NIA Alumn@" required>
+            <input type="text" id="correo" class="fadeIn second" name="correo" placeholder="correo" required>
+            <input type="password" id="contraseña" class="fadeIn third" name="contraseña" placeholder="contraseña (5 caracteres, una mayúscula, una minúscula y un número)"
+                required>
+            <input type="text" id="nia" class="fadeIn fourth" name="nia" placeholder="NIA Alumn@ (6 números)" required>
             <input type="text" id="nombre" class="fadeIn fifth" name="nombre" placeholder="Nombre" required>
-            <input type="submit" class="fadeIn sixth" value="Entrar">
+            <input type="submit" class="fadeIn sixth" value="Entrar" onclick="showSpinner()">
             <div id="formFooter">
                 <input type="checkbox" id="casillaVerificacion" name="casillaVerificacion" required>
-                <a class="underlineHover" href="javascript:void(0);" onclick="mostrarVentanaEmergente()">Términos y Condiciones</a>
+                <a class="underlineHover" href="javascript:void(0);" onclick="mostrarVentanaEmergente()">Términos y
+                    Condiciones</a>
             </div>
 
             <div id="terminosCondiciones" style="display: none;">
                 <!-- Términos y condiciones -->
-                <p style="color: black;"><strong>1. Uso Apropiado: </strong>Este sitio web se proporciona con el propósito de brindar información y asistencia a estudiantes. No se permite el uso indebido de la plataforma, incluyendo la publicación de contenido ofensivo o cualquier actividad que viole la ley.</p>
-                <p style="color: black;"><strong>2. Contenido del Usuario:</strong> Al contribuir con contenido a la plataforma, garantizas que tienes el derecho de compartir dicha información. Nos reservamos el derecho de moderar y eliminar contenido que viole estos términos.</p>
+                <p style="color: black;"><strong>1. Uso Apropiado: </strong>Este sitio web se proporciona con el
+                    propósito de brindar información y asistencia a estudiantes. No se permite el uso indebido de la
+                    plataforma, incluyendo la publicación de contenido ofensivo o cualquier actividad que viole la ley.
+                </p>
+                <p style="color: black;"><strong>2. Contenido del Usuario:</strong> Al contribuir con contenido a la
+                    plataforma, garantizas que tienes el derecho de compartir dicha información. Nos reservamos el
+                    derecho de moderar y eliminar contenido que viole estos términos.</p>
 
-                <p style="color: black;"><strong>3. Acepto</strong> el tratamiento de mis datos de acuerdo con el RGPD y la política de privacidad.</p>
-                <p style="color: black;" for="opcionesAdicionales"><strong>4. Consiento</strong> el tratamiento de mis datos con el propósito de mejorar la experiencia en la página web.</p>
-                <p style="color: black;"><strong>5. Cambios en los Términos:</strong> Nos reservamos el derecho de actualizar o modificar estos términos en cualquier momento. Se te notificará sobre cualquier cambio significativo</p>
+                <p style="color: black;"><strong>3. Acepto</strong> el tratamiento de mis datos de acuerdo con el RGPD y
+                    la política de privacidad.</p>
+                <p style="color: black;" for="opcionesAdicionales"><strong>4. Consiento</strong> el tratamiento de mis
+                    datos con el propósito de mejorar la experiencia en la página web.</p>
+                <p style="color: black;"><strong>5. Cambios en los Términos:</strong> Nos reservamos el derecho de
+                    actualizar o modificar estos términos en cualquier momento. Se te notificará sobre cualquier cambio
+                    significativo</p>
                 <!-- ... Tu código de términos y condiciones ... -->
                 <button onclick="cerrarVentanaEmergente()">Cerrar</button>
             </div>
@@ -54,7 +63,22 @@
         document.getElementById("terminosCondiciones").style.display = "none";
     }
 </script>
+<div id='loader' class="loader" style="display: none;"></div>
+<script>
+    function showSpinner() {
+        document.getElementById('loader').style.display = 'block';
+
+        setTimeout(function () {
+            // Oculta el spinner
+            document.getElementById('loader').style.display = 'none';
+
+            setTimeout(function () {
+                window.location.href = event.target.href;
+            }, 5000); // 5000 milisegundos = 5 segundos
+        }, 5000);
+    }
+</script>
 
 </body>
-</html>
 
+</html>

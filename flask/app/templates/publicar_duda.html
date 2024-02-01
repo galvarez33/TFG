@@ -2,6 +2,7 @@
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-publicar_duda.css') }}">
 
+
 <div class="container">
     <h2 class="mt-4" style="color: white;">Formulario</h2>
     <form id="formulario" method="POST" action="{{ url_for('publicar_duda.publicar_duda') }}" enctype="multipart/form-data">
@@ -17,11 +18,11 @@
         </div>
         <div class="form-group">
             <label for="titulo" style="color: white;">Título:</label>
-            <textarea class="form-control" id="titulo" name="titulo" rows="1" oninput="limitarPalabras(this, 10)" required></textarea>
+            <textarea class="form-control" id="titulo" name="titulo" rows="1" oninput="limitarPalabras(this, 10)" style="background-color: rgb(241, 241, 241);" required></textarea>
         </div>
         <div class="form-group">
             <label for="texto" style="color: white;">Texto:</label>
-            <textarea class="form-control" id="texto" name="texto" rows="3" required></textarea>
+            <textarea class="form-control" id="texto" name="texto" rows="3" style="background-color: rgb(241, 241, 241);" required></textarea>
         </div>
         <div class="form-group">
             <label for="carrera" style="color: white;">Carrera:</label>
@@ -60,8 +61,10 @@
                 <label for="star1" title="1 estrella"></label>
             </div>
         </div>
-        <button type="submit" class="btn btn-success">Enviar</button>
+        <button type="submit" class="btn btn-success" onclick="showSpinner()">Enviar</button>
         <br>
+        <br>
+        <p style="display:none;">relleno</p>
     </form>
 </div>
 
@@ -75,6 +78,21 @@
             });
         }, 10000);
     });
+</script>
+<div id='loader' class="loader" style="display: none;"></div>
+<script>
+    function showSpinner() {
+        document.getElementById('loader').style.display = 'block';
+
+        setTimeout(function () {
+            // Oculta el spinner
+            document.getElementById('loader').style.display = 'none';
+
+            setTimeout(function () {
+                window.location.href = event.target.href;
+            }, 10000); // 5000 milisegundos = 5 segundos
+        }, 10000);
+    }
 </script>
 
 <script src="{{ url_for('static', filename='script-publicar_duda.js') }}"></script>

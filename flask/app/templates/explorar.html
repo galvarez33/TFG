@@ -32,13 +32,13 @@
                 <option value="5º">5º</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">Buscar</button>
-        <a href="{{ url_for('explorar.explorar') }}" class="btn btn-secondary">Deshacer filtros</a>
+        <button type="submit" class="btn btn-primary" onclick="showSpinner()" >Buscar</button>
+        <a href="{{ url_for('explorar.explorar') }}" class="btn btn-secondary" onclick="showSpinner()">Deshacer filtros</a>
     </form>
     <div class="row">
         {% for duda in dudas %}
             <div class="col-md-4 mb-4">
-                <a href="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda.id) }}" class="duda-link">
+                <a href="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda.id) }}" class="duda-link" onclick="showSpinner()">
                     
                     <div class="card duda-card">
                         <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda" class="card-img-top fixed-size-image">
@@ -56,12 +56,12 @@
             <ul class="pagination justify-content-center mt-4">
                 {% if pagination.has_prev %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar.explorar', page=1) }}" aria-label="First">
+                        <a class="page-link" href="{{ url_for('explorar.explorar', page=1) }}" aria-label="First"onclick="showSpinner()">
                             <span aria-hidden="true">&laquo;&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.prev_num) }}" aria-label="Previous">
+                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.prev_num) }}" aria-label="Previous"onclick="showSpinner()">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
@@ -74,19 +74,19 @@
                         </li>
                     {% else %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('explorar.explorar', page=page_num) }}">{{ page_num }}</a>
+                            <a class="page-link" href="{{ url_for('explorar.explorar', page=page_num) }} " onclick="showSpinner()">{{ page_num }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
 
                 {% if pagination.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.next_num) }}" aria-label="Next">
+                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.next_num) }}" aria-label="Next" onclick="showSpinner()">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.pages[-1]) }}" aria-label="Last">
+                        <a class="page-link" href="{{ url_for('explorar.explorar', page=pagination.pages[-1]) }}" aria-label="Last" onclick="showSpinner()">
                             <span aria-hidden="true">&raquo;&raquo;</span>
                         </a>
                     </li>
@@ -95,6 +95,21 @@
         </nav>
     {% endif %}
 </div>
+<div id='loader' class="loader" style="display: none;"></div>
+      <script>
+        function showSpinner() {
+          document.getElementById('loader').style.display = 'block';
+
+          setTimeout(function () {
+            // Oculta el spinner
+            document.getElementById('loader').style.display = 'none';
+
+            setTimeout(function () {
+              window.location.href = event.target.href;
+            }, 5000); // 5000 milisegundos = 5 segundos
+          }, 5000);
+        }
+      </script>
 
 </body>
 </html>

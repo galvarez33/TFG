@@ -3,7 +3,7 @@
 
 <html>
 
-<head>  
+<head>
     <link rel="icon" href="../static/logo_ceu.png" type="image/x-icon">
     <title>CEU</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-navbar.css') }}">
@@ -25,9 +25,10 @@
         {% if not logged_user %}
         <div class="d-flex justify-content-between align-items-center w-100">
             <!-- Contenedor para alinear el contenido y ocupar el ancho completo -->
-            <a class="navbar-brand" href="/" style="margin-left: 25px; font-size: 20px;">PRACTICA CON ESTUDIANTES</a> <!-- Título en el centro del navbar -->
+            <a class="navbar-brand" href="/" style="margin-left: 25px; font-size: 20px;">PRACTICA CON ESTUDIANTES</a>
+            <!-- Título en el centro del navbar -->
             <ul class="navbar-nav " style="margin-right: 25px; color: black; font-size: 20px; ">
-                
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
@@ -69,13 +70,28 @@
                         <form method="POST" action="{{ url_for('explorar.explorar') }}" class="form-inline">
                             <input type="text" class="form-control" id="consulta" name="consulta"
                                 placeholder="Buscar por título">
-                            <button type="submit" class="btn btn-primary">Buscar</button>
+                            <button type="submit" class="btn btn-primary" onclick="showSpinner()">Buscar</button>
                         </form>
                     </div>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                <div id='loader' class="loader" style="display: none;"></div>
+                <script>
+                    // Función para mostrar el spinner al hacer clic en los enlaces
+                    function showSpinner() {
+                        document.getElementById('loader').style.display = 'block';
 
+                        // Puedes agregar aquí cualquier lógica adicional antes de redirigir a la siguiente página
+                        // Por ejemplo, puedes hacer una petición asíncrona (AJAX) antes de redirigir.
+
+                        // Ejemplo de redirección después de 2 segundos (ajusta según tus necesidades)
+                        setTimeout(function () {
+                            // Redirige a la URL del enlace clicado
+                            window.location.href = event.target.href;
+                        }, 2000);
+                    }
+                </script>
 
 
                 <!-- Botón de notificaciones -->
@@ -113,7 +129,7 @@
                                         notificacionElement.href = '/detalle_duda/' + notificacion.duda_id;
                                         notificacionElement.innerText = notificacion.nombre_usuario_comentario + ' ha respondido a tu duda de ' + notificacion.asignatura;
                                         notificacionElement.addEventListener('click', function (event) {
-                                            
+
 
                                             // Realizar una solicitud DELETE para eliminar la notificación
                                             eliminarNotificacion(notificacion._id, notificacionElement.href);
@@ -159,6 +175,7 @@
 
 
 
+
                 <!-- Lista de elementos de navegación para el icono del perfil y el acceso -->
                 <li class="nav-item mr-2">
                     <div>
@@ -173,19 +190,35 @@
                             </svg>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="/perfil">Perfil</a>
-                            <a class="dropdown-item" href="/cambiar_contrasena">Cambiar Contraseña</a>
-                            <a class="dropdown-item" href="/cierre">Cerrar Sesión</a>
-                            
+                            <a class="dropdown-item" href="/perfil" onclick="showSpinner()">Perfil</a>
+                            <a class="dropdown-item" href="/cambiar_contrasena" onclick="showSpinner()">Cambiar
+                                Contraseña</a>
+                            <a class="dropdown-item" href="/cierre" onclick="showSpinner()">Cerrar Sesión</a>
+
                         </div>
                     </div>
                 </li>
 
 
             </ul>
+            <div id='loader' class="loader" style="display: none;"></div>
+            <script>
+                function showSpinner() {
+                    document.getElementById('loader').style.display = 'block';
+
+                    setTimeout(function () {
+                        // Oculta el spinner
+                        document.getElementById('loader').style.display = 'none';
+
+                        setTimeout(function () {
+                            window.location.href = event.target.href;
+                        }, 5000); // 5000 milisegundos = 5 segundos
+                    }, 5000);
+                }
+            </script>
             {% else %}
-            
-            
+
+
             {% endif %}
             </ul>
         </div>

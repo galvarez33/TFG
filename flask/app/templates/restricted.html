@@ -1,18 +1,41 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style-restricted.css') }}">
+  <link rel="icon" href="../static/logo_ceu.png" type="image/x-icon">
 </head>
+
 <body>
   {% include 'header.html' %}
   {% if logged_user %}
-      
+
   {% endif %}
   <div class="container">
     <div class="button-container">
-      <a class="button duda" href="/publicar_duda">Publicar Duda</a>
-      <a class="button explorar" href="/explorar">Explorar</a>
+      <a class="button duda" href="/publicar_duda" onclick="showSpinner()">Publicar Duda</a>
+      <a class="button explorar" href="/explorar" onclick="showSpinner()">Explorar</a>
     </div>
   </div>
+  <!-- Spinner de carga -->
+  <div  id='loader' class="loader" style="display: none;"></div>
+  <script>
+    function showSpinner() {
+      document.getElementById('loader').style.display = 'block';
+
+      setTimeout(function () {
+        // Oculta el spinner
+        document.getElementById('loader').style.display = 'none';
+
+        setTimeout(function () {
+          window.location.href = event.target.href;
+        }, 5000); // 5000 milisegundos = 5 segundos
+      }, 5000);
+    }
+  </script>
+
+
+
 </body>
+
 </html>

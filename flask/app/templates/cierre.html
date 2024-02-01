@@ -9,7 +9,7 @@
   
     <h2 style="color: black;">¿Deseas cerrar sesión?</h2>
     <form action="/cierre" method="POST">
-        <input type="submit" class="fadeIn fourth" name="confirm" value="yes"></input>
+        <input type="submit" class="fadeIn fourth" name="confirm" value="yes" onclick="showSpinner()"></input>
         <input type="submit" class="fadeIn fourth" name="confirm" value="no"></input>
     </form>
     {% if error %}
@@ -25,6 +25,21 @@
 
   </div>
 </div>
+<div id='loader' class="loader" style="display: none;"></div>
+      <script>
+        function showSpinner() {
+          document.getElementById('loader').style.display = 'block';
+
+          setTimeout(function () {
+            // Oculta el spinner
+            document.getElementById('loader').style.display = 'none';
+
+            setTimeout(function () {
+              window.location.href = event.target.href;
+            }, 5000); // 5000 milisegundos = 5 segundos
+          }, 5000);
+        }
+      </script>
 
 
 

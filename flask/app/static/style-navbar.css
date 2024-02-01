@@ -54,3 +54,26 @@
 .dropdown-item.clicked {
     background-color: #637d97; /* Cambia el color de fondo cuando se hace clic */
 }
+
+.loader {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 6px solid white;
+    border-top-color: transparent;
+    animation: spin 1.2s linear infinite;
+  
+    /* Agrega estas propiedades para centrar el spinner */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    
+  }
+  
+  
+  @keyframes spin{
+    to{
+      transform: rotate(360deg);
+    }
+  }
+  

@@ -12,7 +12,7 @@
       <input type="text" name="contrasena_actual" placeholder="Contraseña Actual" required><br>
       <input type="text" name="nueva_contrasena" placeholder="Nueva Contraseña" required><br>
       <input type="text" name="confirmar_contrasena" placeholder="Confirmar Contraseña" required><br>
-      <input type="submit" value="Restablecer Contraseña" href="/cambiar_contrasena">
+      <input type="submit" value="Restablecer Contraseña" href="/cambiar_contrasena" onclick="showSpinner()">
     </form>
     {% if error %}
     <p class="alert alert-danger" role="alert">{{ error }}</p>
@@ -26,6 +26,21 @@
 
   </div>
 </div>
+<div id='loader' class="loader" style="display: none;"></div>
+      <script>
+        function showSpinner() {
+          document.getElementById('loader').style.display = 'block';
+
+          setTimeout(function () {
+            // Oculta el spinner
+            document.getElementById('loader').style.display = 'none';
+
+            setTimeout(function () {
+              window.location.href = event.target.href;
+            }, 5000); // 5000 milisegundos = 5 segundos
+          }, 5000);
+        }
+      </script>
 
 
 

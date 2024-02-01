@@ -94,12 +94,12 @@
             <br>
             <div class="form-group">
                 <textarea class="form-control" name="comentario" id="nuevo-comentario"
-                    placeholder="Escribe tu comentario aquí" rows="4"></textarea>
+                    placeholder="Escribe tu comentario aquí" rows="4" style="background-color: rgb(241, 241, 241);"></textarea>
             </div>
             <div class="form-group">
                 <input type="file" class="form-control-file" id="imagen" name="imagen" style="color: aliceblue;">
             </div>
-            <button type="submit" class="btn btn-primary">Enviar comentario</button>
+            <button type="submit" class="btn btn-primary" onclick="showSpinner()">Enviar comentario</button>
         </form>
         {% if error %}
         <br>
@@ -125,8 +125,8 @@
             <label for="filtro" style="color: white;">Filtrar comentarios:</label>
             <select id="filtro" name="filtro" onchange="filtrarComentarios(this.value) ">
                 <option value="default" selected>Seleccione una opción</option>
-                <option value="mejor_votados">Mejor Votados</option>
-                <option value="recientes">Añadidos Recientemente</option>
+                <option value="mejor_votados" onclick="showSpinner()">Mejor Votados</option>
+                <option value="recientes" onclick="showSpinner()">Añadidos Recientemente</option>
             </select>
         </div>
 
@@ -151,7 +151,7 @@
                         <form
                             action="{{ url_for('detalle_duda.borrar_comentario_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
-                            <button type="submit" class="btn btn-danger">Borrar</button>
+                            <button type="submit" class="btn btn-danger" onclick="showSpinner()">Borrar</button>
 
                         </form>
                         {% endif %}
@@ -160,14 +160,14 @@
                         <form
                             action="{{ url_for('detalle_duda.votar_positivo_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
-                            <button type="submit" class="btn btn-success">Me ha sido útil</button>
+                            <button type="submit" class="btn btn-success" onclick="showSpinner()">Me ha sido útil</button>
                             <span class="like-icon">👍</span>
                             <span class="like-count">{{ comentario.votos_positivos }}</span>
                         </form>
                         <form
                             action="{{ url_for('detalle_duda.votar_negativo_view', duda_id=duda._id, comentario_index=loop.index - 1) }}"
                             method="post" style="display: inline;">
-                            <button type="submit" class="btn btn-danger">No me ha sido útil</button>
+                            <button type="submit" class="btn btn-danger" onclick="showSpinner()">No me ha sido útil</button>
                             <span class="dislike-icon">👎</span>
                             <span class="dislike-count">{{ comentario.votos_negativos }}</span>
                         </form>
@@ -188,7 +188,9 @@
             {% endfor %}
         </ul>
         {% else %}
-        <p>No hay comentarios aún.</p>
+        <br><br>
+        <h2 style="color: brown;">No hay comentarios aún.</h2>
+        <br><br>
         {% endif %}
     </div>
 </div>
@@ -209,6 +211,21 @@
         }
     }
 </script>
+<div id='loader' class="loader" style="display: none;"></div>
+  <script>
+    function showSpinner() {
+      document.getElementById('loader').style.display = 'block';
+
+      setTimeout(function () {
+        // Oculta el spinner
+        document.getElementById('loader').style.display = 'none';
+
+        setTimeout(function () {
+          window.location.href = event.target.href;
+        }, 8000); // 5000 milisegundos = 5 segundos
+      }, 8000);
+    }
+  </script>
 
 
 <script src="{{ url_for('static', filename='script-detalle_duda.js') }}"></script>

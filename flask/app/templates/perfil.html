@@ -58,11 +58,13 @@
             class="rounded-circle profile-image">
             <img src="data:image/jpeg;base64,{{ imagen_perfil }}" alt="Imagen de la duda"
                 class="card-img-top rounded-circle profile-image" style="height: 100px; width: 100px;">
-            <br>
+           
         </a>
+        <br>
         <br>
 
         <div class="d-flex justify-content-center">
+            <br>
             <label for="nuevaImagen" class="btn btn-primary mr-2">
                 Seleccionar Imagen
             </label>
@@ -70,13 +72,13 @@
             <form id="cambiarImagenForm" method="POST" action="{{ url_for('perfil.cambiar_imagen_perfil') }}"
                 enctype="multipart/form-data">
                 <input type="file" class="form-control" id="nuevaImagen" name="nuevaImagen" style="display: none;">
-                <button type="submit" class="btn btn-success">Aplicar Cambios</button>
+                <button type="submit" class="btn btn-success" onclick="showSpinner()">Aplicar Cambios</button>
             </form>
         </div>
 
         <!-- Nuevo formulario para borrar imagen de perfil -->
         <form id="borrarImagenForm" method="POST" action="{{ url_for('perfil.borrar_imagen_perfil') }}">
-            <button type="submit" class="btn btn-danger mt-2">Borrar Imagen de Perfil</button>
+            <button type="submit" class="btn btn-danger mt-2" onclick="showSpinner()">Borrar Imagen de Perfil</button>
         </form>
     </div>
 
@@ -239,24 +241,24 @@
                 <option value="5º">5º</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">Buscar</button>
-        <a href="{{ url_for('perfil.perfil') }}" class="btn btn-secondary">Deshacer filtros</a>
+        <button type="submit" class="btn btn-primary" onclick="showSpinner()">Buscar</button>
+        <a href="{{ url_for('perfil.perfil') }}" class="btn btn-secondary"onclick="showSpinner()">Deshacer filtros</a>
     </form>
 
     <div class="row">
         {% for duda in dudas %}
         <div class="col-md-4 mb-4">
-            <a href="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda._id) }}" class="duda-link">
+            <a href="{{ url_for('detalle_duda.detalle_duda_view', duda_id=duda._id) }}" class="duda-link" onclick="showSpinner()">
                 <div class="card duda-card d-flex align-items-center">
                     <!-- Añadir clases d-flex y align-items-center -->
                     <img src="data:image/jpeg;base64,{{ duda.imagen }}" alt="Imagen de la duda"
                         class="card-img-top fixed-size-image">
                     <div class="card-body duda-card-body">
-                        <h5 class="card-title duda-card-title">{{ duda.titulo }}</h5>
+                        <h5 class="card-title duda-card-title" onclick="showSpinner()">{{ duda.titulo }}</h5>
                         <!-- Agregar el botón de Borrar -->
                         <form method="POST" action="{{ url_for('perfil.borrar_duda', duda_id=duda._id) }}">
                             <input type="hidden" name="duda_id" value="{{ duda._id }}">
-                            <button type="submit" class="btn btn-danger">Borrar</button>
+                            <button type="submit" class="btn btn-danger" onclick="showSpinner()">Borrar</button>
                         </form>
                     </div>
                 </div>
@@ -323,3 +325,18 @@
 
     <br>
 </div>
+<div id='loader' class="loader" style="display: none;"></div>
+<script>
+    function showSpinner() {
+        document.getElementById('loader').style.display = 'block';
+
+        setTimeout(function () {
+            // Oculta el spinner
+            document.getElementById('loader').style.display = 'none';
+
+            setTimeout(function () {
+                window.location.href = event.target.href;
+            }, 5000); // 5000 milisegundos = 5 segundos
+        }, 5000);
+    }
+</script>
