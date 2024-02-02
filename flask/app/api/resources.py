@@ -94,7 +94,7 @@ class PerfilResource(Resource):
             '_id': str(duda['_id']),
             'correo': duda.get('correo_usuario', ''),
             'titulo': duda.get('titulo', ''),
-            'descripcion': duda.get('texto', ''),
+            'texto': duda.get('texto', ''),
             'imagen': duda.get('imagen', '')
         } for duda in dudas_usuario]
 
@@ -135,7 +135,7 @@ class PerfilResource(Resource):
                     {
                         '_id': str(duda['_id']),
                         'titulo': duda.get('titulo', ''),
-                        'descripcion': duda.get('texto', ''),
+                        'texto': duda.get('texto', ''),
                         'imagen': duda.get('imagen', '')
                     } for duda in dudas_actualizadas
                 ]
@@ -166,7 +166,7 @@ class DetalleDudaResource(Resource):
                 'imagen_perfil': duda.get('imagen_perfil', ''),
                 'carrera': duda.get('carrera', ''),
                 'dificultad': duda.get('dificultad', ''),
-                'descripcion': duda.get('texto', ''),
+                'texto': duda.get('texto', ''),
                 'comentarios': duda.get('comentario', []),
             }
             return jsonify({'duda': duda_en_json})
@@ -205,7 +205,7 @@ class PublicarDudaResource(Resource):
             duda_en_json = {
                 '_id': str(duda['_id']),
                 'titulo': duda.get('titulo', ''),
-                'descripcion': duda.get('descripcion', ''),
+                'texto': duda.get('texto', ''),
                 'imagen': duda.get('imagen', '')[:10],  
                 'carrera': duda.get('carrera', ''),  
                 'curso': duda.get('curso', ''),  

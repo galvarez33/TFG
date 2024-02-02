@@ -28,7 +28,7 @@ def obtener_dudas(consulta, carrera, curso, page, per_page):
         parametros_duda = {
             'id': str(duda['_id']),
             'titulo': duda.get('titulo', ''),
-            'descripcion': duda.get('descripcion', ''),
+            'texto': duda.get('texto', ''),
             'carrera': duda.get('carrera', ''),
             'curso': duda.get('curso', ''),
             'imagen': duda.get('imagen', '')
@@ -53,7 +53,7 @@ def obtener_parametros_dudas():
         parametros_duda = {
             'id': str(duda['_id']),
             'titulo': duda.get('titulo', ''),
-            'descripcion': duda.get('texto', ''),
+            'texto': duda.get('texto', ''),
             'carrera': duda.get('carrera', ''),
             'curso': duda.get('curso', ''),
             'imagen': duda.get('imagen', '')

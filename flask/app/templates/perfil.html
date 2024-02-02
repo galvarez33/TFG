@@ -245,6 +245,7 @@
         <a href="{{ url_for('perfil.perfil') }}" class="btn btn-secondary"onclick="showSpinner()">Deshacer filtros</a>
     </form>
 
+    {% if dudas %}
     <div class="row">
         {% for duda in dudas %}
         <div class="col-md-4 mb-4">
@@ -267,6 +268,13 @@
         {% endfor %}
 
     </div>
+    {% else %}
+    <h2 class="text-center" style="color: rgb(165, 49, 49);">No has publicado dudas aún.</h2>
+    <br>
+    <br>
+    <br>
+    <br>
+    {% endif %}
 
 
     {% if pagination.pages|length > 1 %}
