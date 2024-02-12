@@ -1,7 +1,7 @@
 # Práctica con Estudiantes CEU
 
 ## Visitar en:
-https://www.practica-con-estudiantes-ceu.online/
+https://www.practica-con-estudiantes-ceu.online/ (fuera de servicio)
 
 ## Descripción del Proyecto
 Práctica con Estudiantes CEU es una plataforma web diseñada para facilitar la interacción entre estudiantes, permitiéndoles publicar dudas y recibir respuestas de otros compañeros. El proyecto está centrado en la colaboración y el intercambio de conocimientos dentro de la comunidad educativa.
